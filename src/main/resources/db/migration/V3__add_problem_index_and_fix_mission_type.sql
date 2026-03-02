@@ -1,7 +1,7 @@
 -- V3__add_problem_index_and_fix_mission_type.sql
 
 -- 1) Problem 조회 성능 향상용 인덱스 추가
-CREATE INDEX IF NOT EXISTS ix_problem_unit
+CREATE INDEX IF NOT EXISTS ix_problem_lesson
     ON problem(lesson_id);
 
 -- 2) mission_type 체크 제약 조건 수정

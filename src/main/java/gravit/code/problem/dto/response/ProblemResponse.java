@@ -65,14 +65,14 @@ public record ProblemResponse(
 ) {
         public static ProblemResponse createSubjectiveProblem(
                 ProblemDetail problemDetail,
-                Answer answer
+                AnswerResponse answerResponse
         ) {
                 return ProblemResponse.builder()
                         .problemId(problemDetail.id())
                         .problemType(problemDetail.problemType())
                         .instruction(problemDetail.instruction())
                         .content(problemDetail.content())
-                        .answerResponse(AnswerResponse.from(answer))
+                        .answerResponse(answerResponse)
                         .options(null)
                         .isBookmarked(problemDetail.isBookmarked())
                         .build();

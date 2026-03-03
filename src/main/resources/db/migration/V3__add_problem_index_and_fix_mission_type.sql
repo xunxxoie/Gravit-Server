@@ -18,3 +18,10 @@ ALTER TABLE mission
             'LEARNING_MINUTES_FIVE', 'LEARNING_MINUTES_TEN',
             'LEARNING_MINUTES_FIFTEEN', 'FOLLOW_NEW_FRIEND'
         ));
+
+-- 3) Answer, Option에 problemId 인덱스 추가
+CREATE INDEX IF NOT EXISTS ix_answer_problem
+    ON answer(problem_id);
+
+CREATE INDEX IF NOT EXISTS ix_option_problem
+    ON option(problem_id);

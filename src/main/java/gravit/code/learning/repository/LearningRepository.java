@@ -3,13 +3,12 @@ package gravit.code.learning.repository;
 import gravit.code.learning.domain.Learning;
 import gravit.code.learning.dto.response.LearningDetail;
 import jakarta.persistence.LockModeType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LearningRepository extends JpaRepository<Learning,Long> {
@@ -17,7 +16,7 @@ public interface LearningRepository extends JpaRepository<Learning,Long> {
     Optional<Learning> findByUserId(long userId);
 
     @Lock(LockModeType.OPTIMISTIC)
-    Page<Learning> findAll(Pageable pageable);
+    List<Learning> findAll();
 
     @Query("""
         SELECT new gravit.code.learning.dto.response.LearningDetail(

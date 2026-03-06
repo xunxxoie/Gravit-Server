@@ -3,12 +3,10 @@ package gravit.code.learning.service;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.learning.domain.Learning;
-import gravit.code.learning.repository.LearningRepository;
 import gravit.code.learning.dto.common.ConsecutiveSolvedDto;
 import gravit.code.learning.dto.response.LearningDetail;
+import gravit.code.learning.repository.LearningRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,24 +21,13 @@ public class LearningService {
 
     @Transactional
     public void updateConsecutiveDays(){
-        int size = 10;
-        int page = 0;
+        List<Learning> learnings = learningRepository.findAll();
 
-        while(true){
-            Pageable pageable = PageRequest.of(page,size);
-            List<Learning> learnings = learningRepository.findAll(pageable).getContent();
-
-            if(learnings.isEmpty())
-                break;
-
-            for(Learning learning : learnings){
-                learning.updateConsecutiveDays();
-            }
-
-            learningRepository.saveAll(learnings);
-
-            page++;
+        for(Learning learning : learnings){
+            learning.updateConsecutiveDays();
         }
+
+        learningRepository.saveAll(learnings);
     }
 
     @Transactional

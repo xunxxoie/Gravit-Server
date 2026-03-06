@@ -18,8 +18,13 @@ public class LearningProgressRateService {
             long chapterId,
             long userId
     ) {
-        int totalLessonCount = lessonRepository.countTotalLessonByChapterId(chapterId);
         int solvedLessonCount = lessonSubmissionRepository.countSolvedLessonByChapterIdAndUserId(chapterId, userId);
+
+        if(solvedLessonCount == 0) {
+            return 0.0;
+        }
+
+        int totalLessonCount = lessonRepository.countTotalLessonByChapterId(chapterId);
 
         double progressRate = ((double) solvedLessonCount / totalLessonCount) * 100;
         return Math.floor(progressRate);
@@ -30,8 +35,13 @@ public class LearningProgressRateService {
             long unitId,
             long userId
     ) {
-        int totalLessonCount = lessonRepository.countTotalLessonByUnitId(unitId);
         int solvedLessonCount = lessonSubmissionRepository.countSolvedLessonByUnitIdAndUserId(unitId, userId);
+
+        if(solvedLessonCount == 0) {
+            return 0.0;
+        }
+
+        int totalLessonCount = lessonRepository.countTotalLessonByUnitId(unitId);
 
         double progressRate = ((double) solvedLessonCount / totalLessonCount) * 100;
         return Math.floor(progressRate);
@@ -41,8 +51,13 @@ public class LearningProgressRateService {
     public int getPlanetConquestRate(
             long userId
     ) {
-        long totalLesson = lessonRepository.count();
         long solvedLesson = lessonSubmissionRepository.countByUserId(userId);
+
+        if(solvedLesson == 0) {
+            return 0;
+        }
+
+        long totalLesson = lessonRepository.count();
 
         return Math.toIntExact(
                 Math.round(((double) solvedLesson / totalLesson) * 100)

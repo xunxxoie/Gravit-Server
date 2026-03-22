@@ -24,19 +24,15 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 @Component
 public class HttpLoggingFilter extends OncePerRequestFilter {
 
-    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
-
     private final ObjectMapper objectMapper;
 
-    // 필요 시 자유롭게 추가/수정
+    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
     private static final List<String> EXCLUDE_PATTERNS = List.of(
             "/actuator/**",      // 전체 액추에이터
             "/swagger-ui/**",
             "/v3/api-docs/**"
     );
-
     private static final int RESPONSE_BODY_MAX_LENGTH = 200;
-
 
     @Override
     protected void doFilterInternal(
@@ -69,12 +65,7 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(wrappingRequest, wrappingResponse);
-
-            Boolean alreadyErrorLogging = (Boolean) request.getAttribute("errorLoggedByGlobal");
-            if (alreadyErrorLogging == null || !alreadyErrorLogging) {
-                printResponse(request, response, wrappingResponse);
-            }
-
+            printResponse(request, response, wrappingResponse);
             wrappingResponse.copyBodyToResponse();
         } finally {
             MDC.clear();

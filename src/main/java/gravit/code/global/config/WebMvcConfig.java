@@ -22,9 +22,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(requestContextInterceptor)
-                .addPathPatterns("/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**");
+
         registry.addInterceptor(apiPerformanceInterceptor)
-                .addPathPatterns("/**");
+                .addPathPatterns("/**")
+                .excludePathPatterns("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**");
     }
 
     @Bean

@@ -39,3 +39,4 @@ services:
 
 networks:
   gravit-local:
+    name: gravit-local

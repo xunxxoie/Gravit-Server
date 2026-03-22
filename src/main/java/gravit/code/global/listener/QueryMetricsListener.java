@@ -34,7 +34,6 @@ public class QueryMetricsListener implements QueryExecutionListener {
         String httpMethod = (rc != null && rc.getHttpMethod() != null) ? rc.getHttpMethod() : "-";
         String httpPath = (rc != null && rc.getBestMatchPath() != null) ? rc.getBestMatchPath() : "-";
 
-        log.info("httpMethod : {}, httpPath : {}", httpMethod, httpPath);
         meterRegistry.timer(
                 "db.query",
                 "sql_type", type,

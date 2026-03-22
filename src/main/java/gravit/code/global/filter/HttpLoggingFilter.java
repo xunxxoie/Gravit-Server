@@ -26,12 +26,17 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
 
     private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
+    private final ObjectMapper objectMapper;
+
     // 필요 시 자유롭게 추가/수정
     private static final List<String> EXCLUDE_PATTERNS = List.of(
-            "/actuator/**"      // 전체 액추에이터
+            "/actuator/**",      // 전체 액추에이터
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
     );
 
-    private final ObjectMapper objectMapper;
+    private static final int RESPONSE_BODY_MAX_LENGTH = 200;
+
 
     @Override
     protected void doFilterInternal(
@@ -118,17 +123,20 @@ public class HttpLoggingFilter extends OncePerRequestFilter {
 
         String body;
         try {
-            body = objectMapper.readTree(responseWrapper.getContentAsByteArray())
-                    .toPrettyString()
-                    .replaceAll("\\R\\s*\\}$", "}");
-            if (body.isEmpty()) {
+            byte[] bytes = responseWrapper.getContentAsByteArray();
+            if (bytes.length == 0) {
                 body = "NONE";
+            } else {
+                body = objectMapper.writeValueAsString(objectMapper.readTree(bytes));
+                if (body.length() > RESPONSE_BODY_MAX_LENGTH) {
+                    body = body.substring(0, RESPONSE_BODY_MAX_LENGTH) + "...(truncated)";
+                }
             }
         } catch (IOException e) {
             body = responseWrapper.getContentType() + "NOT JSON";
         }
 
-        log.info("[RESPONSE] {} accountId = {}, ({})  responseBody: {}", uri, userId, status, body);
+        log.info("[RESPONSE] {} userId = {}, ({})  responseBody: {}", uri, userId, status, body);
     }
 
     private void printRequestUri(ContentCachingRequestWrapper request) {

@@ -5,7 +5,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./infra/prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - gravit-local
 
@@ -33,9 +33,10 @@ services:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yml
     volumes:
-      - ./loki-config.yml:/etc/loki/local-config.yml:ro
+      - ./infra/loki-config.yml:/etc/loki/local-config.yml:ro
     networks:
       - gravit-local
 
 networks:
   gravit-local:
+    name: gravit-local

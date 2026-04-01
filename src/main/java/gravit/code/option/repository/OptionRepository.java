@@ -13,8 +13,6 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
 
     Optional<Option> findById(long optionId);
 
-    boolean existsById(long optionId);
-
     @Query("""
         SELECT new gravit.code.option.dto.response.OptionResponse(o.id, o.content, o.explanation, o.isAnswer, o.problemId)
         FROM Option o
@@ -24,4 +22,12 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
     List<OptionResponse> findByProblemId(@Param("problemId")long problemId);
 
     void deleteAllByProblemId(long problemId);
+
+    @Query("""
+        SELECT new gravit.code.option.dto.response.OptionResponse(o.id, o.content, o.explanation, o.isAnswer, o.problemId)
+        FROM Option o
+        WHERE o.problemId IN :problemIds
+        ORDER BY o.problemId ASC
+    """)
+    List<OptionResponse> findAllByProblemIdIn(@Param("problemIds") List<Long> problemIds);
 }

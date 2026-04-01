@@ -4,7 +4,7 @@ import gravit.code.global.annotation.Facade;
 import gravit.code.problem.dto.response.ProblemDetail;
 import gravit.code.problem.dto.response.ProblemResponse;
 import gravit.code.problem.dto.response.WrongAnsweredProblemsResponse;
-import gravit.code.problem.service.ProblemQueryService;
+import gravit.code.problem.factory.ProblemFactory;
 import gravit.code.unit.dto.response.UnitSummary;
 import gravit.code.unit.service.UnitQueryService;
 import gravit.code.wrongAnsweredNote.service.WrongAnsweredNoteService;
@@ -20,7 +20,7 @@ public class WrongAnsweredNoteFacade {
     private final WrongAnsweredNoteService wrongAnsweredNoteService;
 
     private final UnitQueryService unitQueryService;
-    private final ProblemQueryService problemQueryService;
+    private final ProblemFactory problemFactory;
 
     @Transactional(readOnly = true)
     public WrongAnsweredProblemsResponse getAllWrongAnsweredProblemInUnit(
@@ -30,7 +30,8 @@ public class WrongAnsweredNoteFacade {
         UnitSummary unitSummary = unitQueryService.getUnitSummaryByUnitId(unitId);
 
         List<ProblemDetail> problemDetails = wrongAnsweredNoteService.getAllWrongAnsweredProblemInUnit(userId, unitId);
-        List<ProblemResponse> problemResponses = problemQueryService.getAnswerOrOptionInProblems(problemDetails);
+
+        List<ProblemResponse> problemResponses = problemFactory.create(problemDetails);
 
         return WrongAnsweredProblemsResponse.of(
                 unitSummary,

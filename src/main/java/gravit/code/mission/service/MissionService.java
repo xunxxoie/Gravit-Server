@@ -1,5 +1,6 @@
 package gravit.code.mission.service;
 
+import gravit.code.global.event.badge.MissionCompletedEvent;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.lesson.service.LessonSubmissionQueryService;
@@ -95,6 +96,7 @@ public class MissionService {
         // 미션을 완료했다면, 경험치 지급
         if (mission.isCompleted()){
             awardMissionXp(userId, mission.getMissionType().getAwardXp());
+            publisher.publishEvent(new MissionCompletedEvent(userId));
         }
     }
 

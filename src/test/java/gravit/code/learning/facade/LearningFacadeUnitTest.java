@@ -1,6 +1,7 @@
 //package gravit.code.learning.facade;
 //
 //import gravit.code.global.event.LessonCompletedEvent;
+//import gravit.code.global.event.badge.QualifiedSolvedEvent;
 //import gravit.code.global.exception.domain.CustomErrorCode;
 //import gravit.code.global.exception.domain.RestApiException;
 //import gravit.code.chapter.domain.Chapter;

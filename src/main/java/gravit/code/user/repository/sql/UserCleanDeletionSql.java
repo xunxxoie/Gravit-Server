@@ -14,8 +14,7 @@ public class UserCleanDeletionSql {
      * 3. 학습 관련 (learning, lesson_submission, problem_submission, bookmark)
      * 4. 리그/시즌 (user_league_history, user_league)
      * 5. 미션/리포트 (mission, report)
-     * 6. 뱃지 및 사용자 통계 (user_badge, user_mission_stat, user_planet_completion, user_qualified_solve_stat)
-     * 7. 사용자 (users)
+     * 6. 사용자 (users)
      */
     public static final String CLEAN_USER_DELETION_SQL = """
             WITH
@@ -49,18 +48,6 @@ public class UserCleanDeletionSql {
               ),
               d_report AS (
                 DELETE FROM report WHERE user_id = :id
-              ),
-              d_ub AS (
-                DELETE FROM user_badge WHERE user_id = :id
-              ),
-              d_ums AS (
-                DELETE FROM user_mission_stat WHERE user_id = :id
-              ),
-              d_upc AS (
-                DELETE FROM user_planet_completion WHERE user_id = :id
-              ),
-              d_uqs AS (
-                DELETE FROM user_qualified_solve_stat WHERE user_id = :id
               )
             DELETE FROM users WHERE id = :id;
         """;

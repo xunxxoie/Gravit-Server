@@ -65,7 +65,13 @@ public class UserDataCleanController {
         exec("DELETE FROM mission WHERE user_id = :id", userId);
         exec("DELETE FROM report WHERE user_id = :id", userId);
 
-        // 6. 사용자
+        // 6. 뱃지 및 사용자 통계
+        exec("DELETE FROM user_badge WHERE user_id = :id", userId);
+        exec("DELETE FROM user_mission_stat WHERE user_id = :id", userId);
+        exec("DELETE FROM user_planet_completion WHERE user_id = :id", userId);
+        exec("DELETE FROM user_qualified_solve_stat WHERE user_id = :id", userId);
+
+        // 7. 사용자
         exec("DELETE FROM users WHERE id = :id", userId);
     }
 

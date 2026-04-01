@@ -12,6 +12,12 @@ public record MissionDetail(
                 description = "미션 이름",
                 example = "레슨 1개 완료하기"
         )
+        String missionName,
+
+        @Schema(
+                description = "미션 설명",
+                example = "레슨 1개 완료하기"
+        )
         @NotNull
         String missionDescription,
 
@@ -29,6 +35,7 @@ public record MissionDetail(
 ) {
     public static MissionDetail from(MissionSummary missionSummary){
         return MissionDetail.builder()
+                .missionName(missionSummary.missionType().name())
                 .missionDescription(missionSummary.missionType().getDescription())
                 .awardXp(missionSummary.missionType().getAwardXp())
                 .isCompleted(missionSummary.isCompleted())

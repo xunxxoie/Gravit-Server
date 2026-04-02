@@ -4,7 +4,7 @@ paths:
   - "src/main/java/**/controller/docs/*Docs.java"
 ---
 
-# API 문서 (Swagger) 컨벤션
+# API Docs Convention
 
 ## 파일 구조
 

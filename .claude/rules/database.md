@@ -6,7 +6,7 @@ paths:
   - "src/main/java/**/repository/*.java"
 ---
 
-# 데이터베이스 규칙
+# Database Rules
 
 ## Flyway 마이그레이션
 

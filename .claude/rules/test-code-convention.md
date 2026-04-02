@@ -4,7 +4,7 @@ paths:
   - "src/test/java/**/*.java"
 ---
 
-# 테스트 코드 컨벤션
+# Test code Convention
 
 ## 테스트 분류
 

@@ -6,7 +6,7 @@ paths:
   - "src/main/resources/application*.yml"
 ---
 
-# 보안 규칙
+# Security Rules
 
 ## 인증 구조
 

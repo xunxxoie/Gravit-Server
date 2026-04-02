@@ -1,7 +1,7 @@
 ---
 name: run-test
 description: 테스트를 실행할 때 사용. "테스트 돌려줘", "테스트 실행해줘", "이 테스트 통과하는지 확인해줘" 등의 요청 시 자동 트리거.
-allowed-tools: Bash(./gradlew *)
+allowed-tools: Bash(./gradlew *), Read, Grep
 ---
 
 # 테스트 실행

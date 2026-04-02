@@ -1,5 +1,7 @@
 #!/bin/bash
 # PreToolUse hook: 위험한 Bash 명령 차단
+# settings.json의 deny와 중복되는 패턴은 제외 (deny가 먼저 차단하므로)
+# 이 hook은 deny에서 커버하지 못하는 추가 패턴을 차단한다
 # exit 0 = 허용, exit 2 = 차단
 
 INPUT=$(cat)
@@ -10,14 +12,9 @@ if [ -z "$COMMAND" ]; then
 fi
 
 BLOCKED_PATTERNS=(
-  "rm -rf /"
-  "rm -rf ~"
-  "rm -rf ."
   "drop database"
   "drop table"
   "truncate table"
-  "git push.*--force"
-  "git reset --hard"
   "chmod -R 777"
   "> /dev/sda"
   "mkfs\."

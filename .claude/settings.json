@@ -6,6 +6,7 @@
       "Bash(git log*)",
       "Bash(git diff*)",
       "Bash(git branch*)",
+      "Bash(ls)",
       "Bash(ls *)",
       "Read",
       "Edit",
@@ -15,6 +16,7 @@
     ],
     "deny": [
       "Bash(rm -rf *)",
+      "Bash(rm -r *)",
       "Bash(git push --force*)",
       "Bash(git reset --hard*)",
       "Bash(docker rm *)",

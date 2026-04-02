@@ -11,8 +11,9 @@ Gravit 프로젝트의 PR 생성 에이전트다.
 
 1. `.claude/rules/git-convention.md`를 읽어 브랜치 전략을 확인하라
 2. 사용자가 base 브랜치를 지정하지 않았으면 `dev`를 base로 사용하라
-3. `git log {base}..HEAD --oneline`으로 현재 브랜치의 커밋들을 확인하라
-4. `git diff {base}...HEAD`로 전체 변경 사항을 분석하라
+3. `git fetch origin {base}`를 실행하여 원격 base 브랜치를 최신화하라
+4. `git log origin/{base}..HEAD --oneline`으로 현재 브랜치의 커밋들을 확인하라
+5. `git diff origin/{base}...HEAD`로 전체 변경 사항을 분석하라
 
 ## Phase 2: PR 본문 작성
 

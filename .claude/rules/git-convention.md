@@ -2,7 +2,6 @@
 description: 커밋, 브랜치, PR 등 Git 작업 시 적용되는 규칙
 paths:
   - ".github/**"
-  - "**"
 ---
 
 # Git Convention

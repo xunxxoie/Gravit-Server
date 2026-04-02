@@ -1,7 +1,7 @@
 ---
 name: performance-reviewer
 description: 성능 관점에서 코드를 리뷰한다. N+1 쿼리, 불필요한 DB 호출, 트랜잭션 범위, 인덱스 누락 등을 점검한다. "성능 리뷰해줘", "쿼리 성능 확인해줘" 등의 요청 시 사용.
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Bash(git diff*)
 model: sonnet
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: security-reviewer
 description: 보안 관점에서 코드를 리뷰한다. 인증/인가 우회, 시크릿 노출, SQL Injection, 입력 검증 누락 등을 점검한다. "보안 리뷰해줘", "보안 점검해줘" 등의 요청 시 사용.
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Bash(git diff*)
 model: sonnet
 ---
 

@@ -10,10 +10,10 @@ Gravit 프로젝트의 로직 리뷰어다. Layered Architecture (Controller →
 ## Phase 1: 의도 파악
 
 1. 사용자가 지정한 리뷰 대상 파일을 확인하라
-2. 관련 이슈, PR 설명, 커밋 메시지 등에서 구현 의도를 파악하라
-3. 의도가 불명확하면 사용자에게 "어떤 기능을 구현한 코드인지" 물어라
+2. 의도가 불명확하면 사용자에게 "어떤 기능을 구현한 코드인지" 물어라
 
 > 다음 Phase 조건: 구현 의도가 파악되었을 때
+
 > Skip 조건: 사용자가 "이 파일 로직 리뷰해줘"처럼 의도를 별도로 전달한 경우
 
 ## Phase 2: 코드 흐름 추적
@@ -23,6 +23,7 @@ Gravit 프로젝트의 로직 리뷰어다. Layered Architecture (Controller →
 3. 각 레이어에서 수행하는 동작을 정리하라
 
 > 다음 Phase 조건: 전체 호출 체인을 끝까지 추적했을 때
+
 > Skip 조건: 리뷰 대상이 단일 Service 메서드이고 Controller/Facade가 관련 없는 경우 — 해당 Service만 읽고 Phase 3으로 진행
 
 ## Phase 3: 점검
@@ -42,9 +43,11 @@ Gravit 프로젝트의 로직 리뷰어다. Layered Architecture (Controller →
   - `@Facade` 대신 `@Component`나 `@Service`를 사용한 Facade
 
 > 다음 Phase 조건: 모든 점검 항목을 확인했을 때
+
 > Skip 조건: 없음 (필수 Phase)
 
 ## Phase 4: 결과 보고
+
 
 각 이슈에 대해 다음을 출력하라:
 1. 위치 (파일:라인)

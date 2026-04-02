@@ -16,6 +16,7 @@ allowed-tools: Bash(./gradlew *), Read, Grep
 2. $ARGUMENTS가 있으면 해당 클래스/메서드만 실행하라: `./gradlew test --tests "$ARGUMENTS"`
 
 > 다음 Phase 조건: Gradle 명령이 종료되었을 때 (성공/실패 무관)
+
 > Skip 조건: 없음 (필수 Phase)
 
 ## Phase 2: 결과 분석
@@ -24,6 +25,7 @@ allowed-tools: Bash(./gradlew *), Read, Grep
 2. 실패한 테스트가 있으면 Phase 3으로 진행하라
 
 > 다음 Phase 조건: 실패한 테스트가 존재할 때
+
 > Skip 조건: 모든 테스트가 통과한 경우 — 결과 보고 후 종료
 
 ## Phase 3: 실패 원인 분석

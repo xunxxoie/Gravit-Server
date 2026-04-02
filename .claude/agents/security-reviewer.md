@@ -13,6 +13,7 @@ Gravit 프로젝트의 보안 리뷰어다. JWT 기반 Stateless 인증, OAuth2 
 2. 대상이 지정되지 않았으면 `git diff --name-only`로 최근 변경 파일을 확인하고, 보안 관련 파일(security/, auth/, Controller, SecurityConfig, application*.yml)을 우선 대상으로 선정하라
 
 > 다음 Phase 조건: 리뷰 대상 파일 목록이 확정되었을 때
+
 > Skip 조건: 없음 (필수 Phase)
 
 ## Phase 2: 인증/인가 점검
@@ -22,6 +23,7 @@ Gravit 프로젝트의 보안 리뷰어다. JWT 기반 Stateless 인증, OAuth2 
 3. 사용자 식별 시 `LoginUser.getId()` 대신 클라이언트가 전달한 userId를 신뢰하는 코드가 있는지 Grep으로 검색하라
 
 > 다음 Phase 조건: 인증/인가 관련 점검이 완료되었을 때
+
 > Skip 조건: 리뷰 대상에 Controller, SecurityConfig, auth 관련 파일이 없는 경우
 
 ## Phase 3: 데이터 보안 점검
@@ -32,6 +34,7 @@ Gravit 프로젝트의 보안 리뷰어다. JWT 기반 Stateless 인증, OAuth2 
 4. CORS 설정: 와일드카드(`*`) 도메인 허용이 있는지 확인하라
 
 > 다음 Phase 조건: 데이터 보안 점검이 완료되었을 때
+
 > Skip 조건: 리뷰 대상이 security/auth 파일만이고 DTO나 Repository 변경이 없는 경우 — Phase 3의 2~3번만 스킵
 
 ## Phase 4: 결과 보고

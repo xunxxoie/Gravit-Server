@@ -20,6 +20,7 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 4. 각 엔드포인트의 반환 타입을 파악하라
 
 > 다음 Phase 조건: 모든 엔드포인트의 메서드 시그니처가 파악되었을 때
+
 > Skip 조건: 없음 (필수 Phase)
 
 ## Phase 2: 예외 수집
@@ -30,21 +31,17 @@ allowed-tools: Read, Grep, Glob, Edit, Write
 4. 엔드포인트별로 발생 가능한 에러 목록을 정리하라
 
 > 다음 Phase 조건: 모든 엔드포인트의 에러 코드 목록이 정리되었을 때
+
 > Skip 조건: Controller가 단순 조회(GET)만 있고, Service에서 예외를 던지지 않는 경우 — 이 경우 500 응답만 포함하고 Phase 3으로 진행
 
 ## Phase 3: Docs 인터페이스 작성
 
-1. [references/api-docs-template.md](references/api-docs-template.md)를 읽어 템플릿 구조를 확인하라
-2. `controller/docs/{Controller}Docs.java` 파일을 생성하라
-3. 각 엔드포인트에 대해 다음을 작성하라:
-   - `@Operation`: summary(기능 한 줄 요약), description(상세 설명)
-   - JWT 필요 API는 description에 `"🔐 <strong>Jwt 필요</strong><br>"` 포함
-   - `@ApiResponses`: 성공 응답 + Phase 2에서 수집한 에러 응답 + 500 응답(`GLOBAL_5001`)
-   - `@ExampleObject`의 value에는 `CustomErrorCode`의 실제 code와 message를 사용
-   - PathVariable/RequestParam에 `@Parameter(description = "...")` 추가
-4. `@Tag(name = "{Domain} API", description = "{도메인} 관련 API")` 를 인터페이스에 선언하라
+1. [references/api-docs-convention.md](references/api-docs-convention.md)를 읽어 어노테이션 규칙과 작성 컨벤션을 확인하라
+2. [references/api-docs-template.md](references/api-docs-template.md)를 읽어 코드 템플릿 구조를 확인하라
+3. 컨벤션과 템플릿에 따라 `controller/docs/{Controller}Docs.java` 파일을 생성하라
 
 > 다음 Phase 조건: Docs 인터페이스 파일이 작성되었을 때
+
 > Skip 조건: 없음 (필수 Phase)
 
 ## Phase 4: Controller 연결 및 검증

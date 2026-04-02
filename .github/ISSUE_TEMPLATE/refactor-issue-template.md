@@ -1,0 +1,42 @@
+---
+name: Refactor issue template
+about: For refactor issue 
+title: 'refactor: '
+labels: "\U0001F9F9 Refactor"
+assignees:
+---
+
+### 1.  Issue Description
+
+---
+
+이슈에 대한 설명을 작성해주세요.
+
+<br>
+
+### 2. Issue Task
+
+---
+
+- [ ] 작업명
+
+<br>
+
+### 3. Related Domain
+
+---
+**작업과 연관된 도메인을 선택해주세요.**
+
+- [ ] Authentication
+- [ ] User
+- [ ] Friend
+- [ ] Chapter / Unit / Lesson / Problem / Option
+- [ ] Learning
+- [ ] Bookmark / WrongAnsweredNote
+- [ ] CS Note
+- [ ] League / Season
+- [ ] Mission
+- [ ] Notice
+- [ ] Admin / Report
+- [ ] Infra / CI·CD
+- [ ] Global (공통 모듈)

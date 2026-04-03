@@ -2,7 +2,6 @@ package gravit.code.global.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import gravit.code.global.listener.QueryMetricsListener;
-import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +10,11 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 
+import javax.sql.DataSource;
+
+@Profile("!test")
 @RequiredArgsConstructor
 @Configuration
 public class DatasourceConfig {

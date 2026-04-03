@@ -8,14 +8,12 @@ import org.testcontainers.utility.DockerImageName;
 
 @TestConfiguration(proxyBeanMethods = false)
 public class PostgreSQLTestContainerConfig {
-
     @Bean
     @ServiceConnection
-    public PostgreSQLContainer<?> postgreSQLContainer() {
+    public PostgreSQLContainer<?> postgresContainer() {
         return new PostgreSQLContainer<>(DockerImageName.parse("postgres:15-alpine"))
                 .withDatabaseName("gravit_test_db")
                 .withUsername("username")
-                .withPassword("password")
-                .withReuse(true);
+                .withPassword("password");
     }
 }

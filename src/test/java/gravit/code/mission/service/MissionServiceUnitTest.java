@@ -133,6 +133,7 @@ class MissionServiceUnitTest {
             assertThat(mission1.isCompleted()).isFalse();
             assertThat(mission1.getProgressRate()).isEqualTo(0.0);
             assertThat(mission2.isCompleted()).isFalse();
+            assertThat(mission2.getProgressRate()).isEqualTo(0.0);
         }
 
         @Test

@@ -51,7 +51,7 @@ class WrongAnsweredNoteServiceUnitTest {
         }
 
         @Test
-        void 기존_오답_노트가_있으면_중복_저장하지_않는다() {
+        void 기존_오답_노트가_있으면_새로_생성하지_않고_기존_것을_저장한다() {
             // given
             long userId = 1L;
             long problemId = 1L;
@@ -63,8 +63,9 @@ class WrongAnsweredNoteServiceUnitTest {
             // when
             wrongAnsweredNoteService.saveWrongAnsweredNote(userId, problemId);
 
-            // then
+            // then — 새 WrongAnsweredNote를 생성하지 않고 기존 객체 그대로 저장
             verify(wrongAnsweredNoteRepository).save(existing);
+            verify(wrongAnsweredNoteRepository, never()).save(argThat(note -> note != existing));
         }
     }
 

@@ -34,7 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MissionServiceTest {
+class MissionServiceUnitTest {
 
     @InjectMocks
     private MissionService missionService;
@@ -269,10 +269,11 @@ class MissionServiceTest {
             when(lessonSubmissionQueryService.getLessonSubmissionCount(userId, lessonId)).thenReturn(1);
 
             // when
-            missionService.handleLessonMission(userId, lessonId, 300, 80); // 5분
+            missionService.handleLessonMission(userId, lessonId, 120, 80); // 2분 (40% 진행, 미완료)
 
             // then
             assertThat(mission.getProgressRate()).isGreaterThan(0.0);
+            assertThat(mission.isCompleted()).isFalse();
         }
     }
 

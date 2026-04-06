@@ -27,3 +27,4 @@ public class ChapterQueryService {
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.CHAPTER_NOT_FOUND));
     }
 }
+

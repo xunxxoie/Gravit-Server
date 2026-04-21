@@ -6,14 +6,17 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${springdoc.server-url}")
+    private String serverUrl;
 
     @Bean
     public OpenAPI openAPI() {
@@ -25,7 +28,7 @@ public class SwaggerConfig {
                 .components(components)
                 .info(apiInfo())
                 .addSecurityItem(requirement)
-                .servers(servers());
+                .servers(List.of(new Server().url(serverUrl)));
     }
 
     private SecurityScheme securityScheme(){
@@ -44,10 +47,5 @@ public class SwaggerConfig {
                 .version("1.0.0");
     }
 
-    private List<Server> servers() {
-        List<Server> servers = new ArrayList<>();
-        servers.add(new Server().url("https://grav-it.inuappcenter.kr").description("Appcenter env"));
-        servers.add(new Server().url("http://localhost:8080").description("Dev env"));
-        return servers;
-    }
+
 }

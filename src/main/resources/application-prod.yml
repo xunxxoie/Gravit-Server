@@ -124,6 +124,9 @@ admin:
     enabled: true
     emails: ${ADMIN_BOOTSTRAP_EMAILS}
 
+springdoc:
+  server-url: https://grav-it.inuappcenter.kr
+
 management:
   endpoints:
     web:

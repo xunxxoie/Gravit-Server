@@ -120,6 +120,9 @@ admin:
     enabled: true
     emails: ${ADMIN_BOOTSTRAP_EMAILS}
 
+springdoc:
+  server-url: http://localhost:8080
+
 management:
   endpoints:
     web:

@@ -15,7 +15,7 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${springdoc.server-url}")
+    @Value("${springdoc.server-url:http://localhost:8080}")
     private String serverUrl;
 
     @Bean

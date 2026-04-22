@@ -9,7 +9,6 @@ jobs:
   test:
     name: 테스트 코드 실행
     runs-on: ubuntu-latest
-
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4

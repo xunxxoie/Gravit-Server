@@ -41,10 +41,6 @@ out/
 ### OS Files ###
 .DS_Store
 
-### Claude Code ###
-CLAUDE.md
-TASKS.md
-
 ### Volume ###
 postgres_data_local
 redis_data_local

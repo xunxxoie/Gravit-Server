@@ -3,6 +3,7 @@ package gravit.code.auth.infrastructure.client;
 import gravit.code.auth.service.oauth.OAuthClient;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
+import java.net.http.HttpTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
@@ -40,6 +42,13 @@ public class OAuthHttpClientAdapter implements OAuthClient {
         } catch (HttpClientErrorException.BadRequest e) {
             log.warn("유효하지 않은 AuthCode 요청 : {}", e.getMessage());
             throw new RestApiException(CustomErrorCode.AUTH_CODE_INVALID);
+        } catch(ResourceAccessException e){ // timeout 과 일반 네트워크 에러를 구분
+            if(e.getCause() instanceof HttpTimeoutException){
+                log.warn("OAuth 서버 timeout 발생", e);
+            }else{
+                log.warn("OAuth 서버 통신 오류", e);
+            }
+            throw new RestApiException(CustomErrorCode.OAUTH_SERVER_ERROR);
         } catch (RestClientException e) {
             log.error("OAuth 서버 통신 오류", e);
             throw new RestApiException(CustomErrorCode.OAUTH_SERVER_ERROR);

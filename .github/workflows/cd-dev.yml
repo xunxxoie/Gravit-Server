@@ -19,7 +19,7 @@ jobs:
       - name: JDK 버전 설정
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'adopt'
 
       - name: application-dev.yml 환경변수 주입

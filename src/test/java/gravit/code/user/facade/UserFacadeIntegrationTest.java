@@ -4,6 +4,8 @@ import gravit.code.chapter.domain.Chapter;
 import gravit.code.chapter.repository.ChapterRepository;
 import gravit.code.dailyLearningRecord.domain.DailyLearningRecord;
 import gravit.code.dailyLearningRecord.repository.DailyLearningRecordRepository;
+import gravit.code.global.exception.domain.CustomErrorCode;
+import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
 import gravit.code.league.repository.LeagueRepository;
 import gravit.code.learning.domain.Learning;
@@ -171,7 +173,9 @@ class UserFacadeIntegrationTest {
 
             // when & then
             assertThatThrownBy(() -> userFacade.getMainPage(nonExistentUserId))
-                    .isInstanceOf(RuntimeException.class);
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(CustomErrorCode.USER_NOT_FOUND);
         }
     }
 }

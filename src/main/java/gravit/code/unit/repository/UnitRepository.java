@@ -41,6 +41,13 @@ public interface UnitRepository extends JpaRepository<Unit, Long> {
     List<Long> findIdsByChapterIdOrderById(@Param("chapterId") long chapterId);
 
     @Query("""
+        SELECT u.id
+        FROM Unit u
+        ORDER BY u.id ASC
+    """)
+    List<Long> findAllUnitIdsOrderById();
+
+    @Query("""
         SELECT new gravit.code.unit.dto.response.UnitProgressRow(
             u.id, u.title, COUNT(DISTINCT l.id), COUNT(DISTINCT ls.lessonId)
         )

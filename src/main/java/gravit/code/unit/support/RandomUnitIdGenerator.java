@@ -1,5 +1,7 @@
 package gravit.code.unit.support;
 
+import gravit.code.global.exception.domain.CustomErrorCode;
+import gravit.code.global.exception.domain.RestApiException;
 import lombok.experimental.UtilityClass;
 
 import java.util.Random;
@@ -7,19 +9,23 @@ import java.util.Random;
 @UtilityClass
 public class RandomUnitIdGenerator {
 
-    public static long[] pickTwoRandomUnitId(
+    public static int[] pickTwoDistinctIndexes(
             long seed,
-            long totalUnits
+            int totalUnits
     ) {
+        if (totalUnits < 2) {
+            throw new RestApiException(CustomErrorCode.UNIT_NOT_FOUND);
+        }
+
         Random random = new Random(seed);
 
-        long first = random.nextLong(totalUnits) + 1;
-        long second;
+        int first = random.nextInt(totalUnits);
+        int second;
 
         do {
-            second = random.nextLong(totalUnits) + 1;
+            second = random.nextInt(totalUnits);
         } while (second == first);
 
-        return new long[]{first, second};
+        return new int[]{first, second};
     }
 }

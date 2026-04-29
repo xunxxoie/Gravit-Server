@@ -50,16 +50,18 @@ public class UnitQueryService {
     }
 
     public List<RecommendedUnit> getRecommendedUnits(long userId) {
-        long totalUnits = unitRepository.count();
+        List<Long> allUnitIds = unitRepository.findAllUnitIdsOrderById();
 
-        if (totalUnits < 2) {
+        if (allUnitIds.size() < 2) {
             throw new RestApiException(CustomErrorCode.UNIT_NOT_FOUND);
         }
 
         long seed = userId * 31L + LocalDate.now(KST).toEpochDay();
 
-        long[] unitIds = RandomUnitIdGenerator.pickTwoRandomUnitId(seed, totalUnits);
+        int[] indexes = RandomUnitIdGenerator.pickTwoDistinctIndexes(seed, allUnitIds.size());
 
-        return unitRepository.findRecommendedUnitsByIds(List.of(unitIds[0], unitIds[1]));
+        List<Long> targetIds = List.of(allUnitIds.get(indexes[0]), allUnitIds.get(indexes[1]));
+
+        return unitRepository.findRecommendedUnitsByIds(targetIds);
     }
 }

@@ -330,6 +330,7 @@ class MissionServiceIntegrationTest {
             assertThat(result.missionType()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.name());
             assertThat(result.missionDescription()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.getDescription());
             assertThat(result.awardXp()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.getAwardXp());
+            assertThat(result.progressRate()).isEqualTo(0.0);
             assertThat(result.isCompleted()).isFalse();
         }
 

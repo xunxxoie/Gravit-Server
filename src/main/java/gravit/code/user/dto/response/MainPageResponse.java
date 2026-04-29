@@ -1,54 +1,45 @@
 package gravit.code.user.dto.response;
 
+import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecord;
+import gravit.code.league.dto.response.LeagueDetail;
 import gravit.code.learning.dto.response.LearningDetail;
 import gravit.code.mission.dto.response.MissionDetail;
-import io.swagger.v3.oas.annotations.media.Schema;
+import gravit.code.unit.dto.response.RecommendedUnit;
 import lombok.AccessLevel;
 import lombok.Builder;
 
+import java.util.List;
+
 @Builder(access = AccessLevel.PRIVATE)
 public record MainPageResponse(
-        @Schema(
-                description = "닉네임",
-                example = "삼준서"
-        )
+        int profileImgNumber,
         String nickname,
-
-        @Schema(
-                description = "리그 이름(티어)",
-                example = "브론즈"
-        )
-        String leagueName,
-
-        @Schema(
-                description = "유저 레벨 관련 정보"
-        )
         UserLevelDetail userLevelDetail,
-
-        @Schema(
-                description = "유저 학습 관련 정보"
-        )
+        LeagueDetail leagueDetail,
         LearningDetail learningDetail,
-
-        @Schema(
-                description = "미션 관련 정보"
-        )
+        List<RecommendedUnit> recommendedUnits,
+        WeeklyLearningRecord weeklyLearningRecord,
         MissionDetail missionDetail
 ) {
-
-        public static MainPageResponse of(
-                String nickname,
-                String leagueName,
-                UserLevelDetail userLevelDetail,
-                MissionDetail missionDetail,
-                LearningDetail learningDetail
-        ) {
-                return MainPageResponse.builder()
-                        .nickname(nickname)
-                        .leagueName(leagueName)
-                        .userLevelDetail(userLevelDetail)
-                        .missionDetail(missionDetail)
-                        .learningDetail(learningDetail)
-                        .build();
-        }
+    public static MainPageResponse of(
+            int profileImgNumber,
+            String nickname,
+            UserLevelDetail userLevelDetail,
+            LeagueDetail leagueDetail,
+            LearningDetail learningDetail,
+            List<RecommendedUnit> recommendedUnits,
+            WeeklyLearningRecord weeklyLearningRecord,
+            MissionDetail missionDetail
+    ) {
+        return MainPageResponse.builder()
+                .profileImgNumber(profileImgNumber)
+                .nickname(nickname)
+                .userLevelDetail(userLevelDetail)
+                .leagueDetail(leagueDetail)
+                .learningDetail(learningDetail)
+                .recommendedUnits(recommendedUnits)
+                .weeklyLearningRecord(weeklyLearningRecord)
+                .missionDetail(missionDetail)
+                .build();
+    }
 }

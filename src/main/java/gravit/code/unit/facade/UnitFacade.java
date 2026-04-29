@@ -27,7 +27,7 @@ public class UnitFacade {
             long userId,
             long chapterId
     ){
-        ChapterSummary chapterSummary = chapterQueryService.getChapterById(chapterId);
+        ChapterSummary chapterSummary = chapterQueryService.getChapterSummary(chapterId);
 
         List<UnitSummary> unitSummaries = unitQueryService.getAllUnitSummaryByChapterId(chapterId);
 

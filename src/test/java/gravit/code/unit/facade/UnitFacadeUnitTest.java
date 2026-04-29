@@ -50,7 +50,7 @@ class UnitFacadeUnitTest {
                     new UnitSummary(2L, "스레드", "스레드 개념")
             );
 
-            when(chapterQueryService.getChapterById(chapterId)).thenReturn(chapterSummary);
+            when(chapterQueryService.getChapterSummary(chapterId)).thenReturn(chapterSummary);
             when(unitQueryService.getAllUnitSummaryByChapterId(chapterId)).thenReturn(unitSummaries);
             when(learningProgressRateService.getUnitProgress(1L, userId)).thenReturn(80.0);
             when(learningProgressRateService.getUnitProgress(2L, userId)).thenReturn(0.0);
@@ -75,7 +75,7 @@ class UnitFacadeUnitTest {
             long chapterId = 1L;
             ChapterSummary chapterSummary = new ChapterSummary(chapterId, "운영체제", "운영체제 기초 개념");
 
-            when(chapterQueryService.getChapterById(chapterId)).thenReturn(chapterSummary);
+            when(chapterQueryService.getChapterSummary(chapterId)).thenReturn(chapterSummary);
             when(unitQueryService.getAllUnitSummaryByChapterId(chapterId)).thenReturn(List.of());
 
             // when

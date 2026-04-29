@@ -17,4 +17,12 @@ public interface LeagueRepository extends JpaRepository<League, Long> {
                 order by l.minLp asc
             """)
     Optional<League> findByLpBetween(@Param("lp") int lp);
+
+    @Query("""
+        SELECT l
+        FROM League L
+    """)
+    Optional<League> findByUserId(long userId);
+
+
 }

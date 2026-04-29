@@ -75,7 +75,7 @@ class ChapterQueryServiceTest {
                     .thenReturn(Optional.of(expected));
 
             // when
-            ChapterSummary result = chapterQueryService.getChapterById(chapterId);
+            ChapterSummary result = chapterQueryService.getChapterSummary(chapterId);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -89,7 +89,7 @@ class ChapterQueryServiceTest {
                     .thenReturn(Optional.empty());
 
             // when & then
-            assertThatThrownBy(() -> chapterQueryService.getChapterById(chapterId))
+            assertThatThrownBy(() -> chapterQueryService.getChapterSummary(chapterId))
                     .isInstanceOf(RestApiException.class)
                     .extracting(e -> ((RestApiException) e).getErrorCode())
                     .isEqualTo(CustomErrorCode.CHAPTER_NOT_FOUND);

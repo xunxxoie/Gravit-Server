@@ -68,7 +68,7 @@ class ChapterQueryServiceIntegrationTest {
             Chapter saved = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
 
             // when
-            ChapterSummary result = chapterQueryService.getChapterById(saved.getId());
+            ChapterSummary result = chapterQueryService.getChapterSummary(saved.getId());
 
             // then
             assertSoftly(softly -> {
@@ -81,7 +81,7 @@ class ChapterQueryServiceIntegrationTest {
         @Test
         void 존재하지_않으면_예외를_던진다() {
             // when & then
-            assertThatThrownBy(() -> chapterQueryService.getChapterById(999L))
+            assertThatThrownBy(() -> chapterQueryService.getChapterSummary(999L))
                     .isInstanceOf(RestApiException.class);
         }
     }

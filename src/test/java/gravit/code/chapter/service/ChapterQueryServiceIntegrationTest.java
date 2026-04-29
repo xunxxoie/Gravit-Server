@@ -85,4 +85,32 @@ class ChapterQueryServiceIntegrationTest {
                     .isInstanceOf(RestApiException.class);
         }
     }
+
+    @Nested
+    @DisplayName("챕터 엔티티를 조회할 때")
+    class GetChapter {
+
+        @Test
+        void 성공한다() {
+            // given
+            Chapter saved = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
+
+            // when
+            Chapter result = chapterQueryService.getChapter(saved.getId());
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result.getId()).isEqualTo(saved.getId());
+                softly.assertThat(result.getTitle()).isEqualTo("운영체제");
+                softly.assertThat(result.getDescription()).isEqualTo("운영체제 기초 개념");
+            });
+        }
+
+        @Test
+        void 존재하지_않으면_예외를_던진다() {
+            // when & then
+            assertThatThrownBy(() -> chapterQueryService.getChapter(999L))
+                    .isInstanceOf(RestApiException.class);
+        }
+    }
 }

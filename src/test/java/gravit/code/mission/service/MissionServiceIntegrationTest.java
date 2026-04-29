@@ -7,6 +7,7 @@ import gravit.code.lesson.repository.LessonSubmissionRepository;
 import gravit.code.mission.domain.Mission;
 import gravit.code.mission.domain.MissionType;
 import gravit.code.mission.dto.event.FollowMissionEvent;
+import gravit.code.mission.dto.response.MissionDetail;
 import gravit.code.mission.dto.response.MissionSummary;
 import gravit.code.mission.repository.MissionRepository;
 import gravit.code.support.TCSpringBootTest;
@@ -309,6 +310,39 @@ class MissionServiceIntegrationTest {
             Mission result = missionRepository.findByUserId(user.getId()).get();
             assertThat(result.isCompleted()).isTrue();
             assertThat(result.getProgressRate()).isEqualTo(100.0);
+        }
+    }
+
+    @Nested
+    @DisplayName("미션 상세를 조회할 때")
+    class GetMissionDetail {
+
+        @Test
+        void 미션이_존재하면_상세를_반환한다() {
+            // given
+            User user = createAndSaveUser();
+            missionRepository.save(Mission.create(MissionType.COMPLETE_LESSON_ONE, user.getId()));
+
+            // when
+            MissionDetail result = missionService.getMissionDetail(user.getId());
+
+            // then
+            assertThat(result.missionType()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.name());
+            assertThat(result.missionDescription()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.getDescription());
+            assertThat(result.awardXp()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.getAwardXp());
+            assertThat(result.isCompleted()).isFalse();
+        }
+
+        @Test
+        void 미션이_존재하지_않으면_예외가_발생한다() {
+            // given
+            long nonExistentUserId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> missionService.getMissionDetail(nonExistentUserId))
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
         }
     }
 }

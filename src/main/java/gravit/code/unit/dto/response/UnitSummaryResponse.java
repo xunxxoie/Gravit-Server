@@ -3,7 +3,7 @@ package gravit.code.unit.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-public record UnitSummary(
+public record UnitSummaryResponse(
 
         @Schema(
                 description = "유닛 아이디",

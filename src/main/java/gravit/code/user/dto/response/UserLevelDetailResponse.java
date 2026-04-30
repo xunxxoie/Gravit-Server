@@ -4,19 +4,19 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record UserLevelDetail(
+public record UserLevelDetailResponse(
         int level,
         int currentXp,
         int maxXp,
         double levelRate
 ) {
-    public static UserLevelDetail of(
+    public static UserLevelDetailResponse of(
             int level,
             int currentXp,
             int maxXp,
             double levelRate
     ) {
-        return UserLevelDetail.builder()
+        return UserLevelDetailResponse.builder()
                 .level(level)
                 .currentXp(currentXp)
                 .maxXp(maxXp)

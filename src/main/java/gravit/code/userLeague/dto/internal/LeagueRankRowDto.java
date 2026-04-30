@@ -1,8 +1,8 @@
-package gravit.code.userLeague.dto.response;
+package gravit.code.userLeague.dto.internal;
 
 import jakarta.validation.constraints.NotNull;
 
-public record LeagueRankRow(
+public record LeagueRankRowDto(
 
         int rank,
         long userId,

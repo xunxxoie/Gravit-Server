@@ -1,4 +1,4 @@
-package gravit.code.friend.dto;
+package gravit.code.friend.dto.internal;
 
 public record SearchUserDto(
         long userId,

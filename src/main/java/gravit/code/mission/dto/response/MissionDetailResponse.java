@@ -5,15 +5,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record MissionDetail(
+public record MissionDetailResponse(
         String missionType,
         String missionDescription,
         int awardXp,
         double progressRate,
         boolean isCompleted
 ) {
-    public static MissionDetail from(Mission mission) {
-        return MissionDetail.builder()
+    public static MissionDetailResponse from(Mission mission) {
+        return MissionDetailResponse.builder()
                 .missionType(mission.getMissionType().name())
                 .missionDescription(mission.getMissionType().getDescription())
                 .awardXp(mission.getMissionType().getAwardXp())

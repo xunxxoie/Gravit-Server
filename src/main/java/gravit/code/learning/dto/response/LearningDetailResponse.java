@@ -1,27 +1,27 @@
 package gravit.code.learning.dto.response;
 
-import gravit.code.unit.dto.response.UnitProgressSummary;
+import gravit.code.unit.dto.response.UnitProgressSummaryResponse;
 import lombok.AccessLevel;
 import lombok.Builder;
 
 import java.util.List;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record LearningDetail(
+public record LearningDetailResponse(
         int consecutiveSolvedDays,
         long recentSolvedChapterId,
         String recentSolvedChapterTitle,
         double recentSolvedChapterProgressRate,
-        List<UnitProgressSummary> units
+        List<UnitProgressSummaryResponse> units
 ) {
-    public static LearningDetail of(
+    public static LearningDetailResponse of(
             int consecutiveSolvedDays,
             long recentSolvedChapterId,
             String recentSolvedChapterTitle,
             double recentSolvedChapterProgressRate,
-            List<UnitProgressSummary> units
+            List<UnitProgressSummaryResponse> units
     ){
-        return LearningDetail.builder()
+        return LearningDetailResponse.builder()
                 .consecutiveSolvedDays(consecutiveSolvedDays)
                 .recentSolvedChapterId(recentSolvedChapterId)
                 .recentSolvedChapterTitle(recentSolvedChapterTitle)

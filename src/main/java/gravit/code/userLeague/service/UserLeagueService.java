@@ -3,7 +3,7 @@ package gravit.code.userLeague.service;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
-import gravit.code.league.dto.response.LeagueDetail;
+import gravit.code.league.dto.response.LeagueDetailResponse;
 import gravit.code.league.repository.LeagueRepository;
 import gravit.code.season.domain.Season;
 import gravit.code.season.service.SeasonService;
@@ -33,14 +33,14 @@ public class UserLeagueService {
     }
 
     @Transactional(readOnly = true)
-    public LeagueDetail getUserLeagueDetail(
+    public LeagueDetailResponse getUserLeagueDetail(
             long userId
     ){
         // lazy로 걸려있어서 .getLeague()에서 추가 쿼리가 나감. 메서드 분리를... 해야할지?
         UserLeague userLeague = userLeagueRepository.findByUserId(userId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.USER_LEAGUE_NOT_FOUND));
 
-        return LeagueDetail.of(
+        return LeagueDetailResponse.of(
                 userLeague.getLeague().getId(),
                 userLeague.getLeague().getName(),
                 userLeague.getLp(),

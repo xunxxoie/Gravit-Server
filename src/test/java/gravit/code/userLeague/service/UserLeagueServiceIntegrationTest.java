@@ -3,7 +3,7 @@ package gravit.code.userLeague.service;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
-import gravit.code.league.dto.response.LeagueDetail;
+import gravit.code.league.dto.response.LeagueDetailResponse;
 import gravit.code.league.repository.LeagueRepository;
 import gravit.code.season.domain.Season;
 import gravit.code.season.repository.SeasonRepository;
@@ -48,7 +48,7 @@ class UserLeagueServiceIntegrationTest {
 
     @Nested
     @DisplayName("사용자의 리그 상세를 조회할 때")
-    class GetUserLeagueDetail {
+    class GetUserLeagueDetailResponse {
 
         @Test
         void 리그_정보가_존재하면_상세를_반환한다() {
@@ -61,7 +61,7 @@ class UserLeagueServiceIntegrationTest {
             userLeagueRepository.save(userLeague);
 
             // when
-            LeagueDetail result = userLeagueService.getUserLeagueDetail(user.getId());
+            LeagueDetailResponse result = userLeagueService.getUserLeagueDetail(user.getId());
 
             // then
             assertSoftly(softly -> {

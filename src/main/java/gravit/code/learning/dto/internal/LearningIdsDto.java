@@ -1,4 +1,4 @@
-package gravit.code.learning.dto.common;
+package gravit.code.learning.dto.internal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
 @Schema(description = "학습 계층 ID 정보")
-public record LearningIds(
+public record LearningIdsDto(
         @Schema(
                 description = "챕터 아이디",
                 example = "1"
@@ -25,8 +25,8 @@ public record LearningIds(
         )
         long lessonId
 ) {
-    public static LearningIds of(long chapterId, long unitId, long lessonId) {
-        return LearningIds.builder()
+    public static LearningIdsDto of(long chapterId, long unitId, long lessonId) {
+        return LearningIdsDto.builder()
                 .chapterId(chapterId)
                 .unitId(unitId)
                 .lessonId(lessonId)

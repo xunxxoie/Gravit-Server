@@ -1,6 +1,6 @@
 package gravit.code.dailyLearningRecord.service;
 
-import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecord;
+import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecordResponse;
 import gravit.code.dailyLearningRecord.repository.DailyLearningRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class DailyLearningRecordService {
     private final DailyLearningRecordRepository dailyLearningRecordRepository;
 
     @Transactional(readOnly = true)
-    public WeeklyLearningRecord getWeeklyLearningRecord(long userId) {
+    public WeeklyLearningRecordResponse getWeeklyLearningRecord(long userId) {
         LocalDate today = LocalDate.now(KST);
         LocalDate monday = today.with(DayOfWeek.MONDAY);
         LocalDate sunday = today.with(DayOfWeek.SUNDAY);
@@ -32,7 +32,7 @@ public class DailyLearningRecordService {
                 .map(LocalDate::getDayOfWeek)
                 .collect(Collectors.toUnmodifiableSet());
 
-        return new WeeklyLearningRecord(
+        return new WeeklyLearningRecordResponse(
                 solvedDays.contains(DayOfWeek.MONDAY),
                 solvedDays.contains(DayOfWeek.TUESDAY),
                 solvedDays.contains(DayOfWeek.WEDNESDAY),

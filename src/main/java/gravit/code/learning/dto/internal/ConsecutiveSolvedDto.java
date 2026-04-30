@@ -1,4 +1,4 @@
-package gravit.code.learning.dto.common;
+package gravit.code.learning.dto.internal;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;

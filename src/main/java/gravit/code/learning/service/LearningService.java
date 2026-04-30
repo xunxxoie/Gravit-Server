@@ -3,7 +3,7 @@ package gravit.code.learning.service;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.learning.domain.Learning;
-import gravit.code.learning.dto.common.ConsecutiveSolvedDto;
+import gravit.code.learning.dto.internal.ConsecutiveSolvedDto;
 import gravit.code.learning.repository.LearningRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

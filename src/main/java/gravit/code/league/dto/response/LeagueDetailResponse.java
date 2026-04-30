@@ -5,19 +5,19 @@ import lombok.Builder;
 import static lombok.AccessLevel.PRIVATE;
 
 @Builder(access = PRIVATE)
-public record LeagueDetail(
+public record LeagueDetailResponse(
         long leagueId,
         String leagueName,
         int currentLP,
         int maxLP
 ) {
-    public static LeagueDetail of(
+    public static LeagueDetailResponse of(
             long leagueId,
             String leagueName,
             int currentLP,
             int maxLP
     ){
-        return  LeagueDetail.builder()
+        return  LeagueDetailResponse.builder()
                 .leagueId(leagueId)
                 .leagueName(leagueName)
                 .currentLP(currentLP)

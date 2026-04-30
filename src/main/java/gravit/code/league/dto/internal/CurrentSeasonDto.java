@@ -1,4 +1,4 @@
-package gravit.code.league.dto;
+package gravit.code.league.dto.internal;
 
 import jakarta.validation.constraints.NotNull;
 

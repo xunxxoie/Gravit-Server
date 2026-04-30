@@ -1,6 +1,6 @@
 package gravit.code.user.domain;
 
-import gravit.code.user.dto.response.UserLevelDetail;
+import gravit.code.user.dto.response.UserLevelDetailResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
@@ -30,9 +30,9 @@ public class UserLevel {
         updateLevel(this.xp);
     }
 
-    public UserLevelDetail getUserLevelDetail() {
+    public UserLevelDetailResponse getUserLevelDetail() {
         int maxXp = (this.level == 10) ? this.xp : getMaxXp(this.level);
-        return UserLevelDetail.of(
+        return UserLevelDetailResponse.of(
                 this.level,
                 this.xp,
                 maxXp,

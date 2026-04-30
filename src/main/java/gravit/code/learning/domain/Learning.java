@@ -1,6 +1,6 @@
 package gravit.code.learning.domain;
 
-import gravit.code.learning.dto.common.ConsecutiveSolvedDto;
+import gravit.code.learning.dto.internal.ConsecutiveSolvedDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 @Builder(access = AccessLevel.PRIVATE)
-public record ChapterSummary(
+public record ChapterSummaryResponse(
 
         @Schema(
                 description = "챕터 아이디",

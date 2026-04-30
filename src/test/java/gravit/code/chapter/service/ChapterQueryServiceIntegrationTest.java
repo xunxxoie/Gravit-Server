@@ -1,7 +1,7 @@
 package gravit.code.chapter.service;
 
 import gravit.code.chapter.domain.Chapter;
-import gravit.code.chapter.dto.response.ChapterSummary;
+import gravit.code.chapter.dto.response.ChapterSummaryResponse;
 import gravit.code.chapter.repository.ChapterRepository;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.support.TCSpringBootTest;
@@ -38,7 +38,7 @@ class ChapterQueryServiceIntegrationTest {
             chapterRepository.save(Chapter.create("네트워크", "네트워크 기초 개념"));
 
             // when
-            List<ChapterSummary> result = chapterQueryService.getAllChapter();
+            List<ChapterSummaryResponse> result = chapterQueryService.getAllChapter();
 
             // then
             assertSoftly(softly -> {
@@ -51,7 +51,7 @@ class ChapterQueryServiceIntegrationTest {
         @Test
         void 챕터가_없으면_빈_리스트를_반환한다() {
             // when
-            List<ChapterSummary> result = chapterQueryService.getAllChapter();
+            List<ChapterSummaryResponse> result = chapterQueryService.getAllChapter();
 
             // then
             assertThat(result).isEmpty();
@@ -68,7 +68,7 @@ class ChapterQueryServiceIntegrationTest {
             Chapter saved = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
 
             // when
-            ChapterSummary result = chapterQueryService.getChapterSummary(saved.getId());
+            ChapterSummaryResponse result = chapterQueryService.getChapterSummary(saved.getId());
 
             // then
             assertSoftly(softly -> {

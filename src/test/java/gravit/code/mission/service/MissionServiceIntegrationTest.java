@@ -7,8 +7,8 @@ import gravit.code.lesson.repository.LessonSubmissionRepository;
 import gravit.code.mission.domain.Mission;
 import gravit.code.mission.domain.MissionType;
 import gravit.code.mission.dto.event.FollowMissionEvent;
-import gravit.code.mission.dto.response.MissionDetail;
-import gravit.code.mission.dto.response.MissionSummary;
+import gravit.code.mission.dto.response.MissionDetailResponse;
+import gravit.code.mission.dto.response.MissionSummaryResponse;
 import gravit.code.mission.repository.MissionRepository;
 import gravit.code.support.TCSpringBootTest;
 import gravit.code.user.domain.Role;
@@ -47,7 +47,7 @@ class MissionServiceIntegrationTest {
 
     @Nested
     @DisplayName("미션 요약을 조회할 때")
-    class GetMissionSummary {
+    class GetMissionSummaryResponse {
 
         @Test
         void 미션이_존재하면_요약을_반환한다() {
@@ -56,7 +56,7 @@ class MissionServiceIntegrationTest {
             missionRepository.save(Mission.create(MissionType.COMPLETE_LESSON_ONE, user.getId()));
 
             // when
-            MissionSummary result = missionService.getMissionSummary(user.getId());
+            MissionSummaryResponse result = missionService.getMissionSummary(user.getId());
 
             // then
             assertThat(result.missionType()).isEqualTo(MissionType.COMPLETE_LESSON_ONE);
@@ -315,7 +315,7 @@ class MissionServiceIntegrationTest {
 
     @Nested
     @DisplayName("미션 상세를 조회할 때")
-    class GetMissionDetail {
+    class GetMissionDetailResponse {
 
         @Test
         void 미션이_존재하면_상세를_반환한다() {
@@ -324,7 +324,7 @@ class MissionServiceIntegrationTest {
             missionRepository.save(Mission.create(MissionType.COMPLETE_LESSON_ONE, user.getId()));
 
             // when
-            MissionDetail result = missionService.getMissionDetail(user.getId());
+            MissionDetailResponse result = missionService.getMissionDetail(user.getId());
 
             // then
             assertThat(result.missionType()).isEqualTo(MissionType.COMPLETE_LESSON_ONE.name());

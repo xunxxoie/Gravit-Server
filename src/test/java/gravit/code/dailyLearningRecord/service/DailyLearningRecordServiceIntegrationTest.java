@@ -1,7 +1,7 @@
 package gravit.code.dailyLearningRecord.service;
 
 import gravit.code.dailyLearningRecord.domain.DailyLearningRecord;
-import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecord;
+import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecordResponse;
 import gravit.code.dailyLearningRecord.repository.DailyLearningRecordRepository;
 import gravit.code.support.TCSpringBootTest;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +30,7 @@ class DailyLearningRecordServiceIntegrationTest {
 
     @Nested
     @DisplayName("주간 학습 기록을 조회할 때")
-    class GetWeeklyLearningRecord {
+    class GetWeeklyLearningRecordResponse {
 
         @Test
         void 모든_요일에_학습_기록이_있으면_모두_true를_반환한다() {
@@ -42,7 +42,7 @@ class DailyLearningRecordServiceIntegrationTest {
             }
 
             // when
-            WeeklyLearningRecord result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
+            WeeklyLearningRecordResponse result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
 
             // then
             assertSoftly(softly -> {
@@ -65,7 +65,7 @@ class DailyLearningRecordServiceIntegrationTest {
             dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, monday.plusDays(2)));
 
             // when
-            WeeklyLearningRecord result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
+            WeeklyLearningRecordResponse result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
 
             // then
             assertSoftly(softly -> {
@@ -85,7 +85,7 @@ class DailyLearningRecordServiceIntegrationTest {
             long userId = 1L;
 
             // when
-            WeeklyLearningRecord result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
+            WeeklyLearningRecordResponse result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
 
             // then
             assertSoftly(softly -> {
@@ -109,7 +109,7 @@ class DailyLearningRecordServiceIntegrationTest {
             dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, nextMonday));
 
             // when
-            WeeklyLearningRecord result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
+            WeeklyLearningRecordResponse result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
 
             // then
             assertSoftly(softly -> {
@@ -132,7 +132,7 @@ class DailyLearningRecordServiceIntegrationTest {
             dailyLearningRecordRepository.save(DailyLearningRecord.create(otherUserId, monday));
 
             // when
-            WeeklyLearningRecord result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
+            WeeklyLearningRecordResponse result = dailyLearningRecordService.getWeeklyLearningRecord(userId);
 
             // then
             assertSoftly(softly -> {

@@ -70,7 +70,7 @@ class WrongAnsweredNoteFacadeIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.unitSummary().title()).isEqualTo("스택/큐");
+                softly.assertThat(result.unitSummaryResponse().title()).isEqualTo("스택/큐");
                 softly.assertThat(result.problems()).hasSize(1);
                 softly.assertThat(result.totalProblems()).isEqualTo(1);
                 softly.assertThat(result.problems().get(0).problemType()).isEqualTo(ProblemType.SUBJECTIVE);

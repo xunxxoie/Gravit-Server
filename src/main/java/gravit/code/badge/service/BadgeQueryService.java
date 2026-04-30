@@ -1,6 +1,6 @@
 package gravit.code.badge.service;
 
-import gravit.code.badge.dto.BadgeCatalogRowDto;
+import gravit.code.badge.dto.internal.BadgeCatalogRowDto;
 import gravit.code.badge.dto.response.AllBadgesResponse;
 import gravit.code.badge.dto.response.BadgeCategoryResponse;
 import gravit.code.badge.dto.response.BadgeResponse;

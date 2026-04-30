@@ -5,17 +5,17 @@ import lombok.Builder;
 import static lombok.AccessLevel.PRIVATE;
 
 @Builder(access = PRIVATE)
-public record UnitProgressSummary(
+public record UnitProgressSummaryResponse(
         long unitId,
         String title,
         boolean isCompleted
 ) {
-    public static UnitProgressSummary of(
+    public static UnitProgressSummaryResponse of(
             long unitId,
             String title,
             boolean isCompleted
     ){
-        return UnitProgressSummary.builder()
+        return UnitProgressSummaryResponse.builder()
                 .unitId(unitId)
                 .title(title)
                 .isCompleted(isCompleted)

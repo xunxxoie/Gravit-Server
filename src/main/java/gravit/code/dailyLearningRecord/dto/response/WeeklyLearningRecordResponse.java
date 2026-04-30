@@ -1,6 +1,6 @@
 package gravit.code.dailyLearningRecord.dto.response;
 
-public record WeeklyLearningRecord(
+public record WeeklyLearningRecordResponse(
         boolean MONDAY,
         boolean TUESDAY,
         boolean WEDNESDAY,

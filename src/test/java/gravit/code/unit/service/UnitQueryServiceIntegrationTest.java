@@ -9,9 +9,9 @@ import gravit.code.lesson.repository.LessonRepository;
 import gravit.code.lesson.repository.LessonSubmissionRepository;
 import gravit.code.support.TCSpringBootTest;
 import gravit.code.unit.domain.Unit;
-import gravit.code.unit.dto.response.RecommendedUnit;
-import gravit.code.unit.dto.response.UnitProgressSummary;
-import gravit.code.unit.dto.response.UnitSummary;
+import gravit.code.unit.dto.response.RecommendedUnitResponse;
+import gravit.code.unit.dto.response.UnitProgressSummaryResponse;
+import gravit.code.unit.dto.response.UnitSummaryResponse;
 import gravit.code.unit.repository.UnitRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +49,7 @@ class UnitQueryServiceIntegrationTest {
 
     @Nested
     @DisplayName("챕터별 유닛 목록을 조회할 때")
-    class GetAllUnitSummaryByChapterId {
+    class GetAllUnitSummaryResponseByChapterId {
 
         @Test
         void 성공한다() {
@@ -59,7 +59,7 @@ class UnitQueryServiceIntegrationTest {
             unitRepository.save(Unit.create("스레드", "스레드 개념", chapter.getId()));
 
             // when
-            List<UnitSummary> result = unitQueryService.getAllUnitSummaryByChapterId(chapter.getId());
+            List<UnitSummaryResponse> result = unitQueryService.getAllUnitSummaryByChapterId(chapter.getId());
 
             // then
             assertSoftly(softly -> {
@@ -75,7 +75,7 @@ class UnitQueryServiceIntegrationTest {
             Chapter chapter = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
 
             // when
-            List<UnitSummary> result = unitQueryService.getAllUnitSummaryByChapterId(chapter.getId());
+            List<UnitSummaryResponse> result = unitQueryService.getAllUnitSummaryByChapterId(chapter.getId());
 
             // then
             assertThat(result).isEmpty();
@@ -84,7 +84,7 @@ class UnitQueryServiceIntegrationTest {
 
     @Nested
     @DisplayName("유닛을 단건 조회할 때")
-    class GetUnitSummaryByUnitId {
+    class GetUnitSummaryByUnitIdResponse {
 
         @Test
         void 성공한다() {
@@ -93,7 +93,7 @@ class UnitQueryServiceIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
 
             // when
-            UnitSummary result = unitQueryService.getUnitSummaryByUnitId(unit.getId());
+            UnitSummaryResponse result = unitQueryService.getUnitSummaryByUnitId(unit.getId());
 
             // then
             assertSoftly(softly -> {
@@ -112,7 +112,7 @@ class UnitQueryServiceIntegrationTest {
 
     @Nested
     @DisplayName("레슨 ID로 유닛을 조회할 때")
-    class GetUnitSummaryByLessonId {
+    class GetUnitSummaryResponseByLessonId {
 
         @Test
         void 성공한다() {
@@ -122,7 +122,7 @@ class UnitQueryServiceIntegrationTest {
             Lesson lesson = lessonRepository.save(Lesson.create("프로세스와 스레드", unit.getId()));
 
             // when
-            UnitSummary result = unitQueryService.getUnitSummaryByLessonId(lesson.getId());
+            UnitSummaryResponse result = unitQueryService.getUnitSummaryByLessonId(lesson.getId());
 
             // then
             assertSoftly(softly -> {
@@ -155,7 +155,7 @@ class UnitQueryServiceIntegrationTest {
             lessonSubmissionRepository.save(LessonSubmission.create(120, lesson2.getId(), userId));
 
             // when
-            List<UnitProgressSummary> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
+            List<UnitProgressSummaryResponse> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
 
             // then
             assertSoftly(softly -> {
@@ -176,7 +176,7 @@ class UnitQueryServiceIntegrationTest {
             lessonSubmissionRepository.save(LessonSubmission.create(120, lesson1.getId(), userId));
 
             // when
-            List<UnitProgressSummary> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
+            List<UnitProgressSummaryResponse> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
 
             // then
             assertSoftly(softly -> {
@@ -193,7 +193,7 @@ class UnitQueryServiceIntegrationTest {
             unitRepository.save(Unit.create("빈유닛", "레슨이 없는 유닛", chapter.getId()));
 
             // when
-            List<UnitProgressSummary> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
+            List<UnitProgressSummaryResponse> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
 
             // then
             assertSoftly(softly -> {
@@ -209,7 +209,7 @@ class UnitQueryServiceIntegrationTest {
             Chapter chapter = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
 
             // when
-            List<UnitProgressSummary> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
+            List<UnitProgressSummaryResponse> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
 
             // then
             assertThat(result).isEmpty();
@@ -218,7 +218,7 @@ class UnitQueryServiceIntegrationTest {
 
     @Nested
     @DisplayName("추천 유닛을 조회할 때")
-    class GetRecommendedUnits {
+    class GetRecommendedUnitsResponse {
 
         @Test
         void 유닛이_2개_이상이면_2개를_반환한다() {
@@ -230,7 +230,7 @@ class UnitQueryServiceIntegrationTest {
             }
 
             // when
-            List<RecommendedUnit> result = unitQueryService.getRecommendedUnits(userId);
+            List<RecommendedUnitResponse> result = unitQueryService.getRecommendedUnits(userId);
 
             // then
             assertSoftly(softly -> {
@@ -250,8 +250,8 @@ class UnitQueryServiceIntegrationTest {
             }
 
             // when
-            List<RecommendedUnit> first = unitQueryService.getRecommendedUnits(userId);
-            List<RecommendedUnit> second = unitQueryService.getRecommendedUnits(userId);
+            List<RecommendedUnitResponse> first = unitQueryService.getRecommendedUnits(userId);
+            List<RecommendedUnitResponse> second = unitQueryService.getRecommendedUnits(userId);
 
             // then
             assertSoftly(softly -> {

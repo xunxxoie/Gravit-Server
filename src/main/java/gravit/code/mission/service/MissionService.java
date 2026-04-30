@@ -8,8 +8,8 @@ import gravit.code.mission.domain.Mission;
 import gravit.code.mission.domain.MissionType;
 import gravit.code.mission.domain.RandomMissionGenerator;
 import gravit.code.mission.dto.event.FollowMissionEvent;
-import gravit.code.mission.dto.response.MissionDetail;
-import gravit.code.mission.dto.response.MissionSummary;
+import gravit.code.mission.dto.response.MissionDetailResponse;
+import gravit.code.mission.dto.response.MissionSummaryResponse;
 import gravit.code.mission.repository.MissionRepository;
 import gravit.code.user.domain.User;
 import gravit.code.user.repository.UserRepository;
@@ -57,7 +57,7 @@ public class MissionService {
     }
 
     @Transactional(readOnly = true)
-    public MissionSummary getMissionSummary(long userId){
+    public MissionSummaryResponse getMissionSummary(long userId){
         return missionRepository.findMissionSummaryByUserId(userId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.MISSION_NOT_FOUND));
     }
@@ -129,11 +129,11 @@ public class MissionService {
     }
 
     @Transactional(readOnly = true)
-    public MissionDetail getMissionDetail(long userId) {
+    public MissionDetailResponse getMissionDetail(long userId) {
         Mission mission = missionRepository.findByUserId(userId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.MISSION_NOT_FOUND));
 
-        return MissionDetail.from(mission);
+        return MissionDetailResponse.from(mission);
     }
 
     private void awardMissionXp(

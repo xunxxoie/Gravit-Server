@@ -12,7 +12,7 @@ import gravit.code.lesson.domain.Lesson;
 import gravit.code.lesson.repository.LessonRepository;
 import gravit.code.problem.domain.Problem;
 import gravit.code.problem.domain.ProblemType;
-import gravit.code.problem.dto.response.ProblemDetail;
+import gravit.code.problem.dto.response.ProblemDetailResponse;
 import gravit.code.problem.repository.ProblemRepository;
 import gravit.code.support.TCSpringBootTest;
 import gravit.code.unit.domain.Unit;
@@ -170,7 +170,7 @@ class BookmarkServiceIntegrationTest {
             bookmarkRepository.save(Bookmark.create(problem.getId(), userId));
 
             // when
-            List<ProblemDetail> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unit.getId());
+            List<ProblemDetailResponse> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unit.getId());
 
             // then
             assertSoftly(softly -> {
@@ -188,7 +188,7 @@ class BookmarkServiceIntegrationTest {
             bookmarkRepository.save(Bookmark.create(problem.getId(), otherUserId));
 
             // when
-            List<ProblemDetail> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unit.getId());
+            List<ProblemDetailResponse> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unit.getId());
 
             // then
             assertThat(result).isEmpty();
@@ -200,7 +200,7 @@ class BookmarkServiceIntegrationTest {
             long userId = 1L;
 
             // when
-            List<ProblemDetail> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unit.getId());
+            List<ProblemDetailResponse> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unit.getId());
 
             // then
             assertThat(result).isEmpty();

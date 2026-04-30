@@ -2,22 +2,22 @@ package gravit.code.user.facade;
 
 import gravit.code.chapter.domain.Chapter;
 import gravit.code.chapter.service.ChapterQueryService;
-import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecord;
+import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecordResponse;
 import gravit.code.dailyLearningRecord.service.DailyLearningRecordService;
 import gravit.code.global.annotation.Facade;
-import gravit.code.league.dto.response.LeagueDetail;
+import gravit.code.league.dto.response.LeagueDetailResponse;
 import gravit.code.learning.domain.Learning;
-import gravit.code.learning.dto.response.LearningDetail;
+import gravit.code.learning.dto.response.LearningDetailResponse;
 import gravit.code.learning.service.LearningProgressRateService;
 import gravit.code.learning.service.LearningService;
-import gravit.code.mission.dto.response.MissionDetail;
+import gravit.code.mission.dto.response.MissionDetailResponse;
 import gravit.code.mission.service.MissionService;
-import gravit.code.unit.dto.response.RecommendedUnit;
-import gravit.code.unit.dto.response.UnitProgressSummary;
+import gravit.code.unit.dto.response.RecommendedUnitResponse;
+import gravit.code.unit.dto.response.UnitProgressSummaryResponse;
 import gravit.code.unit.service.UnitQueryService;
 import gravit.code.user.domain.User;
 import gravit.code.user.dto.response.MainPageResponse;
-import gravit.code.user.dto.response.UserLevelDetail;
+import gravit.code.user.dto.response.UserLevelDetailResponse;
 import gravit.code.user.service.UserService;
 import gravit.code.userLeague.service.UserLeagueService;
 import lombok.RequiredArgsConstructor;
@@ -43,38 +43,38 @@ public class UserFacade {
         User user = userService.getUser(userId);
         Learning learning = learningService.getLearning(userId);
 
-        UserLevelDetail userLevelDetail = user.getLevel().getUserLevelDetail();
-        LeagueDetail leagueDetail = userLeagueService.getUserLeagueDetail(userId);
-        LearningDetail learningDetail = getLearningDetail(userId, learning);
-        List<RecommendedUnit> recommendedUnits = unitQueryService.getRecommendedUnits(userId);
-        WeeklyLearningRecord weeklyLearningRecord = dailyLearningRecordService.getWeeklyLearningRecord(userId);
-        MissionDetail missionDetail = missionService.getMissionDetail(userId);
+        UserLevelDetailResponse userLevelDetailResponse = user.getLevel().getUserLevelDetail();
+        LeagueDetailResponse leagueDetailResponse = userLeagueService.getUserLeagueDetail(userId);
+        LearningDetailResponse learningDetailResponse = getLearningDetail(userId, learning);
+        List<RecommendedUnitResponse> recommendedUnitResponses = unitQueryService.getRecommendedUnits(userId);
+        WeeklyLearningRecordResponse weeklyLearningRecordResponse = dailyLearningRecordService.getWeeklyLearningRecord(userId);
+        MissionDetailResponse missionDetailResponse = missionService.getMissionDetail(userId);
 
         return MainPageResponse.of(
                 user.getProfileImgNumber(),
                 user.getNickname(),
-                userLevelDetail,
-                leagueDetail,
-                learningDetail,
-                recommendedUnits,
-                weeklyLearningRecord,
-                missionDetail
+                userLevelDetailResponse,
+                leagueDetailResponse,
+                learningDetailResponse,
+                recommendedUnitResponses,
+                weeklyLearningRecordResponse,
+                missionDetailResponse
         );
     }
 
-    private LearningDetail getLearningDetail(
+    private LearningDetailResponse getLearningDetail(
             long userId,
             Learning learning
     ) {
         long chapterId = learning.getRecentSolvedChapterId();
 
-        List<UnitProgressSummary> units = unitQueryService.getAllUnitProgressSummariesInChapter(chapterId, userId);
+        List<UnitProgressSummaryResponse> units = unitQueryService.getAllUnitProgressSummariesInChapter(chapterId, userId);
 
         Chapter recentSolvedChapter = chapterQueryService.getChapter(chapterId);
 
         double chapterProgressRate = learningProgressRateService.getChapterProgress(chapterId, userId);
 
-        return LearningDetail.of(
+        return LearningDetailResponse.of(
                 learning.getConsecutiveSolvedDays(),
                 recentSolvedChapter.getId(),
                 recentSolvedChapter.getTitle(),

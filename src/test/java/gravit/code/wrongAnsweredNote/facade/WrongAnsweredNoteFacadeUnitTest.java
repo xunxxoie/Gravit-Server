@@ -3,11 +3,11 @@ package gravit.code.wrongAnsweredNote.facade;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.problem.domain.ProblemType;
-import gravit.code.problem.dto.response.ProblemDetail;
+import gravit.code.problem.dto.response.ProblemDetailResponse;
 import gravit.code.problem.dto.response.ProblemResponse;
 import gravit.code.problem.dto.response.WrongAnsweredProblemsResponse;
 import gravit.code.problem.factory.ProblemFactory;
-import gravit.code.unit.dto.response.UnitSummary;
+import gravit.code.unit.dto.response.UnitSummaryResponse;
 import gravit.code.unit.service.UnitQueryService;
 import gravit.code.wrongAnsweredNote.service.WrongAnsweredNoteService;
 import org.junit.jupiter.api.DisplayName;
@@ -48,24 +48,24 @@ class WrongAnsweredNoteFacadeUnitTest {
             // given
             long userId = 1L;
             long unitId = 1L;
-            UnitSummary unitSummary = new UnitSummary(unitId, "스택/큐", "스택과 큐 개념");
-            List<ProblemDetail> problemDetails = List.of(
-                    new ProblemDetail(1L, ProblemType.SUBJECTIVE, "빈칸을 채우시오.", "스택은 ___구조이다.", false)
+            UnitSummaryResponse unitSummaryResponse = new UnitSummaryResponse(unitId, "스택/큐", "스택과 큐 개념");
+            List<ProblemDetailResponse> problemDetailResponses = List.of(
+                    new ProblemDetailResponse(1L, ProblemType.SUBJECTIVE, "빈칸을 채우시오.", "스택은 ___구조이다.", false)
             );
             List<ProblemResponse> problemResponses = List.of(
-                    ProblemResponse.createSubjectiveProblem(problemDetails.get(0), null)
+                    ProblemResponse.createSubjectiveProblem(problemDetailResponses.get(0), null)
             );
 
-            when(unitQueryService.getUnitSummaryByUnitId(unitId)).thenReturn(unitSummary);
-            when(wrongAnsweredNoteService.getAllWrongAnsweredProblemInUnit(userId, unitId)).thenReturn(problemDetails);
-            when(problemFactory.create(problemDetails)).thenReturn(problemResponses);
+            when(unitQueryService.getUnitSummaryByUnitId(unitId)).thenReturn(unitSummaryResponse);
+            when(wrongAnsweredNoteService.getAllWrongAnsweredProblemInUnit(userId, unitId)).thenReturn(problemDetailResponses);
+            when(problemFactory.create(problemDetailResponses)).thenReturn(problemResponses);
 
             // when
             WrongAnsweredProblemsResponse result = wrongAnsweredNoteFacade.getAllWrongAnsweredProblemInUnit(userId, unitId);
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.unitSummary().title()).isEqualTo("스택/큐");
+                softly.assertThat(result.unitSummaryResponse().title()).isEqualTo("스택/큐");
                 softly.assertThat(result.problems()).hasSize(1);
                 softly.assertThat(result.totalProblems()).isEqualTo(1);
             });
@@ -76,9 +76,9 @@ class WrongAnsweredNoteFacadeUnitTest {
             // given
             long userId = 1L;
             long unitId = 1L;
-            UnitSummary unitSummary = new UnitSummary(unitId, "스택/큐", "스택과 큐 개념");
+            UnitSummaryResponse unitSummaryResponse = new UnitSummaryResponse(unitId, "스택/큐", "스택과 큐 개념");
 
-            when(unitQueryService.getUnitSummaryByUnitId(unitId)).thenReturn(unitSummary);
+            when(unitQueryService.getUnitSummaryByUnitId(unitId)).thenReturn(unitSummaryResponse);
             when(wrongAnsweredNoteService.getAllWrongAnsweredProblemInUnit(userId, unitId)).thenReturn(List.of());
             when(problemFactory.create(List.of())).thenReturn(List.of());
 

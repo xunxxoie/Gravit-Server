@@ -2,7 +2,7 @@ package gravit.code.friend.service;
 
 
 import gravit.code.friend.domain.Friend;
-import gravit.code.friend.dto.SearchUserDto;
+import gravit.code.friend.dto.internal.SearchUserDto;
 import gravit.code.friend.dto.response.FollowCountsResponse;
 import gravit.code.friend.dto.response.FollowerResponse;
 import gravit.code.friend.dto.response.FollowingResponse;

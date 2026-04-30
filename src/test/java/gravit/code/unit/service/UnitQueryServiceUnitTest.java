@@ -2,7 +2,7 @@ package gravit.code.unit.service;
 
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
-import gravit.code.unit.dto.response.UnitSummary;
+import gravit.code.unit.dto.response.UnitSummaryResponse;
 import gravit.code.unit.repository.UnitRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,20 +30,20 @@ class UnitQueryServiceUnitTest {
 
     @Nested
     @DisplayName("챕터별 유닛 목록을 조회할 때")
-    class GetAllUnitSummaryByChapterId {
+    class GetAllUnitSummaryResponseByChapterId {
 
         @Test
         void 성공한다() {
             // given
             long chapterId = 1L;
-            List<UnitSummary> expected = List.of(
-                    new UnitSummary(1L, "프로세스", "프로세스 개념"),
-                    new UnitSummary(2L, "스레드", "스레드 개념")
+            List<UnitSummaryResponse> expected = List.of(
+                    new UnitSummaryResponse(1L, "프로세스", "프로세스 개념"),
+                    new UnitSummaryResponse(2L, "스레드", "스레드 개념")
             );
             when(unitRepository.findAllUnitSummaryByChapterId(chapterId)).thenReturn(expected);
 
             // when
-            List<UnitSummary> result = unitQueryService.getAllUnitSummaryByChapterId(chapterId);
+            List<UnitSummaryResponse> result = unitQueryService.getAllUnitSummaryByChapterId(chapterId);
 
             // then
             assertThat(result).hasSize(2);
@@ -57,7 +57,7 @@ class UnitQueryServiceUnitTest {
             when(unitRepository.findAllUnitSummaryByChapterId(chapterId)).thenReturn(List.of());
 
             // when
-            List<UnitSummary> result = unitQueryService.getAllUnitSummaryByChapterId(chapterId);
+            List<UnitSummaryResponse> result = unitQueryService.getAllUnitSummaryByChapterId(chapterId);
 
             // then
             assertThat(result).isEmpty();
@@ -66,17 +66,17 @@ class UnitQueryServiceUnitTest {
 
     @Nested
     @DisplayName("유닛을 단건 조회할 때")
-    class GetUnitSummaryByUnitId {
+    class GetUnitSummaryByUnitIdResponse {
 
         @Test
         void 성공한다() {
             // given
             long unitId = 1L;
-            UnitSummary expected = new UnitSummary(unitId, "프로세스", "프로세스 개념");
+            UnitSummaryResponse expected = new UnitSummaryResponse(unitId, "프로세스", "프로세스 개념");
             when(unitRepository.findUnitSummaryById(unitId)).thenReturn(Optional.of(expected));
 
             // when
-            UnitSummary result = unitQueryService.getUnitSummaryByUnitId(unitId);
+            UnitSummaryResponse result = unitQueryService.getUnitSummaryByUnitId(unitId);
 
             // then
             assertThat(result).isEqualTo(expected);
@@ -98,17 +98,17 @@ class UnitQueryServiceUnitTest {
 
     @Nested
     @DisplayName("레슨 ID로 유닛을 조회할 때")
-    class GetUnitSummaryByLessonId {
+    class GetUnitSummaryResponseByLessonId {
 
         @Test
         void 성공한다() {
             // given
             long lessonId = 1L;
-            UnitSummary expected = new UnitSummary(1L, "프로세스", "프로세스 개념");
+            UnitSummaryResponse expected = new UnitSummaryResponse(1L, "프로세스", "프로세스 개념");
             when(unitRepository.findUnitSummaryByLessonId(lessonId)).thenReturn(Optional.of(expected));
 
             // when
-            UnitSummary result = unitQueryService.getUnitSummaryByLessonId(lessonId);
+            UnitSummaryResponse result = unitQueryService.getUnitSummaryByLessonId(lessonId);
 
             // then
             assertThat(result).isEqualTo(expected);

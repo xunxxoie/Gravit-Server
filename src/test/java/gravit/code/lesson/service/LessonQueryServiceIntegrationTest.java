@@ -3,10 +3,10 @@ package gravit.code.lesson.service;
 import gravit.code.chapter.domain.Chapter;
 import gravit.code.chapter.repository.ChapterRepository;
 import gravit.code.global.exception.domain.RestApiException;
-import gravit.code.learning.dto.common.LearningIds;
+import gravit.code.learning.dto.internal.LearningIdsDto;
 import gravit.code.lesson.domain.Lesson;
 import gravit.code.lesson.domain.LessonSubmission;
-import gravit.code.lesson.dto.response.LessonSummary;
+import gravit.code.lesson.dto.response.LessonSummaryResponse;
 import gravit.code.lesson.repository.LessonRepository;
 import gravit.code.lesson.repository.LessonSubmissionRepository;
 import gravit.code.support.TCSpringBootTest;
@@ -58,7 +58,7 @@ class LessonQueryServiceIntegrationTest {
             lessonSubmissionRepository.save(LessonSubmission.create(120, lesson1.getId(), userId));
 
             // when
-            List<LessonSummary> result = lessonQueryService.getAllLessonInUnit(userId, unit.getId());
+            List<LessonSummaryResponse> result = lessonQueryService.getAllLessonInUnit(userId, unit.getId());
 
             // then
             assertSoftly(softly -> {
@@ -76,7 +76,7 @@ class LessonQueryServiceIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
 
             // when
-            List<LessonSummary> result = lessonQueryService.getAllLessonInUnit(userId, unit.getId());
+            List<LessonSummaryResponse> result = lessonQueryService.getAllLessonInUnit(userId, unit.getId());
 
             // then
             assertThat(result).isEmpty();
@@ -85,7 +85,7 @@ class LessonQueryServiceIntegrationTest {
 
     @Nested
     @DisplayName("레슨 ID로 학습 계층 ID를 조회할 때")
-    class GetLearningIdsByLessonId {
+    class GetLearningIdsDtoByLessonId {
 
         @Test
         void 성공한다() {
@@ -95,7 +95,7 @@ class LessonQueryServiceIntegrationTest {
             Lesson lesson = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
 
             // when
-            LearningIds result = lessonQueryService.getLearningIdsByLessonId(lesson.getId());
+            LearningIdsDto result = lessonQueryService.getLearningIdsByLessonId(lesson.getId());
 
             // then
             assertSoftly(softly -> {

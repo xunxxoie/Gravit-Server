@@ -124,16 +124,16 @@ class UserFacadeIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(result.profileImgNumber()).isEqualTo(3);
                 softly.assertThat(result.nickname()).isEqualTo("테스터");
-                softly.assertThat(result.userLevelDetail().level()).isEqualTo(1);
-                softly.assertThat(result.leagueDetail().leagueName()).isEqualTo("Bronze");
-                softly.assertThat(result.leagueDetail().currentLP()).isEqualTo(50);
-                softly.assertThat(result.leagueDetail().maxLP()).isEqualTo(100);
-                softly.assertThat(result.learningDetail().recentSolvedChapterId()).isEqualTo(chapter.getId());
-                softly.assertThat(result.learningDetail().recentSolvedChapterTitle()).isEqualTo("운영체제");
-                softly.assertThat(result.learningDetail().units()).hasSize(2);
-                softly.assertThat(result.recommendedUnits()).hasSize(2);
-                softly.assertThat(result.weeklyLearningRecord().MONDAY()).isTrue();
-                softly.assertThat(result.missionDetail().missionType()).isEqualTo("COMPLETE_LESSON_ONE");
+                softly.assertThat(result.userLevelDetailResponse().level()).isEqualTo(1);
+                softly.assertThat(result.leagueDetailResponse().leagueName()).isEqualTo("Bronze");
+                softly.assertThat(result.leagueDetailResponse().currentLP()).isEqualTo(50);
+                softly.assertThat(result.leagueDetailResponse().maxLP()).isEqualTo(100);
+                softly.assertThat(result.learningDetailResponse().recentSolvedChapterId()).isEqualTo(chapter.getId());
+                softly.assertThat(result.learningDetailResponse().recentSolvedChapterTitle()).isEqualTo("운영체제");
+                softly.assertThat(result.learningDetailResponse().units()).hasSize(2);
+                softly.assertThat(result.recommendedUnitResponses()).hasSize(2);
+                softly.assertThat(result.weeklyLearningRecordResponse().MONDAY()).isTrue();
+                softly.assertThat(result.missionDetailResponse().missionType()).isEqualTo("COMPLETE_LESSON_ONE");
             });
         }
 
@@ -159,10 +159,10 @@ class UserFacadeIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.learningDetail().consecutiveSolvedDays()).isZero();
-                softly.assertThat(result.learningDetail().recentSolvedChapterProgressRate()).isZero();
-                softly.assertThat(result.weeklyLearningRecord().MONDAY()).isFalse();
-                softly.assertThat(result.recommendedUnits()).hasSize(2);
+                softly.assertThat(result.learningDetailResponse().consecutiveSolvedDays()).isZero();
+                softly.assertThat(result.learningDetailResponse().recentSolvedChapterProgressRate()).isZero();
+                softly.assertThat(result.weeklyLearningRecordResponse().MONDAY()).isFalse();
+                softly.assertThat(result.recommendedUnitResponses()).hasSize(2);
             });
         }
 

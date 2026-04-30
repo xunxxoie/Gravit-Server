@@ -1,4 +1,4 @@
-package gravit.code.badge.dto;
+package gravit.code.badge.dto.internal;
 
 public record PlanetCompletionDto(
         long userId,

@@ -7,7 +7,7 @@ import gravit.code.bookmark.repository.BookmarkRepository;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.problem.domain.ProblemType;
-import gravit.code.problem.dto.response.ProblemDetail;
+import gravit.code.problem.dto.response.ProblemDetailResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -148,14 +148,14 @@ class BookmarkServiceUnitTest {
             // given
             long userId = 1L;
             long unitId = 1L;
-            List<ProblemDetail> expected = List.of(
-                    new ProblemDetail(1L, ProblemType.SUBJECTIVE, "빈칸을 채우시오.", "스택은 ___구조이다.", true)
+            List<ProblemDetailResponse> expected = List.of(
+                    new ProblemDetailResponse(1L, ProblemType.SUBJECTIVE, "빈칸을 채우시오.", "스택은 ___구조이다.", true)
             );
 
             when(bookmarkRepository.findBookmarkedProblemDetailByUnitIdAndUserId(unitId, userId)).thenReturn(expected);
 
             // when
-            List<ProblemDetail> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unitId);
+            List<ProblemDetailResponse> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unitId);
 
             // then
             assertSoftly(softly -> {
@@ -173,7 +173,7 @@ class BookmarkServiceUnitTest {
             when(bookmarkRepository.findBookmarkedProblemDetailByUnitIdAndUserId(unitId, userId)).thenReturn(List.of());
 
             // when
-            List<ProblemDetail> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unitId);
+            List<ProblemDetailResponse> result = bookmarkService.getAllBookmarkedProblemInUnit(userId, unitId);
 
             // then
             assertThat(result).isEmpty();

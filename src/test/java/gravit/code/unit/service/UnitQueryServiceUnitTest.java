@@ -1,6 +1,5 @@
 package gravit.code.unit.service;
 
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.unit.dto.response.UnitSummaryResponse;
 import gravit.code.unit.repository.UnitRepository;
@@ -15,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.UNIT_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -92,7 +92,7 @@ class UnitQueryServiceUnitTest {
             assertThatThrownBy(() -> unitQueryService.getUnitSummaryByUnitId(unitId))
                     .isInstanceOf(RestApiException.class)
                     .extracting(e -> ((RestApiException) e).getErrorCode())
-                    .isEqualTo(CustomErrorCode.UNIT_NOT_FOUND);
+                    .isEqualTo(UNIT_NOT_FOUND);
         }
     }
 
@@ -124,7 +124,7 @@ class UnitQueryServiceUnitTest {
             assertThatThrownBy(() -> unitQueryService.getUnitSummaryByLessonId(lessonId))
                     .isInstanceOf(RestApiException.class)
                     .extracting(e -> ((RestApiException) e).getErrorCode())
-                    .isEqualTo(CustomErrorCode.UNIT_NOT_FOUND);
+                    .isEqualTo(UNIT_NOT_FOUND);
         }
     }
 }

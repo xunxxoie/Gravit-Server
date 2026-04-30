@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.UNIT_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -102,7 +103,9 @@ class BookmarkFacadeIntegrationTest {
 
             // when & then
             assertThatThrownBy(() -> bookmarkFacade.getAllBookmarkedProblemInUnit(userId, nonExistentUnitId))
-                    .isInstanceOf(RestApiException.class);
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(UNIT_NOT_FOUND);
         }
     }
 }

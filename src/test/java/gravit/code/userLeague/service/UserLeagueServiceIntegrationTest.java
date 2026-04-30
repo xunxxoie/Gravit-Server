@@ -1,6 +1,5 @@
 package gravit.code.userLeague.service;
 
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
 import gravit.code.league.dto.response.LeagueDetailResponse;
@@ -22,6 +21,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.USER_LEAGUE_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -81,7 +81,7 @@ class UserLeagueServiceIntegrationTest {
             assertThatThrownBy(() -> userLeagueService.getUserLeagueDetail(nonExistentUserId))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.USER_LEAGUE_NOT_FOUND);
+                    .isEqualTo(USER_LEAGUE_NOT_FOUND);
         }
     }
 }

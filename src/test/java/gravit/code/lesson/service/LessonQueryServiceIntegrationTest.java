@@ -20,6 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.LESSON_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -109,7 +110,9 @@ class LessonQueryServiceIntegrationTest {
         void 존재하지_않으면_예외를_던진다() {
             // when & then
             assertThatThrownBy(() -> lessonQueryService.getLearningIdsByLessonId(999L))
-                    .isInstanceOf(RestApiException.class);
+                    .isInstanceOf(RestApiException.class)
+                    .extracting(e -> ((RestApiException) e).getErrorCode())
+                    .isEqualTo(LESSON_NOT_FOUND);
         }
     }
 }

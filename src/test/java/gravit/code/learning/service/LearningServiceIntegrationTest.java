@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.LEARNING_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -52,7 +53,9 @@ class LearningServiceIntegrationTest {
 
             // when & then
             assertThatThrownBy(() -> learningService.getLearning(nonExistentUserId))
-                    .isInstanceOf(RestApiException.class);
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(LEARNING_NOT_FOUND);
         }
     }
 }

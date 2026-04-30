@@ -4,7 +4,6 @@ import gravit.code.chapter.domain.Chapter;
 import gravit.code.chapter.repository.ChapterRepository;
 import gravit.code.dailyLearningRecord.domain.DailyLearningRecord;
 import gravit.code.dailyLearningRecord.repository.DailyLearningRecordRepository;
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
 import gravit.code.league.repository.LeagueRepository;
@@ -39,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -175,7 +175,7 @@ class UserFacadeIntegrationTest {
             assertThatThrownBy(() -> userFacade.getMainPage(nonExistentUserId))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.USER_NOT_FOUND);
+                    .isEqualTo(USER_NOT_FOUND);
         }
     }
 }

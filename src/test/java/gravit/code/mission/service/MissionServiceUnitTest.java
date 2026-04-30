@@ -1,7 +1,6 @@
 package gravit.code.mission.service;
 
 import gravit.code.global.event.badge.MissionCompletedEvent;
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.lesson.service.LessonSubmissionQueryService;
 import gravit.code.mission.domain.Mission;
@@ -28,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.MISSION_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -87,7 +87,7 @@ class MissionServiceUnitTest {
             assertThatThrownBy(() -> missionService.getMissionSummary(userId))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
     }
 
@@ -165,7 +165,7 @@ class MissionServiceUnitTest {
             assertThatThrownBy(() -> missionService.handleLessonMission(userId, 1L, 120, 80))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
 
         @Test
@@ -293,7 +293,7 @@ class MissionServiceUnitTest {
             assertThatThrownBy(() -> missionService.handleFollowMission(event))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
 
         @Test

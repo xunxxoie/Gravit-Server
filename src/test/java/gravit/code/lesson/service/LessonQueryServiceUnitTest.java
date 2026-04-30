@@ -1,6 +1,5 @@
 package gravit.code.lesson.service;
 
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.learning.dto.internal.LearningIdsDto;
 import gravit.code.lesson.dto.response.LessonSummaryResponse;
@@ -16,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.LESSON_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
@@ -95,7 +95,7 @@ class LessonQueryServiceUnitTest {
             assertThatThrownBy(() -> lessonQueryService.getLearningIdsByLessonId(lessonId))
                     .isInstanceOf(RestApiException.class)
                     .extracting(e -> ((RestApiException) e).getErrorCode())
-                    .isEqualTo(CustomErrorCode.LESSON_NOT_FOUND);
+                    .isEqualTo(LESSON_NOT_FOUND);
         }
     }
 }

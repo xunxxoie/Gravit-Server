@@ -1,6 +1,5 @@
 package gravit.code.mission.service;
 
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.lesson.domain.LessonSubmission;
 import gravit.code.lesson.repository.LessonSubmissionRepository;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.MISSION_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -72,7 +72,7 @@ class MissionServiceIntegrationTest {
             assertThatThrownBy(() -> missionService.getMissionSummary(nonExistentUserId))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
     }
 
@@ -140,7 +140,7 @@ class MissionServiceIntegrationTest {
             assertThatThrownBy(() -> missionService.handleLessonMission(nonExistentUserId, 1L, 120, 80))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
 
         @Test
@@ -261,7 +261,7 @@ class MissionServiceIntegrationTest {
             assertThatThrownBy(() -> missionService.handleFollowMission(event))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
 
         @Test
@@ -343,7 +343,7 @@ class MissionServiceIntegrationTest {
             assertThatThrownBy(() -> missionService.getMissionDetail(nonExistentUserId))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
-                    .isEqualTo(CustomErrorCode.MISSION_NOT_FOUND);
+                    .isEqualTo(MISSION_NOT_FOUND);
         }
     }
 }

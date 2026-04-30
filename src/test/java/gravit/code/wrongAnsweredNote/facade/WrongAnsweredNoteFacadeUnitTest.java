@@ -1,6 +1,5 @@
 package gravit.code.wrongAnsweredNote.facade;
 
-import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.problem.domain.ProblemType;
 import gravit.code.problem.dto.response.ProblemDetailResponse;
@@ -20,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.UNIT_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.Mockito.when;
@@ -99,11 +99,13 @@ class WrongAnsweredNoteFacadeUnitTest {
             long unitId = 999L;
 
             when(unitQueryService.getUnitSummaryByUnitId(unitId))
-                    .thenThrow(new RestApiException(CustomErrorCode.UNIT_NOT_FOUND));
+                    .thenThrow(new RestApiException(UNIT_NOT_FOUND));
 
             // when & then
             assertThatThrownBy(() -> wrongAnsweredNoteFacade.getAllWrongAnsweredProblemInUnit(userId, unitId))
-                    .isInstanceOf(RestApiException.class);
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(UNIT_NOT_FOUND);
         }
     }
 }

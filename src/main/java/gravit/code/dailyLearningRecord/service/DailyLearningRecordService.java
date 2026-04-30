@@ -1,5 +1,6 @@
 package gravit.code.dailyLearningRecord.service;
 
+import gravit.code.dailyLearningRecord.domain.DailyLearningRecord;
 import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecordResponse;
 import gravit.code.dailyLearningRecord.repository.DailyLearningRecordRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,7 @@ public class DailyLearningRecordService {
         LocalDate monday = today.with(DayOfWeek.MONDAY);
         LocalDate sunday = today.with(DayOfWeek.SUNDAY);
 
-        Set<DayOfWeek> solvedDays = dailyLearningRecordRepository
-                .findSolvedDatesByUserIdAndDateRange(userId, monday, sunday)
-                .stream()
+        Set<DayOfWeek> solvedDays = dailyLearningRecordRepository.findSolvedDatesByUserIdAndDateRange(userId, monday, sunday).stream()
                 .map(LocalDate::getDayOfWeek)
                 .collect(Collectors.toUnmodifiableSet());
 
@@ -41,5 +40,17 @@ public class DailyLearningRecordService {
                 solvedDays.contains(DayOfWeek.SATURDAY),
                 solvedDays.contains(DayOfWeek.SUNDAY)
         );
+    }
+
+    @Transactional
+    public void handleDailyLearningRecord(long userId) {
+        LocalDate today = LocalDate.now(KST);
+
+        DailyLearningRecord dailyLearningRecord = dailyLearningRecordRepository.findByUserIdAndSolvedDate(userId, today)
+                .orElseGet(() -> DailyLearningRecord.create(userId, today));
+
+        dailyLearningRecord.increaseSolvedLessonCount();
+
+        dailyLearningRecordRepository.save(dailyLearningRecord);
     }
 }

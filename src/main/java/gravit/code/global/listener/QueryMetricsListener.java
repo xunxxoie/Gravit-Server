@@ -3,8 +3,6 @@ package gravit.code.global.listener;
 import gravit.code.global.interceptor.RequestContext;
 import gravit.code.global.interceptor.RequestContextHolder;
 import io.micrometer.core.instrument.MeterRegistry;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.ttddyy.dsproxy.ExecutionInfo;
@@ -12,6 +10,9 @@ import net.ttddyy.dsproxy.QueryInfo;
 import net.ttddyy.dsproxy.listener.QueryExecutionListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Profile("!prod")
 @RequiredArgsConstructor

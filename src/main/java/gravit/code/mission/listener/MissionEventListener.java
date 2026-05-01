@@ -27,7 +27,7 @@ public class MissionEventListener {
                     event.accuracy()
             );
         }catch(Exception e){
-            log.error("Exception occurred while handling complete lesson mission event with {}", e.getMessage());
+            log.error("Exception occurred while handling complete lesson mission event", e);
         }
     }
 
@@ -36,7 +36,7 @@ public class MissionEventListener {
         try{
             missionService.handleFollowMission(followMissionDto);
         }catch(Exception e){
-            log.error("Exception occurred while handling follow mission event with {}", e.getMessage());
+            log.error("Exception occurred while handling follow mission event", e);
         }
     }
 
@@ -45,7 +45,7 @@ public class MissionEventListener {
         try{
             missionService.createMission(event.userId());
         }catch(Exception e){
-            log.error("Exception occurred while creating mission for new User with {}", e.getMessage());
+            log.error("Exception occurred while creating mission for new User", e);
         }
     }
 }

@@ -26,7 +26,7 @@ public class DailyLearningRecordListener {
         try{
             dailyLearningRecordService.handleDailyLearningRecord(event.userId());
         } catch (Exception e) {
-            log.error("Exception occurred while handling Daily Learning Record event with {}", e.getMessage());
+            log.error("Exception occurred while handling Daily Learning Record event", e);
         }
     }
 }

@@ -64,7 +64,7 @@ public class BadgeEventListener {
 
             log.info("레슨 완료 뱃지 평가 완료");
         }catch(Exception e){
-            log.error("레슨 완료 뱃지 평가 에러: {}", e.getMessage());
+            log.error("레슨 완료 뱃지 평가 에러", e);
         }
     }
 
@@ -82,7 +82,7 @@ public class BadgeEventListener {
             );
 
         }catch(Exception e){
-            log.error("handleMissionCompleted 에러 : {}", e.getMessage());
+            log.error("handleMissionCompleted 에러", e);
         }
     }
 }

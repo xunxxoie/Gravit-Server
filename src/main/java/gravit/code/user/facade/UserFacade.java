@@ -17,6 +17,7 @@ import gravit.code.unit.dto.response.UnitProgressSummaryResponse;
 import gravit.code.unit.service.UnitQueryService;
 import gravit.code.user.domain.User;
 import gravit.code.user.dto.response.MainPageResponse;
+import gravit.code.user.dto.response.MyPageBannerResponse;
 import gravit.code.user.dto.response.UserLevelDetailResponse;
 import gravit.code.user.service.UserService;
 import gravit.code.userLeague.service.UserLeagueService;
@@ -59,6 +60,22 @@ public class UserFacade {
                 recommendedUnitResponses,
                 weeklyLearningRecordResponse,
                 missionDetailResponse
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public MyPageBannerResponse getMyPageBanner(long userId){
+        User user = userService.getUser(userId);
+        String leagueName = userLeagueService.getUserLeagueName(userId);
+        Learning learning = learningService.getLearning(userId);
+
+        return MyPageBannerResponse.of(
+                user.getProfileImgNumber(),
+                user.getNickname(),
+                user.getHandle(),
+                user.getLevel().getLevel(),
+                leagueName,
+                learning.getConsecutiveSolvedDays()
         );
     }
 

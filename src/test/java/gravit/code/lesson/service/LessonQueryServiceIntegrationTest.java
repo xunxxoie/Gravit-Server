@@ -56,7 +56,7 @@ class LessonQueryServiceIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
             Lesson lesson1 = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
             lessonRepository.save(Lesson.create("레슨2", unit.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson1.getId(), userId));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 100, lesson1.getId(), userId));
 
             // when
             List<LessonSummaryResponse> result = lessonQueryService.getAllLessonInUnit(userId, unit.getId());
@@ -113,6 +113,36 @@ class LessonQueryServiceIntegrationTest {
                     .isInstanceOf(RestApiException.class)
                     .extracting(e -> ((RestApiException) e).getErrorCode())
                     .isEqualTo(LESSON_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    @DisplayName("전체 레슨 수를 조회할 때")
+    class GetTotalLessonCount {
+
+        @Test
+        void 등록된_레슨이_여러_개면_그_수를_반환한다() {
+            // given
+            Chapter chapter = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
+            Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
+            lessonRepository.save(Lesson.create("레슨1", unit.getId()));
+            lessonRepository.save(Lesson.create("레슨2", unit.getId()));
+            lessonRepository.save(Lesson.create("레슨3", unit.getId()));
+
+            // when
+            int result = lessonQueryService.getTotalLessonCount();
+
+            // then
+            assertThat(result).isEqualTo(3);
+        }
+
+        @Test
+        void 등록된_레슨이_없으면_0을_반환한다() {
+            // when
+            int result = lessonQueryService.getTotalLessonCount();
+
+            // then
+            assertThat(result).isZero();
         }
     }
 }

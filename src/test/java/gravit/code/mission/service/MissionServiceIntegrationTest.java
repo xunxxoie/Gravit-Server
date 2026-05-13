@@ -149,7 +149,7 @@ class MissionServiceIntegrationTest {
             User user = createAndSaveUser();
             Mission mission = missionRepository.save(Mission.create(MissionType.COMPLETE_LESSON_ONE, user.getId()));
             // 미션을 완료 상태로 만들기
-            lessonSubmissionRepository.save(LessonSubmission.create(120, 1L, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, 1L, user.getId()));
             missionService.handleLessonMission(user.getId(), 1L, 120, 80);
             double completedProgressRate = missionRepository.findByUserId(user.getId()).get().getProgressRate();
 
@@ -170,8 +170,8 @@ class MissionServiceIntegrationTest {
             missionRepository.save(Mission.create(MissionType.COMPLETE_LESSON_ONE, user.getId()));
             long lessonId = 1L;
             // 이미 한 번 제출한 기록 2개 저장 (tryCount > 1 의미: 두 번째 제출)
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lessonId, user.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lessonId, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, lessonId, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, lessonId, user.getId()));
 
             // when
             missionService.handleLessonMission(user.getId(), lessonId, 120, 80);
@@ -187,7 +187,7 @@ class MissionServiceIntegrationTest {
             User user = createAndSaveUser();
             missionRepository.save(Mission.create(MissionType.COMPLETE_LESSON_ONE, user.getId()));
             long lessonId = 1L;
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lessonId, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, lessonId, user.getId()));
 
             // when
             missionService.handleLessonMission(user.getId(), lessonId, 120, 80);
@@ -204,7 +204,7 @@ class MissionServiceIntegrationTest {
             User user = createAndSaveUser();
             missionRepository.save(Mission.create(MissionType.PERFECT_LESSON_ONE, user.getId()));
             long lessonId = 1L;
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lessonId, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, lessonId, user.getId()));
 
             // when
             missionService.handleLessonMission(user.getId(), lessonId, 120, 80);
@@ -220,7 +220,7 @@ class MissionServiceIntegrationTest {
             User user = createAndSaveUser();
             missionRepository.save(Mission.create(MissionType.PERFECT_LESSON_ONE, user.getId()));
             long lessonId = 1L;
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lessonId, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, lessonId, user.getId()));
 
             // when
             missionService.handleLessonMission(user.getId(), lessonId, 120, 100);
@@ -237,7 +237,7 @@ class MissionServiceIntegrationTest {
             User user = createAndSaveUser();
             missionRepository.save(Mission.create(MissionType.LEARNING_MINUTES_FIVE, user.getId()));
             long lessonId = 1L;
-            lessonSubmissionRepository.save(LessonSubmission.create(300, lessonId, user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(300, 80, lessonId, user.getId()));
 
             // when
             missionService.handleLessonMission(user.getId(), lessonId, 300, 80); // 5분

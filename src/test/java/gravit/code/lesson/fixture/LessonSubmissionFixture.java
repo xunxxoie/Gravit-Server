@@ -9,7 +9,7 @@ public class LessonSubmissionFixture {
             long lessonId,
             long userId
     ) {
-        LessonSubmission submission = LessonSubmission.create(120, lessonId, userId);
+        LessonSubmission submission = LessonSubmission.create(120, 100, lessonId, userId);
         ReflectionTestUtils.setField(submission, "id", 1L);
         return submission;
     }
@@ -19,7 +19,7 @@ public class LessonSubmissionFixture {
             long lessonId,
             long userId
     ) {
-        LessonSubmission submission = LessonSubmission.create(120, lessonId, userId);
+        LessonSubmission submission = LessonSubmission.create(120, 100, lessonId, userId);
         ReflectionTestUtils.setField(submission, "id", id);
         return submission;
     }
@@ -30,7 +30,7 @@ public class LessonSubmissionFixture {
             long lessonId,
             long userId
     ) {
-        LessonSubmission submission = LessonSubmission.create(learningTime, lessonId, userId);
+        LessonSubmission submission = LessonSubmission.create(learningTime, 100, lessonId, userId);
         ReflectionTestUtils.setField(submission, "id", id);
         return submission;
     }

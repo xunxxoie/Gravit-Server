@@ -156,8 +156,8 @@ class UnitQueryServiceIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
             Lesson lesson1 = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
             Lesson lesson2 = lessonRepository.save(Lesson.create("레슨2", unit.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson1.getId(), userId));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson2.getId(), userId));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 100, lesson1.getId(), userId));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 100, lesson2.getId(), userId));
 
             // when
             List<UnitProgressSummaryResponse> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);
@@ -178,7 +178,7 @@ class UnitQueryServiceIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
             Lesson lesson1 = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
             lessonRepository.save(Lesson.create("레슨2", unit.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson1.getId(), userId));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 100, lesson1.getId(), userId));
 
             // when
             List<UnitProgressSummaryResponse> result = unitQueryService.getAllUnitProgressSummariesInChapter(chapter.getId(), userId);

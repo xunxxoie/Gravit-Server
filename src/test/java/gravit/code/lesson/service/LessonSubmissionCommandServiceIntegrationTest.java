@@ -70,7 +70,7 @@ class LessonSubmissionCommandServiceIntegrationTest {
             Chapter chapter = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
             Lesson lesson = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson.getId(), userId));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 80, lesson.getId(), userId));
             LessonSubmissionSaveRequest request = new LessonSubmissionSaveRequest(lesson.getId(), 90, 85);
 
             // when

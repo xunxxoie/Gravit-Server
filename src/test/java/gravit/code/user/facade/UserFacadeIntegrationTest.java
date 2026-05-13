@@ -109,7 +109,7 @@ class UserFacadeIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
             unitRepository.save(Unit.create("스레드", "스레드 개념", chapter.getId()));
             Lesson lesson = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson.getId(), user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 100, lesson.getId(), user.getId()));
 
             Learning learning = Learning.create(user.getId());
             org.springframework.test.util.ReflectionTestUtils.setField(learning, "recentSolvedChapterId", chapter.getId());

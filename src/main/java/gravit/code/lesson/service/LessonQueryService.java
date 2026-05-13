@@ -31,4 +31,9 @@ public class LessonQueryService {
         return lessonRepository.findLearningIdsByLessonId(lessonId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.LESSON_NOT_FOUND));
     }
+
+    @Transactional(readOnly = true)
+    public int getTotalLessonCount() {
+        return Math.toIntExact(lessonRepository.count());
+    }
 }

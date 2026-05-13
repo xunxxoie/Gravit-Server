@@ -338,6 +338,7 @@ class LessonSubmissionQueryServiceIntegrationTest {
                 softly.assertThat(result.get(1).chapterTitle()).isEqualTo("운영체제");
                 softly.assertThat(result.get(1).solvedLessonCount()).isEqualTo(2);
                 softly.assertThat(result.get(2).rank()).isEqualTo(3);
+                softly.assertThat(result.get(2).solvedLessonCount()).isEqualTo(1);
             });
         }
 
@@ -408,6 +409,24 @@ class LessonSubmissionQueryServiceIntegrationTest {
         void 풀이_기록이_없으면_빈_리스트를_반환한다() {
             // given
             long userId = 1L;
+
+            // when
+            List<WeakConceptResponse> result = lessonSubmissionQueryService.getWeakConcepts(userId);
+
+            // then
+            assertThat(result).isEmpty();
+        }
+
+        @Test
+        void 다른_사용자의_풀이는_집계되지_않는다() {
+            // given
+            long userId = 1L;
+            long otherUserId = 2L;
+            Chapter chapter = chapterRepository.save(Chapter.create("자료구조", "자료구조 기초"));
+            Unit unit = unitRepository.save(Unit.create("연결리스트", "linked list", chapter.getId()));
+            Lesson lesson = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
+            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문1", "내용1", lesson.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(60, 20, lesson.getId(), otherUserId));
 
             // when
             List<WeakConceptResponse> result = lessonSubmissionQueryService.getWeakConcepts(userId);

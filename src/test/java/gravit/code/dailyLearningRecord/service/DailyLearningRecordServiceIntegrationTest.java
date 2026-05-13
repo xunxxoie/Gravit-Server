@@ -242,6 +242,8 @@ class DailyLearningRecordServiceIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(2);
                 softly.assertThat(result.weekOverWeekDelta()).isEqualTo(1);
+                softly.assertThat(result.MONDAY()).isEqualTo(1);
+                softly.assertThat(result.TUESDAY()).isZero();
                 softly.assertThat(result.WEDNESDAY()).isEqualTo(1);
             });
         }

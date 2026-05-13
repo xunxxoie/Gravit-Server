@@ -70,7 +70,13 @@ public class LessonSubmissionQueryService {
 
         List<ChapterSolvedStatDto> chapterSolvedStats = lessonSubmissionRepository.findTopChaptersByUserIdInWeek(
                 userId, weekStart, nextWeekStart
-        );
+        ).stream()
+                .map(row -> ChapterSolvedStatDto.of(
+                        ((Number) row[0]).longValue(),
+                        (String) row[1],
+                        ((Number) row[2]).longValue()
+                ))
+                .toList();
 
         long weeklySolvedTotal = lessonSubmissionRepository.countSolvedLessonsByUserIdInWeek(
                 userId, weekStart, nextWeekStart
@@ -89,7 +95,15 @@ public class LessonSubmissionQueryService {
 
     @Transactional(readOnly = true)
     public List<WeakConceptResponse> getWeakConcepts(long userId) {
-        List<WeakLessonStatDto> weakLessonStats = lessonSubmissionRepository.findWeakLessonsByUserId(userId);
+        List<WeakLessonStatDto> weakLessonStats = lessonSubmissionRepository.findWeakLessonsByUserId(userId).stream()
+                .map(row -> WeakLessonStatDto.of(
+                        ((Number) row[0]).longValue(),
+                        (String) row[1],
+                        (String) row[2],
+                        ((Number) row[3]).intValue(),
+                        ((Number) row[4]).longValue()
+                ))
+                .toList();
 
         List<WeakConceptResponse> response = new ArrayList<>();
 

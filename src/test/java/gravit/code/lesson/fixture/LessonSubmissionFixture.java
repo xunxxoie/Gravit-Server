@@ -34,4 +34,16 @@ public class LessonSubmissionFixture {
         ReflectionTestUtils.setField(submission, "id", id);
         return submission;
     }
+
+    public static LessonSubmission 저장된_레슨_제출(
+            long id,
+            int learningTime,
+            int accuracy,
+            long lessonId,
+            long userId
+    ) {
+        LessonSubmission submission = LessonSubmission.create(learningTime, accuracy, lessonId, userId);
+        ReflectionTestUtils.setField(submission, "id", id);
+        return submission;
+    }
 }

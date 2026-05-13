@@ -1,7 +1,5 @@
 package gravit.code.lesson.repository;
 
-import gravit.code.chapter.dto.internal.ChapterSolvedStatDto;
-import gravit.code.learning.dto.internal.WeakLessonStatDto;
 import gravit.code.lesson.domain.LessonSubmission;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -98,24 +96,23 @@ public interface LessonSubmissionRepository extends JpaRepository<LessonSubmissi
     """, nativeQuery = true)
     Optional<Integer> getPeakLearningHour(@Param("userId") long userId);
 
-    @Query("""
-        SELECT new gravit.code.chapter.dto.internal.ChapterSolvedStatDto(
+    @Query(value = """
+        SELECT
             c.id,
             c.title,
             COUNT(DISTINCT l.id)
-        )
-        FROM LessonSubmission ls
-        JOIN Lesson l ON l.id = ls.lessonId
-        JOIN Unit u ON u.id = l.unitId
-        JOIN Chapter c ON c.id = u.chapterId
-        WHERE ls.userId = :userId
-          AND ls.updatedAt >= :weekStart
-          AND ls.updatedAt < :nextWeekStart
+        FROM lesson_submission ls
+        JOIN lesson l ON l.id = ls.lesson_id
+        JOIN unit u ON u.id = l.unit_id
+        JOIN chapter c ON c.id = u.chapter_id
+        WHERE ls.user_id = :userId
+          AND ls.updated_at >= :weekStart
+          AND ls.updated_at < :nextWeekStart
         GROUP BY c.id, c.title
         ORDER BY COUNT(DISTINCT l.id) DESC, c.id ASC
         LIMIT 3
-    """)
-    List<ChapterSolvedStatDto> findTopChaptersByUserIdInWeek(
+    """, nativeQuery = true)
+    List<Object[]> findTopChaptersByUserIdInWeek(
             @Param("userId") long userId,
             @Param("weekStart") LocalDateTime weekStart,
             @Param("nextWeekStart") LocalDateTime nextWeekStart
@@ -134,21 +131,20 @@ public interface LessonSubmissionRepository extends JpaRepository<LessonSubmissi
             @Param("nextWeekStart") LocalDateTime nextWeekStart
     );
 
-    @Query("""
-        SELECT new gravit.code.learning.dto.internal.WeakLessonStatDto(
+    @Query(value = """
+        SELECT
             l.id,
             u.title,
             c.title,
             ls.accuracy,
-            (SELECT COUNT(p.id) FROM Problem p WHERE p.lessonId = l.id)
-        )
-        FROM LessonSubmission ls
-        JOIN Lesson l ON l.id = ls.lessonId
-        JOIN Unit u ON u.id = l.unitId
-        JOIN Chapter c ON c.id = u.chapterId
-        WHERE ls.userId = :userId
+            (SELECT COUNT(p.id) FROM problem p WHERE p.lesson_id = l.id)
+        FROM lesson_submission ls
+        JOIN lesson l ON l.id = ls.lesson_id
+        JOIN unit u ON u.id = l.unit_id
+        JOIN chapter c ON c.id = u.chapter_id
+        WHERE ls.user_id = :userId
         ORDER BY ls.accuracy ASC, l.id ASC
         LIMIT 7
-    """)
-    List<WeakLessonStatDto> findWeakLessonsByUserId(@Param("userId") long userId);
+    """, nativeQuery = true)
+    List<Object[]> findWeakLessonsByUserId(@Param("userId") long userId);
 }

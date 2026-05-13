@@ -1,6 +1,7 @@
 package gravit.code.lesson.domain;
 
 import gravit.code.global.entity.BaseEntity;
+import gravit.code.global.exception.domain.RestApiException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static gravit.code.global.exception.domain.CustomErrorCode.INVALID_ACCURACY;
 
 @Table(name = "lesson_submission")
 @Entity
@@ -44,6 +47,7 @@ public class LessonSubmission extends BaseEntity {
             long lessonId,
             long userId
     ) {
+        validateAccuracy(accuracy);
         this.learningTime = learningTime;
         this.tryCount = 1;
         this.accuracy = accuracy;
@@ -70,10 +74,17 @@ public class LessonSubmission extends BaseEntity {
     }
 
     public void updateAccuracy(int accuracy){
+        validateAccuracy(accuracy);
         this.accuracy = accuracy;
     }
 
     public void updateTryCount() {
         this.tryCount++;
+    }
+
+    private static void validateAccuracy(int accuracy) {
+        if (accuracy < 0 || accuracy > 100) {
+            throw new RestApiException(INVALID_ACCURACY);
+        }
     }
 }

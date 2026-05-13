@@ -81,6 +81,7 @@ class LessonSubmissionCommandServiceIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(updated.getLearningTime()).isEqualTo(90);
                 softly.assertThat(updated.getTryCount()).isEqualTo(2);
+                softly.assertThat(updated.getAccuracy()).isEqualTo(85);
             });
         }
 

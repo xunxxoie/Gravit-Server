@@ -28,6 +28,7 @@ public interface DailyLearningRecordRepository extends JpaRepository<DailyLearni
         )
         FROM DailyLearningRecord dlr
         WHERE dlr.userId = :userId AND dlr.solvedDate BETWEEN :beginDate AND :endDate
+        ORDER BY dlr.solvedDate ASC
     """)
     List<DailySolvedCountResponse> findDailySolvedCountsByUserIdBetween(
             @Param("userId") long userId,

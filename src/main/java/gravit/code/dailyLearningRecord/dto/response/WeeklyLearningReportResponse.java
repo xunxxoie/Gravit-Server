@@ -25,7 +25,7 @@ public record WeeklyLearningReportResponse(
     ) {
         return WeeklyLearningReportResponse.builder()
                 .MONDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.MONDAY, 0))
-                .TUESDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.MONDAY, 0))
+                .TUESDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.TUESDAY, 0))
                 .WEDNESDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.WEDNESDAY, 0))
                 .THURSDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.THURSDAY, 0))
                 .FRIDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.FRIDAY, 0))

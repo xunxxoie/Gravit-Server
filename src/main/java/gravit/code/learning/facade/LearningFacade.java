@@ -30,7 +30,7 @@ public class LearningFacade {
     @Transactional(readOnly = true)
     public MyPageLearningResponse getMyPageLearning(long userId) {
         LearningSummaryResponse learningSummary = getLearningSummary(userId);
-        LearningHistoryResponse learningHistory = getLearningHistory(userId);
+        LearningHistoryResponse learningHistory = getLearningHistory(userId, LocalDate.now().getYear());
         WeeklyLearningReportResponse weeklyReport = getWeeklyLearningReport(userId);
         List<TopChapterResponse> topChapters = getTopChapters(userId);
         List<WeakConceptResponse> weakConcepts = getWeakConcepts(userId);
@@ -42,6 +42,14 @@ public class LearningFacade {
                 topChapters,
                 weakConcepts
         );
+    }
+
+    @Transactional(readOnly = true)
+    public LearningHistoryResponse getMyPageLearningHistory(
+            long userId,
+            int year
+    ) {
+        return getLearningHistory(userId, year);
     }
 
     private LearningSummaryResponse getLearningSummary(long userId) {
@@ -60,8 +68,11 @@ public class LearningFacade {
         );
     }
 
-    private LearningHistoryResponse getLearningHistory(long userId) {
-        List<DailySolvedCountResponse> dailySolvedCountResponses = dailyLearningRecordService.getDailySolvedCounts(userId, LocalDate.now().getYear());
+    private LearningHistoryResponse getLearningHistory(
+            long userId,
+            int year
+    ) {
+        List<DailySolvedCountResponse> dailySolvedCountResponses = dailyLearningRecordService.getDailySolvedCounts(userId, year);
         int peakLearningHour = lessonSubmissionQueryService.getPeakLearningHour(userId);
 
         return LearningHistoryResponse.of(

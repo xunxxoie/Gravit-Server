@@ -32,9 +32,7 @@ public class DailyLearningRecordService {
         LocalDate monday = today.with(DayOfWeek.MONDAY);
         LocalDate sunday = today.with(DayOfWeek.SUNDAY);
 
-        Set<DayOfWeek> solvedDays = dailyLearningRecordRepository
-                .findSolvedDatesByUserIdAndDateRange(userId, monday, sunday)
-                .stream()
+        Set<DayOfWeek> solvedDays = dailyLearningRecordRepository.findSolvedDatesByUserIdAndDateRange(userId, monday, sunday).stream()
                 .map(LocalDate::getDayOfWeek)
                 .collect(Collectors.toUnmodifiableSet());
 
@@ -98,5 +96,15 @@ public class DailyLearningRecordService {
                 thisWeekCompletedLessonCount,
                 weekOverWeekDeltas
         );
+    @Transactional
+    public void handleDailyLearningRecord(long userId) {
+        LocalDate today = LocalDate.now(KST);
+
+        DailyLearningRecord dailyLearningRecord = dailyLearningRecordRepository.findByUserIdAndSolvedDate(userId, today)
+                .orElseGet(() -> DailyLearningRecord.create(userId, today));
+
+        dailyLearningRecord.increaseSolvedLessonCount();
+
+        dailyLearningRecordRepository.save(dailyLearningRecord);
     }
 }

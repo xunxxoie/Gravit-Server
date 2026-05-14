@@ -55,6 +55,8 @@ allowed-tools: Read, Grep, Glob, Edit, Write, Bash
 4. Phase 1에서 파악한 각 메서드에 대해 다음 테스트 케이스를 작성하라:
    - 정상 동작 (성공 케이스)
    - 예외 발생 (실패 케이스: 존재하지 않음, 권한 없음, 중복 등)
+     - **`RestApiException`을 던지는 케이스는 반드시 `errorCode`까지 검증**한다 (예: `.extracting(e -> ((RestApiException) e).getErrorCode()).isEqualTo({CODE})`). 타입만 검증(`.isInstanceOf(RestApiException.class)` 단독)하면 다른 errorCode로 회귀해도 통과하므로 회귀 감지가 불가능하다.
+     - `CustomErrorCode`는 static import로 식별자만 노출한다 (`CustomErrorCode.X` 표기 금지).
    - 엣지 케이스 (경계값, 빈 리스트, null 등 — 해당하는 경우만)
 
 > 다음 Phase 조건: 테스트 파일 작성이 완료되었을 때

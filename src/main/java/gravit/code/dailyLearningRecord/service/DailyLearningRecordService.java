@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,30 +67,36 @@ public class DailyLearningRecordService {
         LocalDate today = LocalDate.now(KST);
         LocalDate thisMonday = today.with(DayOfWeek.MONDAY);
         LocalDate thisSunday = today.with(DayOfWeek.SUNDAY);
-        LocalDate lastMonday = thisMonday.minusWeeks(1);
-        LocalDate lastSunday = thisMonday.minusDays(1);
+        LocalDate threeWeeksAgoMonday = thisMonday.minusWeeks(3);
 
-        Map<DayOfWeek, Integer> thisWeekCountsByDay = dailyLearningRecordRepository
-                .findByUserIdAndSolvedDateBetween(userId, thisMonday, thisSunday)
-                .stream()
+        List<DailyLearningRecord> records = dailyLearningRecordRepository
+                .findByUserIdAndSolvedDateBetween(userId, threeWeeksAgoMonday, thisSunday);
+
+        Map<DayOfWeek, Integer> thisWeekCountsByDay = records.stream()
+                .filter(dlr -> !dlr.getSolvedDate().isBefore(thisMonday))
                 .collect(Collectors.toMap(
                         dlr -> dlr.getSolvedDate().getDayOfWeek(),
                         DailyLearningRecord::getSolvedLessonCount
                 ));
 
-        int thisWeekCompletedLessonCount = thisWeekCountsByDay.values().stream()
-                .mapToInt(Integer::intValue)
-                .sum();
+        Map<LocalDate, Integer> countsByWeekStart = records.stream()
+                .collect(Collectors.groupingBy(
+                        dlr -> dlr.getSolvedDate().with(DayOfWeek.MONDAY),
+                        Collectors.summingInt(DailyLearningRecord::getSolvedLessonCount)
+                ));
 
-        int lastWeekCompletedLessonCount = dailyLearningRecordRepository
-                .findTotalSolvedCountByUserIdAndSolvedDateBetween(userId, lastMonday, lastSunday);
+        List<Integer> recentWeeklyCounts = new ArrayList<>(4);
 
-        int weekOverWeekDelta = thisWeekCompletedLessonCount - lastWeekCompletedLessonCount;
+        for (int weeksAgo = 3; weeksAgo >= 0; weeksAgo--) {
+            recentWeeklyCounts.add(countsByWeekStart.getOrDefault(thisMonday.minusWeeks(weeksAgo), 0));
+        }
+
+        int weekOverWeekDelta = recentWeeklyCounts.get(3) - recentWeeklyCounts.get(2);
 
         return WeeklyLearningReportResponse.of(
                 thisWeekCountsByDay,
                 weekOverWeekDelta,
-                thisWeekCompletedLessonCount
+                recentWeeklyCounts
         );
     }
 }

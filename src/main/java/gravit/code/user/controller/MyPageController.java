@@ -3,6 +3,7 @@ package gravit.code.user.controller;
 import gravit.code.auth.domain.LoginUser;
 import gravit.code.learning.dto.response.LearningHistoryResponse;
 import gravit.code.learning.dto.response.MyPageLearningResponse;
+import gravit.code.learning.dto.response.MyPageSummaryResponse;
 import gravit.code.learning.facade.LearningFacade;
 import gravit.code.user.controller.docs.MyPageControllerDocs;
 import gravit.code.user.dto.response.MyPageBannerResponse;
@@ -30,6 +31,11 @@ public class MyPageController implements MyPageControllerDocs {
     @GetMapping("/banners")
     public ResponseEntity<MyPageBannerResponse> getMyPageBanner(@AuthenticationPrincipal LoginUser loginUser) {
         return ResponseEntity.ok(userFacade.getMyPageBanner(loginUser.getId()));
+    }
+
+    @GetMapping("/summaries")
+    public ResponseEntity<MyPageSummaryResponse> getMyPageSummary(@AuthenticationPrincipal LoginUser loginUser){
+        return ResponseEntity.ok(learningFacade.getMyPageSummary(loginUser.getId()));
     }
 
     @GetMapping("/learning")

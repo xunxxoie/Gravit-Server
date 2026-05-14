@@ -8,15 +8,18 @@ import gravit.code.global.annotation.Facade;
 import gravit.code.learning.dto.response.LearningHistoryResponse;
 import gravit.code.learning.dto.response.LearningSummaryResponse;
 import gravit.code.learning.dto.response.MyPageLearningResponse;
+import gravit.code.learning.dto.response.MyPageSummaryResponse;
 import gravit.code.learning.dto.response.WeakConceptResponse;
 import gravit.code.learning.service.LearningProgressRateService;
 import gravit.code.lesson.service.LessonQueryService;
 import gravit.code.lesson.service.LessonSubmissionQueryService;
+import gravit.code.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Facade
 @RequiredArgsConstructor
@@ -26,21 +29,37 @@ public class LearningFacade {
     private final LessonSubmissionQueryService lessonSubmissionQueryService;
     private final LessonQueryService lessonQueryService;
     private final DailyLearningRecordService dailyLearningRecordService;
+    private final UserService userService;
 
     @Transactional(readOnly = true)
     public MyPageLearningResponse getMyPageLearning(long userId) {
-        LearningSummaryResponse learningSummary = getLearningSummary(userId);
-        LearningHistoryResponse learningHistory = getLearningHistory(userId, LocalDate.now().getYear());
         WeeklyLearningReportResponse weeklyReport = getWeeklyLearningReport(userId);
         List<TopChapterResponse> topChapters = getTopChapters(userId);
         List<WeakConceptResponse> weakConcepts = getWeakConcepts(userId);
 
         return MyPageLearningResponse.of(
-                learningSummary,
-                learningHistory,
                 weeklyReport,
                 topChapters,
                 weakConcepts
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public MyPageSummaryResponse getMyPageSummary(long userId) {
+        int currentYear = LocalDate.now().getYear();
+        int signUpYear = userService.getUser(userId).getCreatedAt().getYear();
+
+        LearningSummaryResponse learningSummary = getLearningSummary(userId);
+        LearningHistoryResponse learningHistory = getLearningHistory(userId, currentYear);
+
+        List<Integer> availableYears = IntStream.rangeClosed(signUpYear, currentYear)
+                .boxed()
+                .toList();
+
+        return MyPageSummaryResponse.of(
+                learningSummary,
+                learningHistory,
+                availableYears
         );
     }
 

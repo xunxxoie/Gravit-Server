@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 
 import java.time.DayOfWeek;
+import java.util.List;
 import java.util.Map;
 
 @Builder(access = AccessLevel.PRIVATE)
@@ -16,12 +17,12 @@ public record WeeklyLearningReportResponse(
         int SATURDAY,
         int SUNDAY,
         int weekOverWeekDelta,
-        int thisWeekCompletedLessonCount
+        List<Integer> recentWeeklyCounts
 ) {
     public static WeeklyLearningReportResponse of(
             Map<DayOfWeek, Integer> thisWeekCountsByDay,
             int weekOverWeekDelta,
-            int thisWeekCompletedLessonCount
+            List<Integer> recentWeeklyCounts
     ) {
         return WeeklyLearningReportResponse.builder()
                 .MONDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.MONDAY, 0))
@@ -32,7 +33,7 @@ public record WeeklyLearningReportResponse(
                 .SATURDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.SATURDAY, 0))
                 .SUNDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.SUNDAY, 0))
                 .weekOverWeekDelta(weekOverWeekDelta)
-                .thisWeekCompletedLessonCount(thisWeekCompletedLessonCount)
+                .recentWeeklyCounts(recentWeeklyCounts)
                 .build();
     }
 }

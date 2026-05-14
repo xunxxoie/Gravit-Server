@@ -240,7 +240,7 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(2);
+                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 1, 2);
                 softly.assertThat(result.weekOverWeekDelta()).isEqualTo(1);
                 softly.assertThat(result.MONDAY()).isEqualTo(1);
                 softly.assertThat(result.TUESDAY()).isZero();
@@ -258,7 +258,7 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
+                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 0, 0);
                 softly.assertThat(result.weekOverWeekDelta()).isZero();
                 softly.assertThat(result.MONDAY()).isZero();
                 softly.assertThat(result.SUNDAY()).isZero();
@@ -277,7 +277,7 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(1);
+                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 0, 1);
                 softly.assertThat(result.weekOverWeekDelta()).isEqualTo(1);
             });
         }
@@ -295,9 +295,44 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
+                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 2, 0);
                 softly.assertThat(result.weekOverWeekDelta()).isEqualTo(-2);
             });
+        }
+
+        @Test
+        void 최근_4주치_주별_풀이_수를_3주전부터_이번주_순서로_반환한다() {
+            // given
+            long userId = 1L;
+            LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
+
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(3)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(3).plusDays(2)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(2)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(1)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday));
+
+            // when
+            WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
+
+            // then
+            assertThat(result.recentWeeklyCounts()).containsExactly(2, 1, 1, 1);
+        }
+
+        @Test
+        void 최근_4주보다_더_과거의_학습_기록은_무시된다() {
+            // given
+            long userId = 1L;
+            LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
+
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(4)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(5)));
+
+            // when
+            WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
+
+            // then
+            assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 0, 0);
         }
     }
 }

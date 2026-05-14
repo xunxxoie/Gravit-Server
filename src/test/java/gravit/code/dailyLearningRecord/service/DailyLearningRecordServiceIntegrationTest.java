@@ -240,8 +240,8 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 1, 2);
-                softly.assertThat(result.weekOverWeekDelta()).isEqualTo(1);
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(2);
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(1, 2, 2);
                 softly.assertThat(result.MONDAY()).isEqualTo(1);
                 softly.assertThat(result.TUESDAY()).isZero();
                 softly.assertThat(result.WEDNESDAY()).isEqualTo(1);
@@ -258,8 +258,8 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 0, 0);
-                softly.assertThat(result.weekOverWeekDelta()).isZero();
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(0, 0, 0);
                 softly.assertThat(result.MONDAY()).isZero();
                 softly.assertThat(result.SUNDAY()).isZero();
             });
@@ -277,8 +277,8 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 0, 1);
-                softly.assertThat(result.weekOverWeekDelta()).isEqualTo(1);
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(1);
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(1, 1, 1);
             });
         }
 
@@ -295,28 +295,36 @@ class DailyLearningRecordServiceIntegrationTest {
 
             // then
             assertSoftly(softly -> {
-                softly.assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 2, 0);
-                softly.assertThat(result.weekOverWeekDelta()).isEqualTo(-2);
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(-2, 0, 0);
             });
         }
 
         @Test
-        void 최근_4주치_주별_풀이_수를_3주전부터_이번주_순서로_반환한다() {
+        void 이번주_풀이_수와_과거_3주_대비_증감을_분리해서_반환한다() {
             // given
             long userId = 1L;
             LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
 
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(3)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(3).plusDays(2)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(2)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(1)));
+            // 이번주 3개
             dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.plusDays(1)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.plusDays(2)));
+            // 저번주 2개
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(1)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(1).plusDays(1)));
+            // 저저번주 0개
+            // 저저저번주 1개
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(3)));
 
             // when
             WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
 
             // then
-            assertThat(result.recentWeeklyCounts()).containsExactly(2, 1, 1, 1);
+            assertSoftly(softly -> {
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(3);
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(1, 3, 2);
+            });
         }
 
         @Test
@@ -332,7 +340,10 @@ class DailyLearningRecordServiceIntegrationTest {
             WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
 
             // then
-            assertThat(result.recentWeeklyCounts()).containsExactly(0, 0, 0, 0);
+            assertSoftly(softly -> {
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(0, 0, 0);
+            });
         }
     }
 }

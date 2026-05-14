@@ -16,13 +16,13 @@ public record WeeklyLearningReportResponse(
         int FRIDAY,
         int SATURDAY,
         int SUNDAY,
-        int weekOverWeekDelta,
-        List<Integer> recentWeeklyCounts
+        int thisWeekCompletedLessonCount,
+        List<Integer> weekOverWeekDeltas
 ) {
     public static WeeklyLearningReportResponse of(
             Map<DayOfWeek, Integer> thisWeekCountsByDay,
-            int weekOverWeekDelta,
-            List<Integer> recentWeeklyCounts
+            int thisWeekCompletedLessonCount,
+            List<Integer> weekOverWeekDeltas
     ) {
         return WeeklyLearningReportResponse.builder()
                 .MONDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.MONDAY, 0))
@@ -32,8 +32,8 @@ public record WeeklyLearningReportResponse(
                 .FRIDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.FRIDAY, 0))
                 .SATURDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.SATURDAY, 0))
                 .SUNDAY(thisWeekCountsByDay.getOrDefault(DayOfWeek.SUNDAY, 0))
-                .weekOverWeekDelta(weekOverWeekDelta)
-                .recentWeeklyCounts(recentWeeklyCounts)
+                .thisWeekCompletedLessonCount(thisWeekCompletedLessonCount)
+                .weekOverWeekDeltas(weekOverWeekDeltas)
                 .build();
     }
 }

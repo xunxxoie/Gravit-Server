@@ -85,18 +85,18 @@ public class DailyLearningRecordService {
                         Collectors.summingInt(DailyLearningRecord::getSolvedLessonCount)
                 ));
 
-        List<Integer> recentWeeklyCounts = new ArrayList<>(4);
+        int thisWeekCompletedLessonCount = countsByWeekStart.getOrDefault(thisMonday, 0);
 
-        for (int weeksAgo = 3; weeksAgo >= 0; weeksAgo--) {
-            recentWeeklyCounts.add(countsByWeekStart.getOrDefault(thisMonday.minusWeeks(weeksAgo), 0));
+        List<Integer> weekOverWeekDeltas = new ArrayList<>(3);
+        for (int weeksAgo = 1; weeksAgo <= 3; weeksAgo++) {
+            int pastWeekCount = countsByWeekStart.getOrDefault(thisMonday.minusWeeks(weeksAgo), 0);
+            weekOverWeekDeltas.add(thisWeekCompletedLessonCount - pastWeekCount);
         }
-
-        int weekOverWeekDelta = recentWeeklyCounts.get(3) - recentWeeklyCounts.get(2);
 
         return WeeklyLearningReportResponse.of(
                 thisWeekCountsByDay,
-                weekOverWeekDelta,
-                recentWeeklyCounts
+                thisWeekCompletedLessonCount,
+                weekOverWeekDeltas
         );
     }
 }

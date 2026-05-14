@@ -58,10 +58,12 @@ public interface DailyLearningRecordRepository extends JpaRepository<DailyLearni
             @Param("userId") long userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate
+    );
+
+    @Query("""
         SELECT dlr
         FROM DailyLearningRecord dlr
-        WHERE dlr.userId = :userId
-          AND dlr.solvedDate = :solvedDate
+        WHERE dlr.userId = :userId AND dlr.solvedDate = :solvedDate
     """)
     Optional<DailyLearningRecord> findByUserIdAndSolvedDate(
             @Param("userId") long userId,

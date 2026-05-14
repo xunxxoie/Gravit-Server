@@ -96,6 +96,8 @@ public class DailyLearningRecordService {
                 thisWeekCompletedLessonCount,
                 weekOverWeekDeltas
         );
+    }
+
     @Transactional
     public void handleDailyLearningRecord(long userId) {
         LocalDate today = LocalDate.now(KST);

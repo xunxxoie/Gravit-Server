@@ -16,10 +16,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -34,6 +33,12 @@ class DailyLearningRecordServiceIntegrationTest {
 
     @Autowired
     private DailyLearningRecordRepository dailyLearningRecordRepository;
+
+    private DailyLearningRecord saveSolvedRecord(long userId, LocalDate date) {
+        DailyLearningRecord record = DailyLearningRecord.create(userId, date);
+        record.increaseSolvedLessonCount();
+        return dailyLearningRecordRepository.save(record);
+    }
 
     @Nested
     @DisplayName("주간 학습 기록을 조회할 때")
@@ -165,8 +170,8 @@ class DailyLearningRecordServiceIntegrationTest {
             int year = LocalDate.now(KST).getYear();
             LocalDate today = LocalDate.now(KST);
 
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, today));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, today.minusDays(1)));
+            saveSolvedRecord(userId, today);
+            saveSolvedRecord(userId, today.minusDays(1));
 
             // when
             List<DailySolvedCountResponse> result = dailyLearningRecordService.getDailySolvedCounts(userId, year);
@@ -234,9 +239,9 @@ class DailyLearningRecordServiceIntegrationTest {
             LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
             LocalDate lastMonday = thisMonday.minusWeeks(1);
 
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.plusDays(2)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, lastMonday));
+            saveSolvedRecord(userId, thisMonday);
+            saveSolvedRecord(userId, thisMonday.plusDays(2));
+            saveSolvedRecord(userId, lastMonday);
 
             // when
             WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
@@ -248,25 +253,6 @@ class DailyLearningRecordServiceIntegrationTest {
                 softly.assertThat(result.MONDAY()).isEqualTo(1);
                 softly.assertThat(result.TUESDAY()).isZero();
                 softly.assertThat(result.WEDNESDAY()).isEqualTo(1);
-    @DisplayName("일일 학습 기록을 처리할 때")
-    class HandleDailyLearningRecord {
-
-        @Test
-        void 오늘_날짜_레코드가_없으면_새로_생성하고_카운트가_1이_된다() {
-            // given
-            long userId = 1L;
-            LocalDate today = LocalDate.now(KST);
-
-            // when
-            dailyLearningRecordService.handleDailyLearningRecord(userId);
-
-            // then
-            Optional<DailyLearningRecord> result = dailyLearningRecordRepository.findByUserIdAndSolvedDate(userId, today);
-            assertSoftly(softly -> {
-                softly.assertThat(result).isPresent();
-                softly.assertThat(result.get().getUserId()).isEqualTo(userId);
-                softly.assertThat(result.get().getSolvedDate()).isEqualTo(today);
-                softly.assertThat(result.get().getSolvedLessonCount()).isEqualTo(1);
             });
         }
 
@@ -292,7 +278,7 @@ class DailyLearningRecordServiceIntegrationTest {
             // given
             long userId = 1L;
             LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday));
+            saveSolvedRecord(userId, thisMonday);
 
             // when
             WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
@@ -309,8 +295,8 @@ class DailyLearningRecordServiceIntegrationTest {
             // given
             long userId = 1L;
             LocalDate lastMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY).minusWeeks(1);
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, lastMonday));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, lastMonday.plusDays(1)));
+            saveSolvedRecord(userId, lastMonday);
+            saveSolvedRecord(userId, lastMonday.plusDays(1));
 
             // when
             WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
@@ -319,6 +305,80 @@ class DailyLearningRecordServiceIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
                 softly.assertThat(result.weekOverWeekDeltas()).containsExactly(-2, 0, 0);
+            });
+        }
+
+        @Test
+        void 이번주_풀이_수와_과거_3주_대비_증감을_분리해서_반환한다() {
+            // given
+            long userId = 1L;
+            LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
+
+            // 이번주 3개
+            saveSolvedRecord(userId, thisMonday);
+            saveSolvedRecord(userId, thisMonday.plusDays(1));
+            saveSolvedRecord(userId, thisMonday.plusDays(2));
+            // 저번주 2개
+            saveSolvedRecord(userId, thisMonday.minusWeeks(1));
+            saveSolvedRecord(userId, thisMonday.minusWeeks(1).plusDays(1));
+            // 저저번주 0개
+            // 저저저번주 1개
+            saveSolvedRecord(userId, thisMonday.minusWeeks(3));
+
+            // when
+            WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(3);
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(1, 3, 2);
+            });
+        }
+
+        @Test
+        void 최근_4주보다_더_과거의_학습_기록은_무시된다() {
+            // given
+            long userId = 1L;
+            LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
+
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(4)));
+            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(5)));
+
+            // when
+            WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
+                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(0, 0, 0);
+            });
+        }
+    }
+
+    @Nested
+    @DisplayName("일일 학습 기록을 처리할 때")
+    class HandleDailyLearningRecord {
+
+        @Test
+        void 오늘_날짜_레코드가_없으면_새로_생성하고_카운트가_1이_된다() {
+            // given
+            long userId = 1L;
+            LocalDate today = LocalDate.now(KST);
+
+            // when
+            dailyLearningRecordService.handleDailyLearningRecord(userId);
+
+            // then
+            Optional<DailyLearningRecord> result = dailyLearningRecordRepository.findByUserIdAndSolvedDate(userId, today);
+            assertSoftly(softly -> {
+                softly.assertThat(result).isPresent();
+                softly.assertThat(result.get().getUserId()).isEqualTo(userId);
+                softly.assertThat(result.get().getSolvedDate()).isEqualTo(today);
+                softly.assertThat(result.get().getSolvedLessonCount()).isEqualTo(1);
+            });
+        }
+
+        @Test
         void 오늘_날짜_레코드가_존재하면_카운트가_1_증가한다() {
             // given
             long userId = 1L;
@@ -340,29 +400,6 @@ class DailyLearningRecordServiceIntegrationTest {
         }
 
         @Test
-        void 이번주_풀이_수와_과거_3주_대비_증감을_분리해서_반환한다() {
-            // given
-            long userId = 1L;
-            LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
-
-            // 이번주 3개
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.plusDays(1)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.plusDays(2)));
-            // 저번주 2개
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(1)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(1).plusDays(1)));
-            // 저저번주 0개
-            // 저저저번주 1개
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(3)));
-
-            // when
-            WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
-
-            // then
-            assertSoftly(softly -> {
-                softly.assertThat(result.thisWeekCompletedLessonCount()).isEqualTo(3);
-                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(1, 3, 2);
         void 같은_유저의_다른_날짜_레코드가_있어도_정상_처리된다() {
             // given
             long userId = 1L;
@@ -390,21 +427,6 @@ class DailyLearningRecordServiceIntegrationTest {
         }
 
         @Test
-        void 최근_4주보다_더_과거의_학습_기록은_무시된다() {
-            // given
-            long userId = 1L;
-            LocalDate thisMonday = LocalDate.now(KST).with(DayOfWeek.MONDAY);
-
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(4)));
-            dailyLearningRecordRepository.save(DailyLearningRecord.create(userId, thisMonday.minusWeeks(5)));
-
-            // when
-            WeeklyLearningReportResponse result = dailyLearningRecordService.getWeeklyLearningReport(userId);
-
-            // then
-            assertSoftly(softly -> {
-                softly.assertThat(result.thisWeekCompletedLessonCount()).isZero();
-                softly.assertThat(result.weekOverWeekDeltas()).containsExactly(0, 0, 0);
         void 같은_메서드를_두_번_호출하면_카운트가_2가_된다() {
             // given
             long userId = 1L;

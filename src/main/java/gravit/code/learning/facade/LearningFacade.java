@@ -18,12 +18,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.IntStream;
 
 @Facade
 @RequiredArgsConstructor
 public class LearningFacade {
+
+    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
 
     private final LearningProgressRateService learningProgressRateService;
     private final LessonSubmissionQueryService lessonSubmissionQueryService;
@@ -46,7 +49,7 @@ public class LearningFacade {
 
     @Transactional(readOnly = true)
     public MyPageSummaryResponse getMyPageSummary(long userId) {
-        int currentYear = LocalDate.now().getYear();
+        int currentYear = LocalDate.now(KST).getYear();
         int signUpYear = userService.getUser(userId).getCreatedAt().getYear();
 
         LearningSummaryResponse learningSummary = getLearningSummary(userId);

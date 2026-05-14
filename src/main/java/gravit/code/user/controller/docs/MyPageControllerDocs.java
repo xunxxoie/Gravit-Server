@@ -96,7 +96,7 @@ public interface MyPageControllerDocs {
     })
     ResponseEntity<MyPageSummaryResponse> getMyPageSummary(@AuthenticationPrincipal LoginUser loginUser);
 
-    @Operation(summary = "마이페이지 학습 정보 조회", description = "마이페이지 학습 요약, 일별 학습 이력, 주간 리포트, TOP 챕터, 취약 개념을 한 번에 조회합니다<br>" +
+    @Operation(summary = "마이페이지 학습 정보 조회", description = "마이페이지 주간 리포트, TOP 챕터, 취약 개념을 한 번에 조회합니다<br>" +
             "🔐 <strong>Jwt 필요</strong><br>")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "✅ 마이페이지 학습 정보 조회 성공"),

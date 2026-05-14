@@ -35,6 +35,32 @@
 | 그룹화 | `@Nested` + `@DisplayName` | `@DisplayName("북마크를 추가할 때")` |
 | 구간 구분 | `// given` / `// when` / `// then` 주석 필수 | — |
 
+## 예외 검증 규칙
+
+`RestApiException`을 던지는 메서드의 예외 케이스는 **반드시 `errorCode`까지 검증**한다. 타입만 검증하면 다른 errorCode로 회귀해도 테스트가 통과해 회귀 감지가 불가능하다.
+
+| 항목 | 규칙 |
+|---|---|
+| 예외 타입 검증 | `.isInstanceOf(RestApiException.class)` (필수) |
+| errorCode 검증 | `.extracting(e -> ((RestApiException) e).getErrorCode()).isEqualTo({CODE})` (필수) |
+| `CustomErrorCode` import | static import로만 사용 (`CustomErrorCode.X` 표기 금지) |
+
+**올바른 예시**
+```java
+import static gravit.code.global.exception.domain.CustomErrorCode.CHAPTER_NOT_FOUND;
+
+assertThatThrownBy(() -> chapterQueryService.getChapterSummary(chapterId))
+        .isInstanceOf(RestApiException.class)
+        .extracting(e -> ((RestApiException) e).getErrorCode())
+        .isEqualTo(CHAPTER_NOT_FOUND);
+```
+
+**잘못된 예시** (사용 금지)
+```java
+assertThatThrownBy(() -> chapterQueryService.getChapterSummary(chapterId))
+        .isInstanceOf(RestApiException.class);  // ❌ errorCode 미검증으로 회귀 감지 불가
+```
+
 ## Fixture
 
 | 항목 | 규칙 |

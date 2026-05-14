@@ -20,7 +20,7 @@ public class LearningEventListener {
         try{
             learningService.createLearning(event.userId());
         }catch (Exception e){
-            log.error("Exception occurred while creating Learning with {}", e.getMessage());
+            log.error("Exception occurred while creating Learning", e);
         }
     }
 }

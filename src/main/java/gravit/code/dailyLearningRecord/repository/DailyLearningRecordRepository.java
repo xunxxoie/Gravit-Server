@@ -50,17 +50,6 @@ public interface DailyLearningRecordRepository extends JpaRepository<DailyLearni
     );
 
     @Query("""
-        SELECT COALESCE(SUM(dlr.solvedLessonCount), 0)
-        FROM DailyLearningRecord dlr
-        WHERE dlr.userId = :userId AND dlr.solvedDate BETWEEN :startDate AND :endDate
-    """)
-    int findTotalSolvedCountByUserIdAndSolvedDateBetween(
-            @Param("userId") long userId,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate
-    );
-
-    @Query("""
         SELECT dlr
         FROM DailyLearningRecord dlr
         WHERE dlr.userId = :userId AND dlr.solvedDate = :solvedDate

@@ -16,10 +16,10 @@ public record WeakConceptResponse(
             int rank,
             WeakLessonStatDto stat
     ) {
-        int wrongAnswerRate = 100 - stat.accuracy();
-        int wrongAnswerCount = stat.totalProblemCount() == 0
+        int wrongAnswerCount = Math.toIntExact(stat.wrongAnswerCount());
+        int wrongAnswerRate = stat.totalProblemCount() == 0
                 ? 0
-                : Math.toIntExact(stat.totalProblemCount() * wrongAnswerRate / 100);
+                : Math.toIntExact(stat.wrongAnswerCount() * 100 / stat.totalProblemCount());
 
         return WeakConceptResponse.builder()
                 .rank(rank)

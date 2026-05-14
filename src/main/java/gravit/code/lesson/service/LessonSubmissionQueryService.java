@@ -2,17 +2,18 @@ package gravit.code.lesson.service;
 
 import gravit.code.chapter.dto.internal.ChapterSolvedStatDto;
 import gravit.code.chapter.dto.response.TopChapterResponse;
+import gravit.code.global.consts.TimeZoneConst;
 import gravit.code.learning.dto.internal.WeakLessonStatDto;
 import gravit.code.learning.dto.response.WeakConceptResponse;
 import gravit.code.lesson.repository.LessonSubmissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LessonSubmissionQueryService {
 
-    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
+    private static final int TOP_CHAPTERS_LIMIT = 3;
+    private static final int WEAK_LESSONS_LIMIT = 7;
 
     private final LessonSubmissionRepository lessonSubmissionRepository;
 
@@ -65,18 +67,12 @@ public class LessonSubmissionQueryService {
 
     @Transactional(readOnly = true)
     public List<TopChapterResponse> getTopChapters(long userId) {
-        LocalDateTime weekStart = LocalDate.now(KST).with(DayOfWeek.MONDAY).atStartOfDay();
+        LocalDateTime weekStart = LocalDate.now(TimeZoneConst.KST).with(DayOfWeek.MONDAY).atStartOfDay();
         LocalDateTime nextWeekStart = weekStart.plusWeeks(1);
 
         List<ChapterSolvedStatDto> chapterSolvedStats = lessonSubmissionRepository.findTopChaptersByUserIdInWeek(
-                userId, weekStart, nextWeekStart
-        ).stream()
-                .map(row -> ChapterSolvedStatDto.of(
-                        ((Number) row[0]).longValue(),
-                        (String) row[1],
-                        ((Number) row[2]).longValue()
-                ))
-                .toList();
+                userId, weekStart, nextWeekStart, PageRequest.of(0, TOP_CHAPTERS_LIMIT)
+        );
 
         long weeklySolvedTotal = lessonSubmissionRepository.countSolvedLessonsByUserIdInWeek(
                 userId, weekStart, nextWeekStart
@@ -95,15 +91,9 @@ public class LessonSubmissionQueryService {
 
     @Transactional(readOnly = true)
     public List<WeakConceptResponse> getWeakConcepts(long userId) {
-        List<WeakLessonStatDto> weakLessonStats = lessonSubmissionRepository.findWeakLessonsByUserId(userId).stream()
-                .map(row -> WeakLessonStatDto.of(
-                        ((Number) row[0]).longValue(),
-                        (String) row[1],
-                        (String) row[2],
-                        ((Number) row[3]).intValue(),
-                        ((Number) row[4]).longValue()
-                ))
-                .toList();
+        List<WeakLessonStatDto> weakLessonStats = lessonSubmissionRepository.findWeakLessonsByUserId(
+                userId, PageRequest.of(0, WEAK_LESSONS_LIMIT)
+        );
 
         List<WeakConceptResponse> response = new ArrayList<>();
 

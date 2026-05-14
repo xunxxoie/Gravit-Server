@@ -9,8 +9,10 @@ import gravit.code.lesson.domain.LessonSubmission;
 import gravit.code.lesson.repository.LessonRepository;
 import gravit.code.lesson.repository.LessonSubmissionRepository;
 import gravit.code.problem.domain.Problem;
+import gravit.code.problem.domain.ProblemSubmission;
 import gravit.code.problem.domain.ProblemType;
 import gravit.code.problem.repository.ProblemRepository;
+import gravit.code.problem.repository.ProblemSubmissionRepository;
 import gravit.code.support.TCSpringBootTest;
 import gravit.code.unit.domain.Unit;
 import gravit.code.unit.repository.UnitRepository;
@@ -46,6 +48,9 @@ class LessonSubmissionQueryServiceIntegrationTest {
 
     @Autowired
     private ProblemRepository problemRepository;
+
+    @Autowired
+    private ProblemSubmissionRepository problemSubmissionRepository;
 
     @Nested
     @DisplayName("레슨 제출 횟수를 조회할 때")
@@ -377,7 +382,7 @@ class LessonSubmissionQueryServiceIntegrationTest {
     class GetWeakConcepts {
 
         @Test
-        void 정확도가_낮은_순으로_최대_7개의_레슨을_반환한다() {
+        void 오답률이_높은_순으로_최대_7개의_레슨을_반환한다() {
             // given
             long userId = 1L;
             Chapter chapter = chapterRepository.save(Chapter.create("자료구조", "자료구조 기초"));
@@ -385,12 +390,25 @@ class LessonSubmissionQueryServiceIntegrationTest {
             Lesson lessonLow = lessonRepository.save(Lesson.create("취약레슨", unit.getId()));
             Lesson lessonHigh = lessonRepository.save(Lesson.create("강한레슨", unit.getId()));
 
-            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문1", "내용1", lessonLow.getId()));
-            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문2", "내용2", lessonLow.getId()));
-            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문3", "내용3", lessonHigh.getId()));
+            Problem lowP1 = problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문1", "내용1", lessonLow.getId()));
+            Problem lowP2 = problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문2", "내용2", lessonLow.getId()));
+            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문3", "내용3", lessonLow.getId()));
+            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문4", "내용4", lessonLow.getId()));
+            problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문5", "내용5", lessonLow.getId()));
+
+            Problem highP1 = problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문6", "내용6", lessonHigh.getId()));
+            for (int i = 7; i <= 15; i++) {
+                problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지문" + i, "내용" + i, lessonHigh.getId()));
+            }
 
             lessonSubmissionRepository.save(LessonSubmission.create(60, 20, lessonLow.getId(), userId));
             lessonSubmissionRepository.save(LessonSubmission.create(60, 90, lessonHigh.getId(), userId));
+
+            problemSubmissionRepository.save(ProblemSubmission.create(false, lowP1.getId(), userId));
+            problemSubmissionRepository.save(ProblemSubmission.create(false, lowP2.getId(), userId));
+            problemSubmissionRepository.save(ProblemSubmission.create(false, lowP2.getId(), userId));
+            problemSubmissionRepository.save(ProblemSubmission.create(false, lowP2.getId(), userId));
+            problemSubmissionRepository.save(ProblemSubmission.create(false, highP1.getId(), userId));
 
             // when
             List<WeakConceptResponse> result = lessonSubmissionQueryService.getWeakConcepts(userId);
@@ -399,8 +417,10 @@ class LessonSubmissionQueryServiceIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(2);
                 softly.assertThat(result.get(0).rank()).isEqualTo(1);
+                softly.assertThat(result.get(0).wrongAnswerCount()).isEqualTo(4);
                 softly.assertThat(result.get(0).wrongAnswerRate()).isEqualTo(80);
                 softly.assertThat(result.get(1).rank()).isEqualTo(2);
+                softly.assertThat(result.get(1).wrongAnswerCount()).isEqualTo(1);
                 softly.assertThat(result.get(1).wrongAnswerRate()).isEqualTo(10);
             });
         }

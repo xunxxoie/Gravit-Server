@@ -5,13 +5,13 @@ import gravit.code.dailyLearningRecord.dto.response.DailySolvedCountResponse;
 import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningRecordResponse;
 import gravit.code.dailyLearningRecord.dto.response.WeeklyLearningReportResponse;
 import gravit.code.dailyLearningRecord.repository.DailyLearningRecordRepository;
+import gravit.code.global.consts.TimeZoneConst;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,13 +22,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DailyLearningRecordService {
 
-    private static final ZoneId KST = ZoneId.of("Asia/Seoul");
-
     private final DailyLearningRecordRepository dailyLearningRecordRepository;
 
     @Transactional(readOnly = true)
     public WeeklyLearningRecordResponse getWeeklyLearningRecord(long userId) {
-        LocalDate today = LocalDate.now(KST);
+        LocalDate today = LocalDate.now(TimeZoneConst.KST);
         LocalDate monday = today.with(DayOfWeek.MONDAY);
         LocalDate sunday = today.with(DayOfWeek.SUNDAY);
 
@@ -52,7 +50,7 @@ public class DailyLearningRecordService {
             long userId,
             int year
     ) {
-        LocalDate today = LocalDate.now(KST);
+        LocalDate today = LocalDate.now(TimeZoneConst.KST);
         LocalDate beginDate = LocalDate.of(year, 1, 1);
         LocalDate yearEnd = LocalDate.of(year, 12, 31);
         LocalDate endDate = yearEnd.isAfter(today) ? today : yearEnd;
@@ -62,7 +60,7 @@ public class DailyLearningRecordService {
 
     @Transactional(readOnly = true)
     public WeeklyLearningReportResponse getWeeklyLearningReport(long userId) {
-        LocalDate today = LocalDate.now(KST);
+        LocalDate today = LocalDate.now(TimeZoneConst.KST);
         LocalDate thisMonday = today.with(DayOfWeek.MONDAY);
         LocalDate thisSunday = today.with(DayOfWeek.SUNDAY);
         LocalDate threeWeeksAgoMonday = thisMonday.minusWeeks(3);
@@ -100,7 +98,7 @@ public class DailyLearningRecordService {
 
     @Transactional
     public void handleDailyLearningRecord(long userId) {
-        LocalDate today = LocalDate.now(KST);
+        LocalDate today = LocalDate.now(TimeZoneConst.KST);
 
         DailyLearningRecord dailyLearningRecord = dailyLearningRecordRepository.findByUserIdAndSolvedDate(userId, today)
                 .orElseGet(() -> DailyLearningRecord.create(userId, today));

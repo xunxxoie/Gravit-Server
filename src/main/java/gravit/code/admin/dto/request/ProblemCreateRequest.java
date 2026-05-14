@@ -1,6 +1,6 @@
 package gravit.code.admin.dto.request;
 
-import gravit.code.global.enums.Enum;
+import gravit.code.global.annotation.EnumValidation;
 import gravit.code.problem.domain.ProblemType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -21,7 +21,7 @@ public record ProblemCreateRequest(
                 example = "SUBJECTIVE/OBJECTIVE"
         )
         @NotNull(message = "문제 유형이 비어있습니다.")
-        @Enum(target = ProblemType.class, message = "올바르지 않은 문제 유형입니다.")
+        @EnumValidation(target = ProblemType.class, message = "올바르지 않은 문제 유형입니다.")
         String problemType,
 
         @Schema(

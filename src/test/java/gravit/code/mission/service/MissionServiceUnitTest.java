@@ -180,7 +180,7 @@ class MissionServiceUnitTest {
             missionService.handleLessonMission(userId, 1L, 120, 80);
 
             // then
-            verify(lessonSubmissionQueryService, never()).getLessonSubmissionCount(anyLong(), anyLong());
+            verify(lessonSubmissionQueryService, never()).getLessonSubmissionTryCount(anyLong(), anyLong());
         }
 
         @Test
@@ -191,7 +191,7 @@ class MissionServiceUnitTest {
             Mission mission = MissionFixture.기본_미션(userId);
 
             when(missionRepository.findByUserId(userId)).thenReturn(Optional.of(mission));
-            when(lessonSubmissionQueryService.getLessonSubmissionCount(userId, lessonId)).thenReturn(2);
+            when(lessonSubmissionQueryService.getLessonSubmissionTryCount(userId, lessonId)).thenReturn(2);
 
             // when
             missionService.handleLessonMission(userId, lessonId, 120, 80);
@@ -209,7 +209,7 @@ class MissionServiceUnitTest {
             User user = createUser(userId);
 
             when(missionRepository.findByUserId(userId)).thenReturn(Optional.of(mission));
-            when(lessonSubmissionQueryService.getLessonSubmissionCount(userId, lessonId)).thenReturn(1);
+            when(lessonSubmissionQueryService.getLessonSubmissionTryCount(userId, lessonId)).thenReturn(1);
             when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
             // when
@@ -229,7 +229,7 @@ class MissionServiceUnitTest {
             Mission mission = MissionFixture.저장된_미션(1L, MissionType.PERFECT_LESSON_ONE, userId);
 
             when(missionRepository.findByUserId(userId)).thenReturn(Optional.of(mission));
-            when(lessonSubmissionQueryService.getLessonSubmissionCount(userId, lessonId)).thenReturn(1);
+            when(lessonSubmissionQueryService.getLessonSubmissionTryCount(userId, lessonId)).thenReturn(1);
 
             // when
             missionService.handleLessonMission(userId, lessonId, 120, 80);
@@ -248,7 +248,7 @@ class MissionServiceUnitTest {
             User user = createUser(userId);
 
             when(missionRepository.findByUserId(userId)).thenReturn(Optional.of(mission));
-            when(lessonSubmissionQueryService.getLessonSubmissionCount(userId, lessonId)).thenReturn(1);
+            when(lessonSubmissionQueryService.getLessonSubmissionTryCount(userId, lessonId)).thenReturn(1);
             when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
             // when
@@ -267,7 +267,7 @@ class MissionServiceUnitTest {
             Mission mission = MissionFixture.저장된_미션(1L, MissionType.LEARNING_MINUTES_FIVE, userId);
 
             when(missionRepository.findByUserId(userId)).thenReturn(Optional.of(mission));
-            when(lessonSubmissionQueryService.getLessonSubmissionCount(userId, lessonId)).thenReturn(1);
+            when(lessonSubmissionQueryService.getLessonSubmissionTryCount(userId, lessonId)).thenReturn(1);
 
             // when
             missionService.handleLessonMission(userId, lessonId, 120, 80); // 2분 (40% 진행, 미완료)

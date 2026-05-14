@@ -30,6 +30,7 @@ public class LessonSubmissionCommandService {
         if(isFirstTry){
             lessonSubmission = LessonSubmission.create(
                     request.learningTime(),
+                    request.accuracy(),
                     request.lessonId(),
                     userId
             );
@@ -38,6 +39,7 @@ public class LessonSubmissionCommandService {
                     .orElseThrow(() -> new RestApiException(CustomErrorCode.LESSON_SUBMISSION_NOT_FOUND));
 
             lessonSubmission.updateLearningTime(request.learningTime());
+            lessonSubmission.updateAccuracy(request.accuracy());
             lessonSubmission.updateTryCount();
         }
 

@@ -64,4 +64,10 @@ public class LearningProgressRateService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public int getLearningRankPercentile(long userId) {
+        return lessonSubmissionRepository.findLearningRateTopPercent(userId)
+                .orElse(100);
+    }
+
 }

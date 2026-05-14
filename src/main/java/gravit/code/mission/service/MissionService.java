@@ -78,7 +78,7 @@ public class MissionService {
 
         MissionType missionType = mission.getMissionType();
 
-        int tryCount = lessonSubmissionQueryService.getLessonSubmissionCount(userId,lessonId);
+        int tryCount = lessonSubmissionQueryService.getLessonSubmissionTryCount(userId,lessonId);
 
         if(tryCount > 1)
             return;

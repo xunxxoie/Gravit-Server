@@ -24,6 +24,7 @@ import gravit.code.unit.repository.UnitRepository;
 import gravit.code.user.domain.Role;
 import gravit.code.user.domain.User;
 import gravit.code.user.dto.response.MainPageResponse;
+import gravit.code.user.dto.response.MyPageBannerResponse;
 import gravit.code.user.repository.UserRepository;
 import gravit.code.userLeague.domain.UserLeague;
 import gravit.code.userLeague.repository.UserLeagueRepository;
@@ -38,6 +39,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import static gravit.code.global.exception.domain.CustomErrorCode.LEARNING_NOT_FOUND;
+import static gravit.code.global.exception.domain.CustomErrorCode.USER_LEAGUE_NOT_FOUND;
 import static gravit.code.global.exception.domain.CustomErrorCode.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -106,7 +109,7 @@ class UserFacadeIntegrationTest {
             Unit unit = unitRepository.save(Unit.create("프로세스", "프로세스 개념", chapter.getId()));
             unitRepository.save(Unit.create("스레드", "스레드 개념", chapter.getId()));
             Lesson lesson = lessonRepository.save(Lesson.create("레슨1", unit.getId()));
-            lessonSubmissionRepository.save(LessonSubmission.create(120, lesson.getId(), user.getId()));
+            lessonSubmissionRepository.save(LessonSubmission.create(120, 100, lesson.getId(), user.getId()));
 
             Learning learning = Learning.create(user.getId());
             org.springframework.test.util.ReflectionTestUtils.setField(learning, "recentSolvedChapterId", chapter.getId());
@@ -176,6 +179,79 @@ class UserFacadeIntegrationTest {
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
                     .isEqualTo(USER_NOT_FOUND);
+        }
+    }
+
+    @Nested
+    @DisplayName("마이페이지 배너를 조회할 때")
+    class GetMyPageBanner {
+
+        @Test
+        void 모든_정보가_세팅된_사용자의_배너를_정상적으로_반환한다() {
+            // given
+            User user = userRepository.save(User.create("test@test.com", "provider_1", "테스터", "handle1", 5, Role.USER));
+
+            League league = leagueRepository.save(League.create("Bronze", 100, 0, 1));
+            Season season = seasonRepository.save(Season.active("2026-W18", LocalDateTime.now(KST), LocalDateTime.now(KST).plusWeeks(1)));
+            userLeagueRepository.save(UserLeague.create(user, season, league));
+
+            Learning learning = Learning.create(user.getId());
+            org.springframework.test.util.ReflectionTestUtils.setField(learning, "consecutiveSolvedDays", 7);
+            learningRepository.save(learning);
+
+            // when
+            MyPageBannerResponse result = userFacade.getMyPageBanner(user.getId());
+
+            // then
+            assertSoftly(softly -> {
+                softly.assertThat(result.profileImageNumber()).isEqualTo(5);
+                softly.assertThat(result.nickname()).isEqualTo("테스터");
+                softly.assertThat(result.handle()).isEqualTo("handle1");
+                softly.assertThat(result.level()).isEqualTo(1);
+                softly.assertThat(result.currentLeague()).isEqualTo("Bronze");
+                softly.assertThat(result.consecutiveSolvedDays()).isEqualTo(7);
+            });
+        }
+
+        @Test
+        void 사용자가_존재하지_않으면_예외를_던진다() {
+            // given
+            long nonExistentUserId = 999L;
+
+            // when & then
+            assertThatThrownBy(() -> userFacade.getMyPageBanner(nonExistentUserId))
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(USER_NOT_FOUND);
+        }
+
+        @Test
+        void 유저_리그_정보가_없으면_예외를_던진다() {
+            // given
+            User user = userRepository.save(User.create("test@test.com", "provider_1", "테스터", "handle1", 1, Role.USER));
+            learningRepository.save(Learning.create(user.getId()));
+
+            // when & then
+            assertThatThrownBy(() -> userFacade.getMyPageBanner(user.getId()))
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(USER_LEAGUE_NOT_FOUND);
+        }
+
+        @Test
+        void 학습_정보가_없으면_예외를_던진다() {
+            // given
+            User user = userRepository.save(User.create("test@test.com", "provider_1", "테스터", "handle1", 1, Role.USER));
+
+            League league = leagueRepository.save(League.create("Bronze", 100, 0, 1));
+            Season season = seasonRepository.save(Season.active("2026-W18", LocalDateTime.now(KST), LocalDateTime.now(KST).plusWeeks(1)));
+            userLeagueRepository.save(UserLeague.create(user, season, league));
+
+            // when & then
+            assertThatThrownBy(() -> userFacade.getMyPageBanner(user.getId()))
+                    .isInstanceOf(RestApiException.class)
+                    .extracting("errorCode")
+                    .isEqualTo(LEARNING_NOT_FOUND);
         }
     }
 }

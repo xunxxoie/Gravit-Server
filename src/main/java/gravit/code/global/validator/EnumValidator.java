@@ -1,13 +1,14 @@
-package gravit.code.global.enums;
+package gravit.code.global.validator;
 
+import gravit.code.global.annotation.EnumValidation;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class EnumValidator implements ConstraintValidator<Enum, String> {
-    private Enum annotation;
+public class EnumValidator implements ConstraintValidator<EnumValidation, String> {
+    private EnumValidation annotation;
 
     @Override
-    public void initialize(Enum constraintAnnotation) {
+    public void initialize(EnumValidation constraintAnnotation) {
         this.annotation = constraintAnnotation;
     }
 

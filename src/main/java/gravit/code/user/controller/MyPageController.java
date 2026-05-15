@@ -46,7 +46,7 @@ public class MyPageController implements MyPageControllerDocs {
     @GetMapping("/learning/history")
     public ResponseEntity<LearningHistoryResponse> getMyPageLearningHistory(
             @AuthenticationPrincipal LoginUser loginUser,
-            @RequestParam("year") @Min(2025)@Max(2050) int year
+            @RequestParam("year") @Min(2025) @Max(2099)int year
     ){
         return ResponseEntity.ok(learningFacade.getMyPageLearningHistory(loginUser.getId(), year));
     }

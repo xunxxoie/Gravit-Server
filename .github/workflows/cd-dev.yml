@@ -87,7 +87,7 @@ jobs:
           username: ${{secrets.APPCENTER_SERVER_USERNAME}}
           password: ${{secrets.APPCENTER_SERVER_PASSWORD}}
           port: ${{secrets.APPCENTER_SERVER_PORT}}
-          source: "docker-compose-dev.yml"
+          source: "docker-compose-dev.yml,infra/config.alloy"
           target: "/home/serverking/gravit/dev"
 
       - name: 앱센터 서버에 배포
@@ -105,6 +105,11 @@ jobs:
 
             echo "DOCKER_HUB_USERNAME=$DOCKER_HUB_USERNAME" > .env
 
+            # 인프라 서비스: compose 설정이 변경된 경우에만 재시작
+            docker-compose -f docker-compose-dev.yml up -d --no-deps gravit-redis-dev alloy-dev
+
+            # 앱 서버: 항상 최신 이미지로 재시작
             docker-compose -f docker-compose-dev.yml pull gravit-server-dev
             docker-compose -f docker-compose-dev.yml up -d --no-deps --force-recreate gravit-server-dev
+
             docker image prune -f

@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -130,6 +132,6 @@ public interface MyPageControllerDocs {
     })
     ResponseEntity<LearningHistoryResponse> getMyPageLearningHistory(
             @AuthenticationPrincipal LoginUser loginUser,
-            @Parameter(description = "조회할 연도", example = "2026") @RequestParam("year") int year
+            @Parameter(description = "조회할 연도", example = "2026") @RequestParam("year") @Min(2025) @Max(2050) int year
     );
 }

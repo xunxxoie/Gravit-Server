@@ -15,8 +15,8 @@ allowed-tools: Bash(git *), Bash(gh *), Read
 ## Phase 1: 현재 브랜치 및 변경 사항 파악
 
 1. `git branch --show-current`로 현재 브랜치명을 확인하라
-2. 브랜치명에서 이슈 번호를 추출하라 (형식: `{type}/#{이슈번호}-{설명}`)
-   - 예: `feat/#123-bookmark` → 이슈 번호 `123`
+2. 브랜치명에서 이슈 번호를 추출하라 (형식: `{type}/{이슈번호}-{설명}`)
+   - 예: `feat/123-bookmark` → 이슈 번호 `123`
    - 이슈 번호가 없으면 사용자에게 물어보라
 3. `git log dev..HEAD --oneline` (또는 $ARGUMENTS..HEAD)으로 이 브랜치의 커밋 목록을 확인하라
 4. `git diff dev...HEAD --stat`으로 변경된 파일 목록을 파악하라

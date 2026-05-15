@@ -48,10 +48,8 @@ services:
       - ALLOY_ENV=prod
     command: [ "run", "/etc/alloy/config.alloy" ]
     networks:
-      - gravit-monitoring
+      - gravit-prod
 
 networks:
   gravit-prod:
     driver: bridge
-  gravit-monitoring:
-    external: true

@@ -43,7 +43,7 @@ services:
       - ALLOY_ENV=dev
     command: ["run", "/etc/alloy/config.alloy"]
     networks:
-      - gravit-monitoring
+      - gravit-dev
 
 volumes:
   redis_data:
@@ -51,5 +51,3 @@ volumes:
 networks:
   gravit-dev:
     driver: bridge
-  gravit-monitoring:
-    external: true

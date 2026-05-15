@@ -132,6 +132,6 @@ public interface MyPageControllerDocs {
     })
     ResponseEntity<LearningHistoryResponse> getMyPageLearningHistory(
             @AuthenticationPrincipal LoginUser loginUser,
-            @Parameter(description = "조회할 연도", example = "2026") @RequestParam("year") @Min(2025) @Max(2050) int year
+            @Parameter(description = "조회할 연도", example = "2026") @RequestParam("year") @Min(2025) @Max(2099) int year
     );
 }

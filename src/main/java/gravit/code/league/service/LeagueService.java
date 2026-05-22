@@ -13,17 +13,18 @@ import gravit.code.season.domain.SeasonStatus;
 import gravit.code.season.repository.SeasonRepository;
 import gravit.code.season.service.port.SeasonClosedCache;
 import gravit.code.season.service.port.SeasonPopupSeenStore;
+import gravit.code.user.repository.UserRepository;
+import gravit.code.userLeague.repository.UserLeagueRepository;
 import gravit.code.userLeagueHistory.repository.UserLeagueHistoryRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,8 @@ public class LeagueService {
     private final SeasonClosedCache seasonClosedCache;
     private final SeasonPopupSeenStore seasonPopupSeenStore;
     private final UserLeagueHistoryRepository userLeagueHistoryRepository;
+    private final UserLeagueRepository userLeagueRepository;
+    private final UserRepository userRepository;
     private final Clock clock;
 
     private static final Duration TTL_BUFFER = Duration.ofHours(2);
@@ -48,8 +51,8 @@ public class LeagueService {
 
     @Transactional
     public LeagueHomeResponse enterLeagueHome(long userId){
-        Season actvieSeason = seasonRepository.findByStatus(SeasonStatus.ACTIVE).orElseThrow(
-                ()-> new RestApiException(CustomErrorCode.ACTIVE_SEASON_NOT_FOUND));
+        Season actvieSeason = seasonRepository.findByStatus(SeasonStatus.ACTIVE)
+                .orElseThrow(()-> new RestApiException(CustomErrorCode.ACTIVE_SEASON_NOT_FOUND));
 
         CurrentSeasonDto current = new CurrentSeasonDto("시즌 " + actvieSeason.getSeasonKey());
 
@@ -70,14 +73,18 @@ public class LeagueService {
         boolean hasUserLeagueHistory = userLeagueHistoryRepository.existsByUserIdAndSeasonId(userId, lastClosedSeasonId);
         if (!hasUserLeagueHistory) return Optional.empty();
 
-        // 캐시에 이미 팝업 확인 키-값 이 존재한다면(이미 확인한것) 그냥 리턴
+        // 위 2가지 조건을 다 통과하면 db 접근해서 유저의 이전/현재 리그 정보를 가져온다.
+        Optional<LastSeasonPopupDto> popup = userLeagueHistoryRepository.findByUserIdAndSeasonId(userId, lastClosedSeasonId)
+                .flatMap(history -> userLeagueRepository.findByUserIdAndSeasonId(userId, activeSeason.getId())
+                        .map(nextUl -> LastSeasonPopupDto.from(history, nextUl)));
+
+        // DTO 생성이 성공한 경우에만 seen 플래그를 소비한다 (먼저 마킹하면 DTO 생성 실패 시 플래그가 낭비됨)
+        if (popup.isEmpty()) return Optional.empty();
         Duration ttl = ttlUntil(activeSeason.getEndsAt());
         boolean firstSeen = seasonPopupSeenStore.markSeenIfFirst(userId, lastClosedSeasonId, ttl);
         if (!firstSeen) return Optional.empty();
 
-        // 위 3가지 조건을 다 통과하면 db 접근해서 유저의 이전 리그 정보를 가져온다.
-        return userLeagueHistoryRepository.findByUserIdAndSeasonId(userId, lastClosedSeasonId)
-                .map(LastSeasonPopupDto::from);
+        return popup;
     }
 
     private Duration ttlUntil(LocalDateTime activeSeasonEndedAt) {

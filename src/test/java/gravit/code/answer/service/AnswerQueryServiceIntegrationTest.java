@@ -1,27 +1,22 @@
 package gravit.code.answer.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import gravit.code.answer.domain.Answer;
 import gravit.code.answer.dto.response.AnswerResponse;
 import gravit.code.answer.repository.AnswerRepository;
 import gravit.code.problem.domain.ProblemType;
 import gravit.code.problem.dto.response.ProblemDetailResponse;
 import gravit.code.support.TCSpringBootTest;
+import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @TCSpringBootTest
-@Transactional
-@Sql(scripts = "classpath:sql/truncate_all.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class AnswerQueryServiceIntegrationTest {
 
     @Autowired

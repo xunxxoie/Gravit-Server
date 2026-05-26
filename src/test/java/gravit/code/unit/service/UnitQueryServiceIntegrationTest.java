@@ -163,7 +163,7 @@ class UnitQueryServiceIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(1);
                 softly.assertThat(result.get(0).unitId()).isEqualTo(unit.getId());
-                softly.assertThat(result.get(0).isCompleted()).isTrue();
+                softly.assertThat(result.get(0).status()).isTrue();
             });
         }
 
@@ -183,7 +183,7 @@ class UnitQueryServiceIntegrationTest {
             // then
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(1);
-                softly.assertThat(result.get(0).isCompleted()).isFalse();
+                softly.assertThat(result.get(0).status()).isFalse();
             });
         }
 
@@ -200,7 +200,7 @@ class UnitQueryServiceIntegrationTest {
             // then
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(1);
-                softly.assertThat(result.get(0).isCompleted()).isFalse();
+                softly.assertThat(result.get(0).status()).isFalse();
             });
         }
 

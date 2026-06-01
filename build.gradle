@@ -81,6 +81,9 @@ dependencies {
 
     // Database Proxy
     implementation 'net.ttddyy.observation:datasource-micrometer:1.2.0'
+
+    // FCM (Firebase Cloud Messaging)
+    implementation 'com.google.firebase:firebase-admin:9.4.3'
 }
 
 // 현재 migration 실행까지 테스트 하려면 TestContainer 가 필요할 듯 싶습니다.

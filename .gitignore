@@ -46,3 +46,6 @@ postgres_data_local
 redis_data_local
 logs
 grafana_data
+
+### Firebase ###
+/src/main/resources/firebase/firebase_service_key.json

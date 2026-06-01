@@ -53,6 +53,11 @@ jobs:
 
           admin.bootstrap.emails: ${{ secrets.ADMIN_BOOTSTRAP_EMAILS }}
 
+      - name: Firebase 서비스 계정 키 파일 생성
+        run: |
+          mkdir -p ./src/main/resources/firebase
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > ./src/main/resources/firebase/firebase_service_key.json
+
       - name: JAR 빌드
         run: |
           chmod +x ./gradlew

@@ -13,16 +13,23 @@ public record LessonSubmissionSaveResponse(
 
         @Schema(
                 description = "리그 이름",
-                example = "브론즈"
+                example = "브론즈",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         String leagueName,
 
-        @Schema(description = "유저 레벨 정보")
+        @Schema(
+                description = "유저 레벨 정보",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         UserLevelResponse userLevelResponse,
 
-        @Schema(description = "유닛 요약 정보")
+        @Schema(
+                description = "유닛 요약 정보",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         UnitSummaryResponse unitSummaryResponse
 ) {

@@ -13,17 +13,24 @@ import java.util.List;
 @Schema(description = "레슨 조회 Response")
 public record LessonResponse(
 
-        @Schema(description = "유닛 요약 정보")
+        @Schema(
+                description = "유닛 요약 정보",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         UnitSummaryResponse unitSummaryResponse,
 
-        @Schema(description = "문제 목록")
+        @Schema(
+                description = "문제 목록",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         List<ProblemResponse> problems,
 
         @Schema(
                 description = "전체 문제 수",
-                example = "5"
+                example = "5",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         int totalProblems
 ) {

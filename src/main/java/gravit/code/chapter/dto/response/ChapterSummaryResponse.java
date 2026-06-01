@@ -10,20 +10,23 @@ public record ChapterSummaryResponse(
 
         @Schema(
                 description = "챕터 아이디",
-                example = "1"
+                example = "1",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         long chapterId,
 
         @Schema(
                 description = "챕터명",
-                example = "자료구조"
+                example = "자료구조",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         String title,
 
         @Schema(
                 description = "챕터 설명",
-                example = "큐, 스택, 힙과 같은 자료구조에 대해 학습합니다."
+                example = "큐, 스택, 힙과 같은 자료구조에 대해 학습합니다.",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         String description

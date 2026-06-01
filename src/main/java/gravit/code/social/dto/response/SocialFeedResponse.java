@@ -2,20 +2,30 @@ package gravit.code.social.dto.response;
 
 import gravit.code.social.domain.FeedEventType;
 import gravit.code.social.dto.internal.SocialFeedProjection;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 public record SocialFeedResponse(
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         Long feedId,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         Long actorId,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String actorNickname,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int actorProfileImgNumber,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String actorHandle,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String message,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String timeAgo,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         boolean canCongratulate,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LocalDateTime createdAt
 ) {
     public static SocialFeedResponse from(

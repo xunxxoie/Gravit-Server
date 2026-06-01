@@ -8,19 +8,22 @@ import lombok.Builder;
 public record UserLevelResponse(
         @Schema(
                 description = "현재 레벨",
-                example = "3"
+                example = "3",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         int currentLevel,
 
         @Schema(
                 description = "다음 레벨",
-                example = "4"
+                example = "4",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         int nextLevel,
 
         @Schema(
                 description = "경험치",
-                example = "100"
+                example = "100",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         int xp
 ){

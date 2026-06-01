@@ -12,31 +12,36 @@ public record ReportSummaryResponse(
 
         @Schema(
                 description = "신고 ID",
-                example = "1"
+                example = "1",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         long reportId,
 
         @Schema(
-                description = "신고 유형"
+                description = "신고 유형",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         ReportType reportType,
 
         @Schema(
                 description = "문제 ID",
-                example = "123"
+                example = "123",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         long problemId,
 
         @Schema(
                 description = "해결 여부",
-                example = "false"
+                example = "false",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @JsonProperty("isResolved")
         boolean isResolved,
 
         @Schema(
-                description = "신고 접수 시간"
+                description = "신고 접수 시간",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         LocalDateTime submittedAt

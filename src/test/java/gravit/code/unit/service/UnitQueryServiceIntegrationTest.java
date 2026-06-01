@@ -22,6 +22,9 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static gravit.code.global.exception.domain.CustomErrorCode.UNIT_NOT_FOUND;
+import static gravit.code.unit.domain.UnitProgressStatus.COMPLETED;
+import static gravit.code.unit.domain.UnitProgressStatus.IN_PROGRESS;
+import static gravit.code.unit.domain.UnitProgressStatus.NOT_STARTED;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -163,12 +166,12 @@ class UnitQueryServiceIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(1);
                 softly.assertThat(result.get(0).unitId()).isEqualTo(unit.getId());
-                softly.assertThat(result.get(0).isCompleted()).isTrue();
+                softly.assertThat(result.get(0).status()).isEqualTo(COMPLETED);
             });
         }
 
         @Test
-        void 일부_레슨만_푼_유닛은_미완료로_표시된다() {
+        void 일부_레슨만_푼_유닛은_진행중으로_표시된다() {
             // given
             long userId = 1L;
             Chapter chapter = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
@@ -183,12 +186,12 @@ class UnitQueryServiceIntegrationTest {
             // then
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(1);
-                softly.assertThat(result.get(0).isCompleted()).isFalse();
+                softly.assertThat(result.get(0).status()).isEqualTo(IN_PROGRESS);
             });
         }
 
         @Test
-        void 레슨이_없는_유닛은_미완료로_표시된다() {
+        void 레슨이_없는_유닛은_시작전으로_표시된다() {
             // given
             long userId = 1L;
             Chapter chapter = chapterRepository.save(Chapter.create("운영체제", "운영체제 기초 개념"));
@@ -200,7 +203,7 @@ class UnitQueryServiceIntegrationTest {
             // then
             assertSoftly(softly -> {
                 softly.assertThat(result).hasSize(1);
-                softly.assertThat(result.get(0).isCompleted()).isFalse();
+                softly.assertThat(result.get(0).status()).isEqualTo(NOT_STARTED);
             });
         }
 

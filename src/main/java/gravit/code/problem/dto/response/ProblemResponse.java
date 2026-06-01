@@ -20,27 +20,31 @@ public record ProblemResponse(
 
         @Schema(
                 description = "문제 아이디",
-                example = "1"
+                example = "1",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         long problemId,
 
         @Schema(
                 description = "문제 타입",
-                example = "SUBJECTIVE / OBJECTIVE"
+                example = "SUBJECTIVE / OBJECTIVE",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         ProblemType problemType,
 
         @Schema(
                 description = "발문",
-                example = "빈칸에 들어갈 단어를 고르시오."
+                example = "빈칸에 들어갈 단어를 고르시오.",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         String instruction,
 
         @Schema(
                 description = "본문",
-                example = "큐에 2, 9, 7, 4를 순차적으로 넣었을 때, 원소 삭제시 반환되는 값은?"
+                example = "큐에 2, 9, 7, 4를 순차적으로 넣었을 때, 원소 삭제시 반환되는 값은?",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         String content,
@@ -59,7 +63,8 @@ public record ProblemResponse(
 
         @Schema(
                 description = "북마크 여부",
-                example = "true"
+                example = "true",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @JsonProperty("isBookmarked")
         boolean isBookmarked

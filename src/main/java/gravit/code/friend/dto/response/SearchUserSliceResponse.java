@@ -8,9 +8,9 @@ import java.util.List;
 @Schema(description = "사용자 검색 슬라이스 응답")
 public class SearchUserSliceResponse {
 
-    @Schema(description = "다음 페이지 존재 여부", example = "false")
+    @Schema(description = "다음 페이지 존재 여부", example = "false", requiredMode = Schema.RequiredMode.REQUIRED)
     public boolean hasNextPage;
 
-    @Schema(description = "검색 결과 목록")
+    @Schema(description = "검색 결과 목록", requiredMode = Schema.RequiredMode.REQUIRED)
     public List<SearchUserDto> contents;
 }

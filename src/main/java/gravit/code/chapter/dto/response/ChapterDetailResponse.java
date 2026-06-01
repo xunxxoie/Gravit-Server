@@ -9,13 +9,17 @@ import lombok.Builder;
 @Schema(description = "챕터 정보 조회 Response")
 public record ChapterDetailResponse(
 
-        @Schema(description = "챕터 요약 정보")
+        @Schema(
+                description = "챕터 요약 정보",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         ChapterSummaryResponse chapterSummaryResponse,
 
         @Schema(
                 description = "진행도(퍼센트)",
-                example = "12.3"
+                example = "12.3",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         double chapterProgressRate
 ) {

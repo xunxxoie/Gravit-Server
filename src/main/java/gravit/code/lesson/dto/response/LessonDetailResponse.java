@@ -12,31 +12,40 @@ import java.util.List;
 @Schema(description = "레슨 페이지 조회 Response")
 public record LessonDetailResponse(
 
-        @Schema(description = "유닛 요약 정보")
+        @Schema(
+                description = "유닛 요약 정보",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         UnitSummaryResponse unitSummaryResponse,
 
         @Schema(
                 description = "북마크 풀이 가능 여부",
-                example = "true"
+                example = "true",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         boolean bookmarkAccessible,
 
         @Schema(
                 description = "오답노트 풀이 가능 여부",
-                example = "true"
+                example = "true",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotNull
         boolean wrongAnsweredNoteAccessible,
 
         @Schema(
                 description = "유닛 아이디",
-                example = "1"
+                example = "1",
+                requiredMode = Schema.RequiredMode.REQUIRED
         )
         long unitId,
 
-        @Schema(description = "레슨 요약 정보 목록")
+        @Schema(
+                description = "레슨 요약 정보 목록",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         List<LessonSummaryResponse> lessonSummaries
 ) {

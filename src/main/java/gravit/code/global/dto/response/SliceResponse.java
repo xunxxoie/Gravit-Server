@@ -1,5 +1,6 @@
 package gravit.code.global.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import org.springframework.data.domain.Slice;
 
@@ -7,7 +8,9 @@ import java.util.List;
 
 @Builder
 public record SliceResponse<T>(
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         boolean hasNextPage,
+        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<T> contents
 ){
     public static <T> SliceResponse<T> of(

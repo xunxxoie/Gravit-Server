@@ -12,11 +12,17 @@ import java.util.List;
 @Schema(description = "유닛 페이지 조회 Response")
 public record UnitPageResponse(
 
-        @Schema(description = "챕터 요약 정보")
+        @Schema(
+                description = "챕터 요약 정보",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         ChapterSummaryResponse chapterSummaryResponse,
 
-        @Schema(description = "유닛 상세 정보 목록")
+        @Schema(
+                description = "유닛 상세 정보 목록",
+                requiredMode = Schema.RequiredMode.REQUIRED
+        )
         @NotNull
         List<UnitDetailResponse> unitDetailResponses
 ) {

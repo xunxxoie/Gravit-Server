@@ -12,6 +12,7 @@ import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
 import gravit.code.league.fixture.LeagueFixture;
 import gravit.code.notification.domain.Notification;
+import gravit.code.notification.domain.NotificationType;
 import gravit.code.notification.repository.NotificationRepository;
 import gravit.code.season.domain.Season;
 import gravit.code.season.fixture.SeasonFixture;
@@ -222,7 +223,9 @@ class SocialFacadeIntegrationTest {
             assertThat(notifications).hasSize(1);
             assertSoftly(softly -> {
                 softly.assertThat(notifications.get(0).getUserId()).isEqualTo(followee.getId());
+                softly.assertThat(notifications.get(0).getType()).isEqualTo(NotificationType.CONGRATULATION);
                 softly.assertThat(notifications.get(0).getMessage()).isEqualTo("유저1님이 축하해줬어요!");
+                softly.assertThat(notifications.get(0).getTargetId()).isNull();
             });
         }
 

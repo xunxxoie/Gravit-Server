@@ -4,10 +4,6 @@ import gravit.code.fcm.domain.FcmToken;
 import gravit.code.fcm.dto.request.RegisterFcmTokenRequest;
 import gravit.code.fcm.repository.FcmTokenRepository;
 import gravit.code.support.TCSpringBootTest;
-import gravit.code.user.domain.Role;
-import gravit.code.user.domain.User;
-import gravit.code.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,27 +18,13 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @TCSpringBootTest
 @Transactional
-class FcmTokenCommandServiceIntegrationTest {
+class FcmTokenCommandServiceIntegrationTest extends FcmServiceIntegrationTestBase {
 
     @Autowired
     private FcmTokenCommandService fcmTokenCommandService;
 
     @Autowired
     private FcmTokenRepository fcmTokenRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private long userId;
-    private long otherUserId;
-
-    @BeforeEach
-    void setUp() {
-        User user = userRepository.save(User.create("a@test.com", "provider_a", "유저A", "handle_a", 1, Role.USER));
-        User other = userRepository.save(User.create("b@test.com", "provider_b", "유저B", "handle_b", 1, Role.USER));
-        userId = user.getId();
-        otherUserId = other.getId();
-    }
 
     @Nested
     @DisplayName("FCM 토큰을 등록할 때")

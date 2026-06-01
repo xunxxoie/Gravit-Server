@@ -10,7 +10,7 @@ CREATE TABLE fcm_token (
     created_at TIMESTAMP(6),
     updated_at TIMESTAMP(6),
     CONSTRAINT uq_fcm_token_device_id UNIQUE (device_id),
-    CONSTRAINT fk_fcm_token_user FOREIGN KEY (user_id) REFERENCES users(id)
+    CONSTRAINT fk_fcm_token_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- 발송 시 유저별 토큰 조회를 위한 인덱스

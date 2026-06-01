@@ -39,7 +39,7 @@ public interface FcmTokenControllerDocs {
                             examples = {
                                     @ExampleObject(
                                             name = "필수 값 누락",
-                                            value = "{\"error\" : \"GLOBAL_4001\", \"message\" : [\"[ deviceId ][ 디바이스 아이디가 비어있습니다 ][ null ]\"]}"
+                                            value = "{\"error\" : \"GLOBAL_4001\", \"message\" : [\"[ deviceId ][ 디바이스 아이디가 비어있습니다. ][ null ]\"]}"
                                     )
                             },
                             schema = @Schema(implementation = ErrorResponse.class))
@@ -90,7 +90,7 @@ public interface FcmTokenControllerDocs {
     @GetMapping("/exists")
     ResponseEntity<FcmTokenExistsResponse> checkFcmTokenExist(
             @AuthenticationPrincipal LoginUser loginUser,
-            @Parameter(description = "클라이언트 디바이스 식별자", example = "a1b2c3d4-e5f6-7890-abcd-ef1234567890")
+            @Parameter(description = "클라이언트 디바이스 식별자", example = "a1b2c3d4-e5f6-7890-abcd-ef1234567890", required = true)
             @RequestParam("deviceId") String deviceId
     );
 }

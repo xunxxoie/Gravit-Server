@@ -1,6 +1,7 @@
 package gravit.code.notification.service;
 
 import gravit.code.notification.domain.Notification;
+import gravit.code.notification.domain.NotificationType;
 import gravit.code.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,19 @@ public class NotificationService {
     @Transactional
     public void notify(
             long userId,
+            NotificationType type,
+            String message,
+            Long targetId
+    ) {
+        notificationRepository.save(Notification.create(userId, type, message, targetId));
+    }
+
+    @Transactional
+    public void notify(
+            long userId,
+            NotificationType type,
             String message
     ) {
-        notificationRepository.save(Notification.create(userId, message));
+        notify(userId, type, message, null);
     }
 }

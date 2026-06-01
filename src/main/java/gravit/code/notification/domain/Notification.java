@@ -3,6 +3,8 @@ package gravit.code.notification.domain;
 import gravit.code.global.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,8 +27,15 @@ public class Notification extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private long userId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private NotificationType type;
+
     @Column(name = "message", nullable = false)
     private String message;
+
+    @Column(name = "target_id")
+    private Long targetId;
 
     @Column(name = "is_read", nullable = false)
     private boolean read;
@@ -34,20 +43,36 @@ public class Notification extends BaseEntity {
     @Builder(access = AccessLevel.PRIVATE)
     private Notification(
             long userId,
-            String message
+            NotificationType type,
+            String message,
+            Long targetId
     ) {
         this.userId = userId;
+        this.type = type;
         this.message = message;
+        this.targetId = targetId;
         this.read = false;
     }
 
     public static Notification create(
             long userId,
-            String message
+            NotificationType type,
+            String message,
+            Long targetId
     ) {
         return Notification.builder()
                 .userId(userId)
+                .type(type)
                 .message(message)
+                .targetId(targetId)
                 .build();
+    }
+
+    public static Notification create(
+            long userId,
+            NotificationType type,
+            String message
+    ) {
+        return create(userId, type, message, null);
     }
 }

@@ -5,6 +5,7 @@ import gravit.code.global.annotation.Facade;
 import gravit.code.global.dto.response.SliceResponse;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
+import gravit.code.notification.domain.NotificationType;
 import gravit.code.notification.service.NotificationService;
 import gravit.code.social.domain.FeedEventType;
 import gravit.code.social.domain.SocialFeed;
@@ -97,6 +98,6 @@ public class SocialFacade {
         userFeedService.congratulateFeed(userId, feedId);
         userLeaguePointService.addLeaguePoints(actorId, CONGRATULATION_LP, FULL_ACCURACY);
         String congratulatorNickname = userService.getUser(userId).getNickname();
-        notificationService.notify(actorId, congratulatorNickname + "님이 축하해줬어요!");
+        notificationService.notify(actorId, NotificationType.CONGRATULATION, congratulatorNickname + "님이 축하해줬어요!");
     }
 }

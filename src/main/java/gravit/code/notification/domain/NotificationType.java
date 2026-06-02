@@ -15,7 +15,7 @@ import static gravit.code.notification.domain.NotificationActionType.NONE;
 @RequiredArgsConstructor
 public enum NotificationType {
 
-    STREAK_WARNING(GO_TO_LEARNING),    // 3.1  연속학습 끊길 위기
+    CONSECUTIVE_LEARNING_WARNING(GO_TO_LEARNING),  // 3.1  연속학습 끊길 위기
     DAILY_INCOMPLETE(GO_TO_LEARNING),  // 3.2  오늘 학습 미완료
     INACTIVITY(GO_TO_LEARNING),        // 3.3  장기 미접속
     SEASON_ENDING(GO_TO_LEARNING),     // 3.7  시즌 종료 임박
@@ -34,6 +34,18 @@ public enum NotificationType {
         return Map.of(
                 "type", name(),
                 "actionType", actionType.name()
+        );
+    }
+
+    // 액션 대상이 있는 경우(targetId) deeplink용으로 함께 실어 보낸다
+    public Map<String, String> toPushData(Long targetId) {
+        if (targetId == null) {
+            return toPushData();
+        }
+        return Map.of(
+                "type", name(),
+                "actionType", actionType.name(),
+                "targetId", String.valueOf(targetId)
         );
     }
 }

@@ -40,7 +40,7 @@ public class NotificationFacade {
 
         Map<Long, List<String>> tokensByUserId = fcmTokenQueryService.getTokensByUserIds(targetUserIds);
 
-        Map<String, String> data = NotificationType.STREAK_WARNING.toPushData();
+        Map<String, String> data = NotificationType.CONSECUTIVE_LEARNING_WARNING.toPushData();
 
         List<PushMessage> messages = targets.stream()
                 .filter(target -> tokensByUserId.containsKey(target.userId()))
@@ -79,6 +79,24 @@ public class NotificationFacade {
 
             pushToUsers(targetUserIds, data, milestone::message);
         }
+    }
+
+    public void sendNewContentAlerts(long unitId) {
+
+        List<String> tokens = fcmTokenQueryService.getAllTokens();
+
+        if (tokens.isEmpty()) {
+            return;
+        }
+
+        PushMessage message = PushMessage.of(
+                tokens,
+                messageProvider.newContent(),
+                null,
+                NotificationType.NEW_CONTENT.toPushData(unitId)
+        );
+
+        fcmService.sendNotifications(List.of(message));
     }
 
     private void pushToUsers(

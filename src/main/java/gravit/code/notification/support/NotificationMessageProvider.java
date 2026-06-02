@@ -11,6 +11,8 @@ public class NotificationMessageProvider {
 
     private static final String CONSECUTIVE_WARNING_MESSAGE = "오늘 학습을 하지 않으면 %d일 연속학습이 끊겨요!";
 
+    private static final String NEW_CONTENT_MESSAGE = "새 레슨이 업데이트됐어요! 오늘 학습에 도전해보세요 🔥";
+
     private static final List<String> DAILY_INCOMPLETE_MESSAGES = List.of(
             "오늘 아직 학습을 안 했어요! 10분만 투자해보세요 📚",
             "오늘 학습을 시작해보세요! 작은 습관이 큰 변화를 만들어요 🌱",
@@ -36,5 +38,13 @@ public class NotificationMessageProvider {
 
     public List<InactivityMilestone> inactivityMilestones() {
         return INACTIVITY_MILESTONES;
+    }
+
+    public String noticePublished(String noticeTitle) {
+        return "[공지] " + noticeTitle;
+    }
+
+    public String newContent() {
+        return NEW_CONTENT_MESSAGE;
     }
 }

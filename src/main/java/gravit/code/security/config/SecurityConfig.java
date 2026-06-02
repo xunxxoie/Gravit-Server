@@ -8,6 +8,7 @@ import gravit.code.security.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -55,6 +56,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/test/**").permitAll() // 테스트 할때만
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/cs-notes/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/version").permitAll() // 앱 버전 체크(로그인 전)
                 .anyRequest().authenticated());
 
         // JwtFilter 추가

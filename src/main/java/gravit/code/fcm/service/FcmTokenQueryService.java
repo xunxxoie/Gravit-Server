@@ -35,4 +35,10 @@ public class FcmTokenQueryService {
                         Collectors.mapping(FcmToken::getToken, Collectors.toList())
                 ));
     }
+
+    // 전체 유저 브로드캐스트용: 모든 디바이스 토큰
+    @Transactional(readOnly = true)
+    public List<String> getAllTokens() {
+        return fcmTokenRepository.findAllTokens();
+    }
 }

@@ -3,6 +3,7 @@ package gravit.code.admin.service;
 import gravit.code.admin.dto.request.NoticeCreateRequest;
 import gravit.code.admin.dto.request.NoticeUpdateRequest;
 import gravit.code.admin.dto.response.AdminNoticeDetailResponse;
+import gravit.code.global.event.NoticeCreatedEvent;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.notice.domain.Notice;
@@ -11,12 +12,15 @@ import gravit.code.notice.repository.NoticeRepository;
 import gravit.code.user.domain.User;
 import gravit.code.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AdminNoticeCommandService {
+
+    private final ApplicationEventPublisher publisher;
 
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
@@ -35,6 +39,10 @@ public class AdminNoticeCommandService {
         Notice notice = Notice.create(title, content, author, status, pinned);
 
         noticeRepository.save(notice);
+
+        if (status == NoticeStatus.PUBLISHED) {
+            publisher.publishEvent(new NoticeCreatedEvent(notice.getId(), title));
+        }
 
         return AdminNoticeDetailResponse.from(notice);
     }

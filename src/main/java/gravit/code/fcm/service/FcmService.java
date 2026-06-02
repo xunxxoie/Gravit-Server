@@ -44,9 +44,11 @@ public class FcmService {
             Map<String, String> data
     ) {
         Notification.Builder notification = Notification.builder();
+
         if (title != null && !title.isBlank()) {
             notification.setTitle(title);
         }
+
         if (body != null && !body.isBlank()) {
             notification.setBody(body);
         }
@@ -54,6 +56,7 @@ public class FcmService {
         Message.Builder message = Message.builder()
                 .setToken(token)
                 .setNotification(notification.build());
+
         if (data != null && !data.isEmpty()) {
             message.putAllData(data);
         }

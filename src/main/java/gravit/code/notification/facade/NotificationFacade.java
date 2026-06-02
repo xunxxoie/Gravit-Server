@@ -7,27 +7,24 @@ import gravit.code.global.annotation.Facade;
 import gravit.code.learning.dto.internal.ConsecutiveAtRiskUser;
 import gravit.code.learning.service.LearningQueryService;
 import gravit.code.notification.domain.NotificationType;
+import gravit.code.notification.dto.internal.InactivityMilestone;
+import gravit.code.notification.support.NotificationMessageProvider;
+import gravit.code.user.service.UserAccessService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Supplier;
 
 @Facade
 @RequiredArgsConstructor
 public class NotificationFacade {
 
-    private static final String CONSECUTIVE_WARNING_MESSAGE = "오늘 학습을 하지 않으면 %d일 연속학습이 끊겨요!";
-
-    private static final List<String> DAILY_INCOMPLETE_MESSAGES = List.of(
-            "오늘 아직 학습을 안 했어요! 10분만 투자해보세요 📚",
-            "오늘 학습을 시작해보세요! 작은 습관이 큰 변화를 만들어요 🌱",
-            "지금 이 시간에도 누군가는 CS를 공부하고 있어요 👀"
-    );
-
     private final LearningQueryService learningQueryService;
+    private final UserAccessService userAccessService;
     private final FcmTokenQueryService fcmTokenQueryService;
     private final FcmService fcmService;
+    private final NotificationMessageProvider messageProvider;
 
     public void sendConsecutiveLearningWarnings() {
 
@@ -43,13 +40,13 @@ public class NotificationFacade {
 
         Map<Long, List<String>> tokensByUserId = fcmTokenQueryService.getTokensByUserIds(targetUserIds);
 
-        Map<String, String> data = buildActionData(NotificationType.STREAK_WARNING);
+        Map<String, String> data = NotificationType.STREAK_WARNING.toPushData();
 
         List<PushMessage> messages = targets.stream()
                 .filter(target -> tokensByUserId.containsKey(target.userId()))
                 .map(target -> PushMessage.of(
                         tokensByUserId.get(target.userId()),
-                        CONSECUTIVE_WARNING_MESSAGE.formatted(target.consecutiveSolvedDays()),
+                        messageProvider.consecutiveWarning(target.consecutiveSolvedDays()),
                         null,
                         data
                 ))
@@ -66,32 +63,41 @@ public class NotificationFacade {
             return;
         }
 
-        Map<Long, List<String>> tokensByUserId = fcmTokenQueryService.getTokensByUserIds(targetUserIds);
+        pushToUsers(targetUserIds, NotificationType.DAILY_INCOMPLETE.toPushData(), messageProvider::randomDailyIncomplete);
+    }
 
-        Map<String, String> data = buildActionData(NotificationType.DAILY_INCOMPLETE);
+    public void sendInactivityReminders() {
 
-        List<PushMessage> messages = targetUserIds.stream()
+        Map<String, String> data = NotificationType.INACTIVITY.toPushData();
+
+        for (InactivityMilestone milestone : messageProvider.inactivityMilestones()) {
+            List<Long> targetUserIds = userAccessService.getUserIdsInactiveForExactly(milestone.days());
+
+            if (targetUserIds.isEmpty()) {
+                continue;
+            }
+
+            pushToUsers(targetUserIds, data, milestone::message);
+        }
+    }
+
+    private void pushToUsers(
+            List<Long> userIds,
+            Map<String, String> data,
+            Supplier<String> messageSupplier
+    ) {
+        Map<Long, List<String>> tokensByUserId = fcmTokenQueryService.getTokensByUserIds(userIds);
+
+        List<PushMessage> messages = userIds.stream()
                 .filter(tokensByUserId::containsKey)
                 .map(userId -> PushMessage.of(
                         tokensByUserId.get(userId),
-                        randomDailyIncompleteMessage(),
+                        messageSupplier.get(),
                         null,
                         data
                 ))
                 .toList();
 
         fcmService.sendNotifications(messages);
-    }
-
-    private String randomDailyIncompleteMessage() {
-        int index = ThreadLocalRandom.current().nextInt(DAILY_INCOMPLETE_MESSAGES.size());
-        return DAILY_INCOMPLETE_MESSAGES.get(index);
-    }
-
-    private Map<String, String> buildActionData(NotificationType type) {
-        return Map.of(
-                "type", type.name(),
-                "actionType", type.getActionType().name()
-        );
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long>, UserDeletionRepository {
@@ -49,5 +50,16 @@ public interface UserRepository extends JpaRepository<User, Long>, UserDeletionR
             @Param("userId") long userId,
             @Param("now") LocalDateTime now,
             @Param("startOfToday") LocalDateTime startOfToday
+    );
+
+    // 마지막 접속이 [start, end) 구간(특정 하루)에 속한 유저 = 정확히 N일째 미접속 유저
+    @Query("""
+        SELECT u.id
+        FROM User u
+        WHERE u.lastAccessedAt >= :start AND u.lastAccessedAt < :end
+    """)
+    List<Long> findUserIdsLastAccessedBetween(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
     );
 }

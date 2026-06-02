@@ -20,4 +20,9 @@ public class NotificationScheduler {
     public void sendDailyIncompleteReminders(){
         notificationFacade.sendDailyIncompleteReminders();
     }
+
+    @Scheduled(cron = "0 0 21 * * *", zone = "Asia/Seoul")
+    public void sendInactivityReminders(){
+        notificationFacade.sendInactivityReminders();
+    }
 }

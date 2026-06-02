@@ -9,13 +9,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class LearningQueryService {
 
+    // 미접속 7일 미만(=6일 이내 접속)만 일일 알림 대상. 7일 이상은 장기 미접속 알림으로 대체
+    private static final int ACTIVE_THRESHOLD_DAYS = 6;
+
     private final LearningRepository learningRepository;
+    private final Clock clock;
 
     @Transactional(readOnly = true)
     public Learning getLearning(long userId) {
@@ -25,11 +32,15 @@ public class LearningQueryService {
 
     @Transactional(readOnly = true)
     public List<ConsecutiveAtRiskUser> getConsecutiveAtRiskUsers() {
-        return learningRepository.findConsecutiveAtRiskUsers();
+        return learningRepository.findConsecutiveAtRiskUsers(activeThreshold());
     }
 
     @Transactional(readOnly = true)
     public List<Long> getDailyIncompleteUserIds() {
-        return learningRepository.findDailyIncompleteUserIds();
+        return learningRepository.findDailyIncompleteUserIds(activeThreshold());
+    }
+
+    private LocalDateTime activeThreshold() {
+        return LocalDate.now(clock).minusDays(ACTIVE_THRESHOLD_DAYS).atStartOfDay();
     }
 }

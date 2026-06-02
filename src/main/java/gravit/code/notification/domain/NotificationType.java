@@ -3,6 +3,8 @@ package gravit.code.notification.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 import static gravit.code.notification.domain.NotificationActionType.CONGRATULATE;
 import static gravit.code.notification.domain.NotificationActionType.FOLLOW_BACK;
 import static gravit.code.notification.domain.NotificationActionType.GO_TO_LEARNING;
@@ -26,4 +28,12 @@ public enum NotificationType {
     NEW_CONTENT(GO_TO_LEARNING);       // 3.14 새 콘텐츠 업데이트
 
     private final NotificationActionType actionType;
+
+    // 클라이언트 액션 라우팅용 FCM data payload. 키 계약은 프론트와 동일하게 맞춘다
+    public Map<String, String> toPushData() {
+        return Map.of(
+                "type", name(),
+                "actionType", actionType.name()
+        );
+    }
 }

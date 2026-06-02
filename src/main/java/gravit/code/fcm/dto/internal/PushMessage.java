@@ -9,6 +9,11 @@ public record PushMessage(
         String body,
         Map<String, String> data
 ) {
+    public PushMessage {
+        tokens = List.copyOf(tokens);
+        data = Map.copyOf(data);
+    }
+
     public static PushMessage of(
             List<String> tokens,
             String title,

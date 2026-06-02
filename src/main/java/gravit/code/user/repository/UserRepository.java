@@ -39,7 +39,7 @@ public interface UserRepository extends JpaRepository<User, Long>, UserDeletionR
     """)
     Optional<MyPageResponse> findMyPageByUserId(@Param("userId") long userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("""
         UPDATE User u
         SET u.lastAccessedAt = :now
@@ -52,7 +52,6 @@ public interface UserRepository extends JpaRepository<User, Long>, UserDeletionR
             @Param("startOfToday") LocalDateTime startOfToday
     );
 
-    // 마지막 접속이 [start, end) 구간(특정 하루)에 속한 유저 = 정확히 N일째 미접속 유저
     @Query("""
         SELECT u.id
         FROM User u

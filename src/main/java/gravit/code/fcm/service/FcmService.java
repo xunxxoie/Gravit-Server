@@ -1,5 +1,6 @@
 package gravit.code.fcm.service;
 
+import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -66,7 +67,10 @@ public class FcmService {
 
     private void sendBatch(List<Message> batch) {
         try {
-            firebaseMessaging.sendEach(batch);
+            BatchResponse response = firebaseMessaging.sendEach(batch);
+            if (response.getFailureCount() > 0) {
+                log.warn("FCM 부분 실패 (성공 {}건 / 실패 {}건)", response.getSuccessCount(), response.getFailureCount());
+            }
         } catch (FirebaseMessagingException e) {
             log.error("FCM 푸시 발송 실패 (배치 {}건)", batch.size(), e);
         }

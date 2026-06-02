@@ -1,7 +1,6 @@
 package gravit.code.chapter.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 
@@ -20,7 +19,6 @@ public record ChapterSummaryResponse(
                 example = "자료구조",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         String title,
 
         @Schema(
@@ -28,7 +26,6 @@ public record ChapterSummaryResponse(
                 example = "큐, 스택, 힙과 같은 자료구조에 대해 학습합니다.",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         String description
 ) {
 }

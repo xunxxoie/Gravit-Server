@@ -12,8 +12,10 @@ import java.util.List;
 public record MyPageLearningResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         WeeklyLearningReportResponse weeklyReport,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<TopChapterResponse> topChapters,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<WeakConceptResponse> weakConcepts
 ) {

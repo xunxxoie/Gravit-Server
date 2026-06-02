@@ -8,10 +8,13 @@ import lombok.Builder;
 public record UserResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long userId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int profileImgNumber,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String nickname,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String providerId
 ) {

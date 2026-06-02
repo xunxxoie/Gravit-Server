@@ -7,6 +7,7 @@ import java.time.LocalDate;
 public record DailySolvedCountResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LocalDate date,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int solvedLessonCount
 ) {

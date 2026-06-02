@@ -2,7 +2,6 @@ package gravit.code.lesson.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 @Schema(description = "레슨 요약 정보")
 public record LessonSummaryResponse(
@@ -18,7 +17,6 @@ public record LessonSummaryResponse(
                 example = "스택 1/3",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         String title,
 
         @Schema(

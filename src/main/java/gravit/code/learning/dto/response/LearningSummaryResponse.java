@@ -8,12 +8,16 @@ import lombok.Builder;
 public record LearningSummaryResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int topPercent,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int completedLessonCount,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int totalLessonCount,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         double totalLearningHours,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int averageAccuracy
 ) {

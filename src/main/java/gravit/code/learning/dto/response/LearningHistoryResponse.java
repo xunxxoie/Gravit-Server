@@ -11,6 +11,7 @@ import java.util.List;
 public record LearningHistoryResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<DailySolvedCountResponse> dailySolvedCounts,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int peakLearningHour
 ) {

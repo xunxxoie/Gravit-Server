@@ -3,7 +3,6 @@ package gravit.code.lesson.dto.response;
 import gravit.code.problem.dto.response.ProblemResponse;
 import gravit.code.unit.dto.response.UnitSummaryResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 
@@ -17,14 +16,12 @@ public record LessonResponse(
                 description = "유닛 요약 정보",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         UnitSummaryResponse unitSummaryResponse,
 
         @Schema(
                 description = "문제 목록",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         List<ProblemResponse> problems,
 
         @Schema(

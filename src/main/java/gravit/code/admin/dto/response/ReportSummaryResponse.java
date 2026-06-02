@@ -3,7 +3,6 @@ package gravit.code.admin.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gravit.code.report.domain.ReportType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +20,6 @@ public record ReportSummaryResponse(
                 description = "신고 유형",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         ReportType reportType,
 
         @Schema(
@@ -43,7 +41,6 @@ public record ReportSummaryResponse(
                 description = "신고 접수 시간",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         LocalDateTime submittedAt
 ) {
 }

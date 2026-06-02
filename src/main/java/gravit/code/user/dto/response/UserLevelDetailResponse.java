@@ -8,10 +8,13 @@ import lombok.Builder;
 public record UserLevelDetailResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int level,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int currentXp,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int maxXp,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         double levelRate
 ) {

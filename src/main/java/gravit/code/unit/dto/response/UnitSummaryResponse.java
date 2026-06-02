@@ -1,7 +1,6 @@
 package gravit.code.unit.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 
 public record UnitSummaryResponse(
 
@@ -17,7 +16,6 @@ public record UnitSummaryResponse(
                 example = "Unit01 - 연결리스트",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         String title,
 
         @Schema(
@@ -25,7 +23,6 @@ public record UnitSummaryResponse(
                 example = "배열과 연결리스트에 대해 학습합니다.",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         String description
 ) {
 }

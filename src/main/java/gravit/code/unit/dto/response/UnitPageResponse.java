@@ -2,7 +2,6 @@ package gravit.code.unit.dto.response;
 
 import gravit.code.chapter.dto.response.ChapterSummaryResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 
@@ -16,14 +15,12 @@ public record UnitPageResponse(
                 description = "챕터 요약 정보",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         ChapterSummaryResponse chapterSummaryResponse,
 
         @Schema(
                 description = "유닛 상세 정보 목록",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         List<UnitDetailResponse> unitDetailResponses
 ) {
 

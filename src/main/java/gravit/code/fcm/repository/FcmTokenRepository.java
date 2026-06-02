@@ -3,6 +3,7 @@ package gravit.code.fcm.repository;
 import gravit.code.fcm.domain.FcmToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FcmTokenRepository extends JpaRepository<FcmToken, Long> {
@@ -12,4 +13,6 @@ public interface FcmTokenRepository extends JpaRepository<FcmToken, Long> {
             long userId,
             String deviceId
     );
+
+    List<FcmToken> findByUserIdIn(List<Long> userIds);
 }

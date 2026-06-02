@@ -14,10 +14,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @TCSpringBootTest
-class LearningServiceIntegrationTest {
+class LearningCommandServiceIntegrationTest {
 
     @Autowired
-    private LearningService learningService;
+    private LearningCommandService learningCommandService;
+
+    @Autowired
+    private LearningQueryService learningQueryService;
 
     @Autowired
     private LearningRepository learningRepository;
@@ -33,7 +36,7 @@ class LearningServiceIntegrationTest {
             Learning saved = learningRepository.save(Learning.create(userId));
 
             // when
-            Learning result = learningService.getLearning(userId);
+            Learning result = learningQueryService.getLearning(userId);
 
             // then
             assertSoftly(softly -> {
@@ -50,7 +53,7 @@ class LearningServiceIntegrationTest {
             long nonExistentUserId = 999L;
 
             // when & then
-            assertThatThrownBy(() -> learningService.getLearning(nonExistentUserId))
+            assertThatThrownBy(() -> learningQueryService.getLearning(nonExistentUserId))
                     .isInstanceOf(RestApiException.class)
                     .extracting("errorCode")
                     .isEqualTo(LEARNING_NOT_FOUND);

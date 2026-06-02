@@ -21,7 +21,8 @@ import org.springframework.test.context.ContextConfiguration;
 @Import({
         PostgreSQLTestContainerConfig.class,
         DatabaseCleaner.class,
-        FixedClockConfig.class
+        FixedClockConfig.class,
+        FcmTestConfig.class
 })
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ExtendWith(DatabaseClearExtension.class)

@@ -6,7 +6,7 @@ import gravit.code.global.event.LessonCompletedEvent;
 import gravit.code.learning.dto.internal.ConsecutiveSolvedDto;
 import gravit.code.learning.dto.internal.LearningIdsDto;
 import gravit.code.learning.dto.request.LearningSubmissionSaveRequest;
-import gravit.code.learning.service.LearningService;
+import gravit.code.learning.service.LearningCommandService;
 import gravit.code.lesson.dto.response.LessonDetailResponse;
 import gravit.code.lesson.dto.response.LessonSubmissionSaveResponse;
 import gravit.code.lesson.dto.response.LessonSummaryResponse;
@@ -41,7 +41,7 @@ public class LessonFacade {
     private final WrongAnsweredNoteService wrongAnsweredNoteService;
     private final BookmarkService bookmarkService;
 
-    private final LearningService learningService;
+    private final LearningCommandService learningCommandService;
 
     private final UserService userService;
     private final UserLeagueService userLeagueService;
@@ -89,7 +89,7 @@ public class LessonFacade {
 
         LearningIdsDto learningIdsDto = lessonQueryService.getLearningIdsByLessonId(request.lessonSubmissionSaveRequest().lessonId());
 
-        ConsecutiveSolvedDto consecutiveSolvedDto = learningService.updateLearningStatus(userId, learningIdsDto.chapterId());
+        ConsecutiveSolvedDto consecutiveSolvedDto = learningCommandService.updateLearningStatus(userId, learningIdsDto.chapterId());
         if(isFirstTry){
             publisher.publishEvent(new LessonCompletedEvent(
                     userId,

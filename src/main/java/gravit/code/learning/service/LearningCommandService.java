@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class LearningService {
+public class LearningCommandService {
 
     private final LearningRepository learningRepository;
     private final LearningProgressRateService learningProgressRateService;
@@ -27,6 +27,12 @@ public class LearningService {
         }
 
         learningRepository.saveAll(learnings);
+    }
+
+    @Transactional
+    public void createLearning(long userId){
+        Learning learning = Learning.create(userId);
+        learningRepository.save(learning);
     }
 
     @Transactional
@@ -44,17 +50,5 @@ public class LearningService {
         learningRepository.save(learning);
 
         return consecutiveSolvedDto;
-    }
-
-    @Transactional
-    public void createLearning(long userId){
-        Learning learning = Learning.create(userId);
-        learningRepository.save(learning);
-    }
-
-    @Transactional(readOnly = true)
-    public Learning getLearning(long userId) {
-        return learningRepository.findByUserId(userId)
-                .orElseThrow(() -> new RestApiException(CustomErrorCode.LEARNING_NOT_FOUND));
     }
 }

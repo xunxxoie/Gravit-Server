@@ -4,7 +4,7 @@ import gravit.code.bookmark.service.BookmarkService;
 import gravit.code.learning.dto.internal.ConsecutiveSolvedDto;
 import gravit.code.learning.dto.internal.LearningIdsDto;
 import gravit.code.learning.dto.request.LearningSubmissionSaveRequest;
-import gravit.code.learning.service.LearningService;
+import gravit.code.learning.service.LearningCommandService;
 import gravit.code.lesson.dto.request.LessonSubmissionSaveRequest;
 import gravit.code.lesson.dto.response.LessonDetailResponse;
 import gravit.code.lesson.dto.response.LessonSubmissionSaveResponse;
@@ -66,7 +66,7 @@ class LessonFacadeUnitTest {
     private BookmarkService bookmarkService;
 
     @Mock
-    private LearningService learningService;
+    private LearningCommandService learningCommandService;
 
     @Mock
     private UserService userService;
@@ -148,7 +148,7 @@ class LessonFacadeUnitTest {
             when(userService.updateUserLevelByLessonSubmission(eq(userId), eq(lessonRequest), eq(true)))
                     .thenReturn(UserLevelResponse.create(1, 20));
             when(lessonQueryService.getLearningIdsByLessonId(1L)).thenReturn(new LearningIdsDto(1L, 1L, 1L));
-            when(learningService.updateLearningStatus(userId, 1L)).thenReturn(new ConsecutiveSolvedDto(0, 1));
+            when(learningCommandService.updateLearningStatus(userId, 1L)).thenReturn(new ConsecutiveSolvedDto(0, 1));
 
             // when
             LessonSubmissionSaveResponse result = lessonFacade.saveLessonSubmission(userId, request);
@@ -177,7 +177,7 @@ class LessonFacadeUnitTest {
             when(userService.updateUserLevelByLessonSubmission(eq(userId), eq(lessonRequest), eq(false)))
                     .thenReturn(UserLevelResponse.create(1, 0));
             when(lessonQueryService.getLearningIdsByLessonId(1L)).thenReturn(new LearningIdsDto(1L, 1L, 1L));
-            when(learningService.updateLearningStatus(userId, 1L)).thenReturn(new ConsecutiveSolvedDto(1, 1));
+            when(learningCommandService.updateLearningStatus(userId, 1L)).thenReturn(new ConsecutiveSolvedDto(1, 1));
 
             // when
             LessonSubmissionSaveResponse result = lessonFacade.saveLessonSubmission(userId, request);

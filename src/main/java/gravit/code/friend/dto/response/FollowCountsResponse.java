@@ -6,6 +6,7 @@ public record FollowCountsResponse(
 
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long followerCount,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long followingCount
 ) {

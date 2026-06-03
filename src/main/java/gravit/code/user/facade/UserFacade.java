@@ -9,7 +9,8 @@ import gravit.code.league.dto.response.LeagueDetailResponse;
 import gravit.code.learning.domain.Learning;
 import gravit.code.learning.dto.response.LearningDetailResponse;
 import gravit.code.learning.service.LearningProgressRateService;
-import gravit.code.learning.service.LearningService;
+import gravit.code.learning.service.LearningQueryService;
+import gravit.code.learning.service.LearningCommandService;
 import gravit.code.mission.dto.response.MissionDetailResponse;
 import gravit.code.mission.service.MissionService;
 import gravit.code.unit.dto.response.RecommendedUnitResponse;
@@ -33,7 +34,8 @@ public class UserFacade {
     private final UserService userService;
     private final UserLeagueService userLeagueService;
     private final UnitQueryService unitQueryService;
-    private final LearningService learningService;
+    private final LearningQueryService learningQueryService;
+    private final LearningCommandService learningCommandService;
     private final ChapterQueryService chapterQueryService;
     private final LearningProgressRateService learningProgressRateService;
     private final MissionService missionService;
@@ -42,7 +44,7 @@ public class UserFacade {
     @Transactional(readOnly = true)
     public MainPageResponse getMainPage(long userId) {
         User user = userService.getUser(userId);
-        Learning learning = learningService.getLearning(userId);
+        Learning learning = learningQueryService.getLearning(userId);
 
         UserLevelDetailResponse userLevelDetailResponse = user.getLevel().getUserLevelDetail();
         LeagueDetailResponse leagueDetailResponse = userLeagueService.getUserLeagueDetail(userId);
@@ -67,7 +69,7 @@ public class UserFacade {
     public MyPageBannerResponse getMyPageBanner(long userId){
         User user = userService.getUser(userId);
         String leagueName = userLeagueService.getUserLeagueName(userId);
-        Learning learning = learningService.getLearning(userId);
+        Learning learning = learningQueryService.getLearning(userId);
 
         return MyPageBannerResponse.of(
                 user.getProfileImgNumber(),

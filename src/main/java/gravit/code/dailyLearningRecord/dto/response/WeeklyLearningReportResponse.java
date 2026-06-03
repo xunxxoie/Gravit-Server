@@ -12,20 +12,28 @@ import java.util.Map;
 public record WeeklyLearningReportResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int MONDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int TUESDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int WEDNESDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int THURSDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int FRIDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int SATURDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int SUNDAY,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int thisWeekCompletedLessonCount,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<Integer> weekOverWeekDeltas
 ) {

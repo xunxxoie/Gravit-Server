@@ -9,14 +9,19 @@ import static lombok.AccessLevel.PRIVATE;
 public record MyPageBannerResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int profileImageNumber,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String nickname,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String handle,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int level,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String currentLeague,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int consecutiveSolvedDays
 ) {

@@ -46,7 +46,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpEndpoint.prefix("/actuator", HttpMethod.GET),
 
             /* note */
-            HttpEndpoint.prefix("/api/v1/cs-notes", HttpMethod.GET)
+            HttpEndpoint.prefix("/api/v1/cs-notes", HttpMethod.GET),
+
+            /* app version check */
+            HttpEndpoint.exact("/api/v1/version", HttpMethod.GET)
 
     );
 

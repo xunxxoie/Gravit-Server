@@ -10,12 +10,16 @@ import lombok.Builder;
 public record MissionDetailResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String missionType,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String missionDescription,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int awardXp,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         double progressRate,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         @JsonProperty("isCompleted")
         boolean isCompleted

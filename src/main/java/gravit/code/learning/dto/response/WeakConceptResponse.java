@@ -9,12 +9,16 @@ import lombok.Builder;
 public record WeakConceptResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int rank,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String unitTitle,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String chapterTitle,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int wrongAnswerCount,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int wrongAnswerRate
 ) {

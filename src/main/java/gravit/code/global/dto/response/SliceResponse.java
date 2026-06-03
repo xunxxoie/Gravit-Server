@@ -10,6 +10,7 @@ import java.util.List;
 public record SliceResponse<T>(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         boolean hasNextPage,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<T> contents
 ){

@@ -4,9 +4,12 @@ import gravit.code.user.domain.User;
 import gravit.code.user.dto.response.MyPageResponse;
 import gravit.code.user.repository.custom.UserDeletionRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long>, UserDeletionRepository {
@@ -35,4 +38,27 @@ public interface UserRepository extends JpaRepository<User, Long>, UserDeletionR
         where u.id = :userId
     """)
     Optional<MyPageResponse> findMyPageByUserId(@Param("userId") long userId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+        UPDATE User u
+        SET u.lastAccessedAt = :now
+        WHERE u.id = :userId
+          AND (u.lastAccessedAt IS NULL OR u.lastAccessedAt < :startOfToday)
+    """)
+    int updateLastAccessedAt(
+            @Param("userId") long userId,
+            @Param("now") LocalDateTime now,
+            @Param("startOfToday") LocalDateTime startOfToday
+    );
+
+    @Query("""
+        SELECT u.id
+        FROM User u
+        WHERE u.lastAccessedAt >= :start AND u.lastAccessedAt < :end
+    """)
+    List<Long> findUserIdsLastAccessedBetween(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }

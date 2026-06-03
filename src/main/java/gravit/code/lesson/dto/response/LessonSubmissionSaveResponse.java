@@ -3,7 +3,6 @@ package gravit.code.lesson.dto.response;
 import gravit.code.unit.dto.response.UnitSummaryResponse;
 import gravit.code.user.dto.response.UserLevelResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 
@@ -16,21 +15,18 @@ public record LessonSubmissionSaveResponse(
                 example = "브론즈",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         String leagueName,
 
         @Schema(
                 description = "유저 레벨 정보",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         UserLevelResponse userLevelResponse,
 
         @Schema(
                 description = "유닛 요약 정보",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        @NotNull
         UnitSummaryResponse unitSummaryResponse
 ) {
     public static LessonSubmissionSaveResponse create(

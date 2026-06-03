@@ -3,6 +3,8 @@ package gravit.code.notification.domain;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Map;
+
 import static gravit.code.notification.domain.NotificationActionType.CONGRATULATE;
 import static gravit.code.notification.domain.NotificationActionType.FOLLOW_BACK;
 import static gravit.code.notification.domain.NotificationActionType.GO_TO_LEARNING;
@@ -13,7 +15,7 @@ import static gravit.code.notification.domain.NotificationActionType.NONE;
 @RequiredArgsConstructor
 public enum NotificationType {
 
-    STREAK_WARNING(GO_TO_LEARNING),    // 3.1  연속학습 끊길 위기
+    CONSECUTIVE_LEARNING_WARNING(GO_TO_LEARNING),  // 3.1  연속학습 끊길 위기
     DAILY_INCOMPLETE(GO_TO_LEARNING),  // 3.2  오늘 학습 미완료
     INACTIVITY(GO_TO_LEARNING),        // 3.3  장기 미접속
     SEASON_ENDING(GO_TO_LEARNING),     // 3.7  시즌 종료 임박
@@ -26,4 +28,24 @@ public enum NotificationType {
     NEW_CONTENT(GO_TO_LEARNING);       // 3.14 새 콘텐츠 업데이트
 
     private final NotificationActionType actionType;
+
+    // 클라이언트 액션 라우팅용 FCM data payload. 키 계약은 프론트와 동일하게 맞춘다
+    public Map<String, String> toPushData() {
+        return Map.of(
+                "type", name(),
+                "actionType", actionType.name()
+        );
+    }
+
+    // 액션 대상이 있는 경우(targetId) deeplink용으로 함께 실어 보낸다
+    public Map<String, String> toPushData(Long targetId) {
+        if (targetId == null) {
+            return toPushData();
+        }
+        return Map.of(
+                "type", name(),
+                "actionType", actionType.name(),
+                "targetId", String.valueOf(targetId)
+        );
+    }
 }

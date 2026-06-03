@@ -82,6 +82,9 @@ spring:
             authorization-grant-type: authorization_code
             scope: name,email
 
+app:
+  version: 1.0.0
+
 jwt:
   secret: testtesttesttesttesttesttesttesttesttesttest
 

@@ -11,8 +11,10 @@ import static lombok.AccessLevel.PRIVATE;
 public record MyPageSummaryResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LearningSummaryResponse learningSummary,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LearningHistoryResponse learningHistory,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<Integer> years
 ) {

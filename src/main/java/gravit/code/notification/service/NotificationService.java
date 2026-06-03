@@ -7,11 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final Clock clock;
 
     @Transactional
     public void notify(
@@ -30,5 +34,15 @@ public class NotificationService {
             String message
     ) {
         notify(userId, type, message, null);
+    }
+
+    // 전체 활성 유저 알림함에 동일 알림 적재 (공지 등 브로드캐스트)
+    @Transactional
+    public void notifyAllUsers(
+            NotificationType type,
+            String message,
+            Long targetId
+    ) {
+        notificationRepository.insertForAllActiveUsers(type.name(), message, targetId, LocalDateTime.now(clock));
     }
 }

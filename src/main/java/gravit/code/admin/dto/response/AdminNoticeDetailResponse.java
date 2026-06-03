@@ -2,7 +2,6 @@ package gravit.code.admin.dto.response;
 
 import gravit.code.notice.domain.Notice;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -12,24 +11,25 @@ public record AdminNoticeDetailResponse(
 
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long noticeId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         String title,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         String contents,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         String authorName,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         LocalDateTime createdAt,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         LocalDateTime updatedAt,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         String noticeType,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         boolean pinned,
         LocalDateTime publishedAt

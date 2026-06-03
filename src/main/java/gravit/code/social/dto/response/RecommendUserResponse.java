@@ -9,10 +9,13 @@ import static lombok.AccessLevel.PRIVATE;
 public record RecommendUserResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long userId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String nickname,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int profileImgNumber,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int mutualFollowCount
 ) {

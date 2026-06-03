@@ -11,20 +11,28 @@ import java.time.temporal.ChronoUnit;
 public record SocialFeedResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         Long feedId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         Long actorId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String actorNickname,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int actorProfileImgNumber,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String actorHandle,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String message,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String timeAgo,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         boolean canCongratulate,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LocalDateTime createdAt
 ) {

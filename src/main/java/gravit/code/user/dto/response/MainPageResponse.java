@@ -15,18 +15,25 @@ import java.util.List;
 public record MainPageResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int profileImgNumber,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String nickname,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         UserLevelDetailResponse userLevelDetailResponse,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LeagueDetailResponse leagueDetailResponse,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         LearningDetailResponse learningDetailResponse,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<RecommendedUnitResponse> recommendedUnitResponses,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         WeeklyLearningRecordResponse weeklyLearningRecordResponse,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         MissionDetailResponse missionDetailResponse
 ) {

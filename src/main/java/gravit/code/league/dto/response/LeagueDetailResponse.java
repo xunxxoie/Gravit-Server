@@ -9,10 +9,13 @@ import static lombok.AccessLevel.PRIVATE;
 public record LeagueDetailResponse(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long leagueId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         String leagueName,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int currentLP,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int maxLP
 ) {

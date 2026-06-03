@@ -65,6 +65,9 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(name = "last_accessed_at")
+    private LocalDateTime lastAccessedAt;
+
     @Builder
     private User(
             String email,

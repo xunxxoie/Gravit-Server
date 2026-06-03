@@ -8,10 +8,13 @@ import java.util.List;
 public record PageResponse<T>(
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int page,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int totalPages,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         boolean hasNext,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         List<T> contents
 ) {

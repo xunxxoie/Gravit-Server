@@ -2,7 +2,6 @@ package gravit.code.league.dto.response;
 
 import gravit.code.league.domain.League;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder
@@ -10,11 +9,13 @@ public record LeagueResponse(
 
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long leagueId,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
-        @NotNull
         String name,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int minLp,
+
         @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         int maxLp
 ) {

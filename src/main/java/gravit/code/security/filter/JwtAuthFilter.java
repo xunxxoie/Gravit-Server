@@ -33,8 +33,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpEndpoint.prefix("/api/v1/oauth", HttpMethod.GET, HttpMethod.POST),
             HttpEndpoint.exact("/api/v1/auth/reissue", HttpMethod.POST),
 
-            /* test */
-            HttpEndpoint.prefix("/api/v1/test", HttpMethod.POST),
+            /* test (단, /api/v1/test/notifications 는 인증 주체 식별이 필요해 제외하지 않는다) */
+            HttpEndpoint.exact("/api/v1/test/users/create", HttpMethod.POST),
+            HttpEndpoint.exact("/api/v1/test/users/login", HttpMethod.POST),
+            HttpEndpoint.exact("/api/v1/test/users/clean", HttpMethod.POST),
+            HttpEndpoint.exact("/api/v1/test/tokens/custom", HttpMethod.POST),
+            HttpEndpoint.exact("/api/v1/test/chapter-almost-clear", HttpMethod.POST),
+            HttpEndpoint.exact("/api/v1/test/consecutive_solved", HttpMethod.POST),
+            HttpEndpoint.exact("/api/v1/test/season/clean", HttpMethod.POST),
 
             /* delete account */
             HttpEndpoint.exact("/api/v1/users/deletion/confirm", HttpMethod.POST),

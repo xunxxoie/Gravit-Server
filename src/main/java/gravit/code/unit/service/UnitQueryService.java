@@ -2,8 +2,8 @@ package gravit.code.unit.service;
 
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
-import gravit.code.unit.dto.response.RecommendedUnitResponse;
 import gravit.code.unit.dto.internal.UnitProgressRowDto;
+import gravit.code.unit.dto.response.RecommendedUnitResponse;
 import gravit.code.unit.dto.response.UnitProgressSummaryResponse;
 import gravit.code.unit.dto.response.UnitSummaryResponse;
 import gravit.code.unit.repository.UnitRepository;

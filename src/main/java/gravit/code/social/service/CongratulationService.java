@@ -1,8 +1,5 @@
 package gravit.code.social.service;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.ALREADY_CONGRATULATED;
-import static gravit.code.global.exception.domain.CustomErrorCode.CONGRATULATE_LIMIT_EXCEEDED;
-
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.social.domain.Congratulation;
 import gravit.code.social.repository.CongratulationRepository;
@@ -14,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+
+import static gravit.code.global.exception.domain.CustomErrorCode.ALREADY_CONGRATULATED;
+import static gravit.code.global.exception.domain.CustomErrorCode.CONGRATULATE_LIMIT_EXCEEDED;
 
 @Service
 @RequiredArgsConstructor

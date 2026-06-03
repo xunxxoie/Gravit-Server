@@ -53,10 +53,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/users/deletion/confirm").permitAll()
                 .requestMatchers("/api/v1/auth/reissue").permitAll()
                 .requestMatchers("/api/v1/users/restore").permitAll()
-                .requestMatchers("/api/v1/test/**").permitAll() // 테스트 할때만
+                .requestMatchers("/api/v1/test/notifications/**").authenticated()
+                .requestMatchers("/api/v1/test/**").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/v1/cs-notes/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/version").permitAll() // 앱 버전 체크(로그인 전)
+                .requestMatchers(HttpMethod.GET, "/api/v1/version").permitAll()
                 .anyRequest().authenticated());
 
         // JwtFilter 추가

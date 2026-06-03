@@ -40,6 +40,14 @@ public class NotificationMessageProvider {
         return INACTIVITY_MILESTONES;
     }
 
+    public String inactivity(int inactiveDays) {
+        return INACTIVITY_MILESTONES.stream()
+                .filter(milestone -> milestone.days() == inactiveDays)
+                .map(InactivityMilestone::message)
+                .findFirst()
+                .orElseGet(() -> "%d일째 그래빗이 당신을 기다리고 있어요 🛜".formatted(inactiveDays));
+    }
+
     public String noticePublished(String noticeTitle) {
         return "[공지] " + noticeTitle;
     }

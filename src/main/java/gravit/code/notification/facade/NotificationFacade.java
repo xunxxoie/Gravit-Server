@@ -99,6 +99,64 @@ public class NotificationFacade {
         fcmService.sendNotifications(List.of(message));
     }
 
+    public void sendConsecutiveLearningWarningToUser(
+            long userId,
+            int consecutiveDays
+    ) {
+        pushToUser(
+                userId,
+                NotificationType.CONSECUTIVE_LEARNING_WARNING.toPushData(),
+                messageProvider.consecutiveWarning(consecutiveDays)
+        );
+    }
+
+    public void sendDailyIncompleteToUser(long userId) {
+        pushToUser(
+                userId,
+                NotificationType.DAILY_INCOMPLETE.toPushData(),
+                messageProvider.randomDailyIncomplete()
+        );
+    }
+
+    public void sendInactivityToUser(
+            long userId,
+            int inactiveDays
+    ) {
+        pushToUser(
+                userId,
+                NotificationType.INACTIVITY.toPushData(),
+                messageProvider.inactivity(inactiveDays)
+        );
+    }
+
+    public void sendNewContentToUser(
+            long userId,
+            long unitId
+    ) {
+        pushToUser(
+                userId,
+                NotificationType.NEW_CONTENT.toPushData(unitId),
+                messageProvider.newContent()
+        );
+    }
+
+    private void pushToUser(
+            long userId,
+            Map<String, String> data,
+            String message
+    ) {
+        List<String> tokens = fcmTokenQueryService.getTokensByUserIds(List.of(userId))
+                .get(userId);
+
+        if (tokens == null || tokens.isEmpty()) {
+            return;
+        }
+
+        PushMessage pushMessage = PushMessage.of(tokens, message, null, data);
+
+        fcmService.sendNotifications(List.of(pushMessage));
+    }
+
     private void pushToUsers(
             List<Long> userIds,
             Map<String, String> data,

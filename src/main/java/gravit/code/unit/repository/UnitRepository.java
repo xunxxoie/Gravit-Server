@@ -1,8 +1,8 @@
 package gravit.code.unit.repository;
 
 import gravit.code.unit.domain.Unit;
-import gravit.code.unit.dto.response.RecommendedUnitResponse;
 import gravit.code.unit.dto.internal.UnitProgressRowDto;
+import gravit.code.unit.dto.response.RecommendedUnitResponse;
 import gravit.code.unit.dto.response.UnitSummaryResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

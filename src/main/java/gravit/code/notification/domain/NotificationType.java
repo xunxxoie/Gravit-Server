@@ -5,11 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-import static gravit.code.notification.domain.NotificationActionType.CONGRATULATE;
-import static gravit.code.notification.domain.NotificationActionType.FOLLOW_BACK;
-import static gravit.code.notification.domain.NotificationActionType.GO_TO_LEARNING;
-import static gravit.code.notification.domain.NotificationActionType.GO_TO_NOTICE;
-import static gravit.code.notification.domain.NotificationActionType.NONE;
+import static gravit.code.notification.domain.NotificationActionType.*;
 
 @Getter
 @RequiredArgsConstructor

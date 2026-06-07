@@ -36,6 +36,7 @@ public class NotificationEventListener {
 
     // 3.8 시즌 롤오버 커밋 직후 전체 유저에게 새 시즌 시작 알림 푸시
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void handleSeasonRolledOver(SeasonRolledOverEvent event) {
         try {
             notificationFacade.sendSeasonResetAlerts();

@@ -3,11 +3,12 @@ package gravit.code.admin.dto.response;
 import gravit.code.admin.domain.AdminUser;
 import gravit.code.user.domain.Role;
 import gravit.code.user.domain.UserStatus;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "유저 상세")
+@Builder(access = AccessLevel.PRIVATE)
 public record UserDetailResponse(
 
         long userId,
@@ -29,16 +30,16 @@ public record UserDetailResponse(
         LocalDateTime createdAt
 ) {
     public static UserDetailResponse from(AdminUser user) {
-        return new UserDetailResponse(
-                user.getUserId(),
-                user.getEmail(),
-                user.getNickname(),
-                user.getHandle(),
-                user.getProfileImgNumber(),
-                Role.valueOf(user.getRole()),
-                UserStatus.valueOf(user.getStatus()),
-                user.getLevel(),
-                user.getCreatedAt()
-        );
+        return UserDetailResponse.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .handle(user.getHandle())
+                .profileImgNumber(user.getProfileImgNumber())
+                .role(Role.valueOf(user.getRole()))
+                .status(UserStatus.valueOf(user.getStatus()))
+                .level(user.getLevel())
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 }

@@ -27,6 +27,7 @@ public class AdminLessonService {
     public LessonDetailResponse getLesson(long lessonId) {
         Lesson lesson = lessonRepository.findById(lessonId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.LESSON_NOT_FOUND));
+
         long problemCount = problemRepository.countByLessonId(lessonId);
 
         return LessonDetailResponse.of(lesson, problemCount);

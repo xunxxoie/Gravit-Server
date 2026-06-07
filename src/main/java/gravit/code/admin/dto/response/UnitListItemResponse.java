@@ -1,9 +1,10 @@
 package gravit.code.admin.dto.response;
 
 import gravit.code.unit.domain.Unit;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
-@Schema(description = "유닛 목록 항목")
+@Builder(access = AccessLevel.PRIVATE)
 public record UnitListItemResponse(
 
         long unitId,
@@ -13,6 +14,10 @@ public record UnitListItemResponse(
         String description
 ) {
     public static UnitListItemResponse from(Unit unit) {
-        return new UnitListItemResponse(unit.getId(), unit.getTitle(), unit.getDescription());
+        return UnitListItemResponse.builder()
+                .unitId(unit.getId())
+                .title(unit.getTitle())
+                .description(unit.getDescription())
+                .build();
     }
 }

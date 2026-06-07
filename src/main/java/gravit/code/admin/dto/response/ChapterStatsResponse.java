@@ -1,29 +1,30 @@
 package gravit.code.admin.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.util.List;
 
-@Schema(description = "챕터 유닛별 통계")
+@Builder(access = AccessLevel.PRIVATE)
 public record ChapterStatsResponse(
 
         List<UnitStatItemResponse> units
 ) {
     public static ChapterStatsResponse of(List<UnitStatItemResponse> units) {
-        return new ChapterStatsResponse(units);
+        return ChapterStatsResponse.builder()
+                .units(units)
+                .build();
     }
 
-    @Schema(description = "유닛 통계 항목")
+    @Builder(access = AccessLevel.PRIVATE)
     public record UnitStatItemResponse(
 
             long unitId,
 
             String unitTitle,
 
-            @Schema(description = "참여율(참여자/전체 유저, 0~100 정수)")
             int averageProgress,
 
-            @Schema(description = "참여 인원(해당 유닛 레슨 제출 distinct 유저)")
             long participantCount
     ) {
         public static UnitStatItemResponse of(
@@ -32,7 +33,12 @@ public record ChapterStatsResponse(
                 int averageProgress,
                 long participantCount
         ) {
-            return new UnitStatItemResponse(unitId, unitTitle, averageProgress, participantCount);
+            return UnitStatItemResponse.builder()
+                    .unitId(unitId)
+                    .unitTitle(unitTitle)
+                    .averageProgress(averageProgress)
+                    .participantCount(participantCount)
+                    .build();
         }
     }
 }

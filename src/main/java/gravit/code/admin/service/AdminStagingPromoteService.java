@@ -33,10 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * staging -> prod 승급. 단일 트랜잭션으로 INSERT + ID 리매핑 + 라벨 COMPLETED + 감사로그.
- * staging 행은 보존(전환 후 read-only)한다.
- */
 @Service
 @RequiredArgsConstructor
 public class AdminStagingPromoteService {
@@ -71,12 +67,14 @@ public class AdminStagingPromoteService {
 
         StagingLabel stagingLabel = stagingLabelRepository.findByLabel(label)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.STAGING_LABEL_NOT_FOUND));
+
         if (stagingLabel.isCompleted()) {
             throw new RestApiException(CustomErrorCode.STAGING_LABEL_ALREADY_COMPLETED);
         }
 
         LessonStaging lessonStaging = lessonStagingRepository.findByLabel(label)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.STAGING_LESSON_NOT_FOUND));
+
         List<ProblemStaging> problemStagings = problemStagingRepository.findByLabelOrderById(label);
         List<OptionStaging> optionStagings = optionStagingRepository.findByLabelOrderById(label);
         List<AnswerStaging> answerStagings = answerStagingRepository.findByLabelOrderById(label);
@@ -134,12 +132,14 @@ public class AdminStagingPromoteService {
 
         long objectiveCount = problems.stream().filter(p -> p.getProblemType() == ProblemType.OBJECTIVE).count();
         long subjectiveCount = problems.stream().filter(p -> p.getProblemType() == ProblemType.SUBJECTIVE).count();
+
         if (objectiveCount != EXPECTED_OBJECTIVE_COUNT || subjectiveCount != EXPECTED_SUBJECTIVE_COUNT) {
             throw new RestApiException(CustomErrorCode.STAGING_INVALID_STRUCTURE);
         }
 
         Map<Long, List<OptionStaging>> optionsByProblem = options.stream()
                 .collect(Collectors.groupingBy(OptionStaging::getProblemId));
+
         Map<Long, List<AnswerStaging>> answersByProblem = answers.stream()
                 .filter(answer -> answer.getProblemId() != null)
                 .collect(Collectors.groupingBy(AnswerStaging::getProblemId));
@@ -148,11 +148,14 @@ public class AdminStagingPromoteService {
             if (problem.getProblemType() == ProblemType.OBJECTIVE) {
                 List<OptionStaging> problemOptions = optionsByProblem.getOrDefault(problem.getId(), List.of());
                 long answerOptionCount = problemOptions.stream().filter(OptionStaging::isAnswer).count();
+
                 if (problemOptions.size() != EXPECTED_OPTION_COUNT || answerOptionCount != 1) {
                     throw new RestApiException(CustomErrorCode.STAGING_INVALID_STRUCTURE);
                 }
+
             } else {
                 List<AnswerStaging> problemAnswers = answersByProblem.getOrDefault(problem.getId(), List.of());
+
                 if (problemAnswers.size() != 1) {
                     throw new RestApiException(CustomErrorCode.STAGING_INVALID_STRUCTURE);
                 }

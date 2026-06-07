@@ -11,11 +11,9 @@ import java.util.Optional;
 public interface StagingLabelRepository extends JpaRepository<StagingLabel, Long> {
 
     Optional<StagingLabel> findByLabel(String label);
-
     Page<StagingLabel> findByStatus(
             LabelStatus status,
             Pageable pageable
     );
-
     long countByStatus(LabelStatus status);
 }

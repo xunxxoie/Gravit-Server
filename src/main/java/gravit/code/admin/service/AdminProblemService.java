@@ -37,14 +37,17 @@ public class AdminProblemService {
 
         if (problem.getProblemType() == ProblemType.OBJECTIVE) {
             List<Option> options = optionRepository.findByProblemIdOrderById(problemId);
+
             if (options.isEmpty()) {
                 throw new RestApiException(CustomErrorCode.OPTION_NOT_FOUND);
             }
+
             return ProblemDetailResponse.objective(problem, options);
         }
 
         Answer answer = answerRepository.findByProblemId(problemId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.ANSWER_NOT_FOUND));
+
         return ProblemDetailResponse.subjective(problem, answer);
     }
 
@@ -58,6 +61,7 @@ public class AdminProblemService {
 
         String instruction = request.instruction() != null ? request.instruction() : problem.getInstruction();
         String content = request.content() != null ? request.content() : problem.getContent();
+
         problem.updateContent(instruction, content);
 
         if (request.options() != null) {
@@ -75,12 +79,14 @@ public class AdminProblemService {
 
         String instruction = request.instruction() != null ? request.instruction() : problem.getInstruction();
         String content = request.content() != null ? request.content() : problem.getContent();
+
         problem.updateContent(instruction, content);
 
         SubjectiveAnswerUpdateRequest answerRequest = request.answer();
         if (answerRequest != null) {
             Answer answer = answerRepository.findByProblemId(problemId)
                     .orElseThrow(() -> new RestApiException(CustomErrorCode.ANSWER_NOT_FOUND));
+
             answer.update(answerRequest.content(), answerRequest.explanation());
         }
     }
@@ -91,6 +97,7 @@ public class AdminProblemService {
         for (ObjectiveOptionUpdateRequest optionRequest : options) {
             Option option = optionRepository.findById(optionRequest.optionId())
                     .orElseThrow(() -> new RestApiException(CustomErrorCode.OPTION_NOT_FOUND));
+
             option.update(optionRequest.content(), optionRequest.explanation(), optionRequest.isAnswer());
         }
     }

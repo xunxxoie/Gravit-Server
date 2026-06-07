@@ -1,17 +1,15 @@
 package gravit.code.admin.dto.response;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
-@Schema(description = "대시보드 요약")
+@Builder(access = AccessLevel.PRIVATE)
 public record DashboardSummaryResponse(
 
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long totalUsers,
 
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long pendingLabelsCount,
 
-        @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
         long unresolvedReportsCount
 ) {
     public static DashboardSummaryResponse of(
@@ -19,6 +17,10 @@ public record DashboardSummaryResponse(
             long pendingLabelsCount,
             long unresolvedReportsCount
     ) {
-        return new DashboardSummaryResponse(totalUsers, pendingLabelsCount, unresolvedReportsCount);
+        return DashboardSummaryResponse.builder()
+                .totalUsers(totalUsers)
+                .pendingLabelsCount(pendingLabelsCount)
+                .unresolvedReportsCount(unresolvedReportsCount)
+                .build();
     }
 }

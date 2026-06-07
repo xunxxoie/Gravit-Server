@@ -71,6 +71,7 @@ public class AdminStagingService {
 
         Map<Long, List<OptionStaging>> optionsByProblem = optionStagingRepository.findByLabelOrderById(label).stream()
                 .collect(Collectors.groupingBy(OptionStaging::getProblemId));
+
         Map<Long, List<AnswerStaging>> answersByProblem = answerStagingRepository.findByLabelOrderById(label).stream()
                 .filter(answer -> answer.getProblemId() != null)
                 .collect(Collectors.groupingBy(AnswerStaging::getProblemId));
@@ -89,6 +90,7 @@ public class AdminStagingService {
     ) {
         LessonStaging lesson = lessonStagingRepository.findById(lessonId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.STAGING_LESSON_NOT_FOUND));
+
         guardNotCompleted(lesson.getLabel());
 
         lesson.updateTitle(request.title());
@@ -101,10 +103,12 @@ public class AdminStagingService {
     ) {
         ProblemStaging problem = problemStagingRepository.findById(problemId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.STAGING_PROBLEM_NOT_FOUND));
+
         guardNotCompleted(problem.getLabel());
 
         String instruction = request.instruction() != null ? request.instruction() : problem.getInstruction();
         String content = request.content() != null ? request.content() : problem.getContent();
+
         problem.updateContent(instruction, content);
     }
 
@@ -115,11 +119,13 @@ public class AdminStagingService {
     ) {
         OptionStaging option = optionStagingRepository.findById(optionId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.STAGING_OPTION_NOT_FOUND));
+
         guardNotCompleted(option.getLabel());
 
         String content = request.content() != null ? request.content() : option.getContent();
         String explanation = request.explanation() != null ? request.explanation() : option.getExplanation();
         boolean isAnswer = request.isAnswer() != null ? request.isAnswer() : option.isAnswer();
+
         option.update(content, explanation, isAnswer);
     }
 
@@ -130,10 +136,12 @@ public class AdminStagingService {
     ) {
         AnswerStaging answer = answerStagingRepository.findById(answerId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.STAGING_ANSWER_NOT_FOUND));
+
         guardNotCompleted(answer.getLabel());
 
         String content = request.content() != null ? request.content() : answer.getContent();
         String explanation = request.explanation() != null ? request.explanation() : answer.getExplanation();
+
         answer.update(content, explanation);
     }
 
@@ -148,6 +156,7 @@ public class AdminStagingService {
 
         List<AnswerStaging> answers = answersByProblem.getOrDefault(problem.getId(), List.of());
         AnswerStaging answer = answers.isEmpty() ? null : answers.get(0);
+        
         return StagingProblemResponse.subjective(problem, answer);
     }
 

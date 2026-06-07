@@ -8,12 +8,13 @@ import gravit.code.admin.domain.staging.OptionStaging;
 import gravit.code.admin.domain.staging.ProblemStaging;
 import gravit.code.admin.domain.staging.StagingLabel;
 import gravit.code.problem.domain.ProblemType;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Schema(description = "스테이징 라벨 상세 (그루핑)")
+@Builder(access = AccessLevel.PRIVATE)
 public record StagingLabelDetailResponse(
 
         String label,
@@ -35,18 +36,18 @@ public record StagingLabelDetailResponse(
             StagingLessonResponse lesson,
             List<StagingProblemResponse> problems
     ) {
-        return new StagingLabelDetailResponse(
-                stagingLabel.getLabel(),
-                stagingLabel.getUnitId(),
-                stagingLabel.getDescription(),
-                stagingLabel.getStatus(),
-                stagingLabel.getCreatedAt(),
-                lesson,
-                problems
-        );
+        return StagingLabelDetailResponse.builder()
+                .label(stagingLabel.getLabel())
+                .unitId(stagingLabel.getUnitId())
+                .description(stagingLabel.getDescription())
+                .status(stagingLabel.getStatus())
+                .createdAt(stagingLabel.getCreatedAt())
+                .lesson(lesson)
+                .problems(problems)
+                .build();
     }
 
-    @Schema(description = "스테이징 레슨")
+    @Builder(access = AccessLevel.PRIVATE)
     public record StagingLessonResponse(
 
             long lessonId,
@@ -54,11 +55,14 @@ public record StagingLabelDetailResponse(
             String title
     ) {
         public static StagingLessonResponse from(LessonStaging lesson) {
-            return new StagingLessonResponse(lesson.getId(), lesson.getTitle());
+            return StagingLessonResponse.builder()
+                    .lessonId(lesson.getId())
+                    .title(lesson.getTitle())
+                    .build();
         }
     }
 
-    @Schema(description = "스테이징 문제")
+    @Builder(access = AccessLevel.PRIVATE)
     public record StagingProblemResponse(
 
             long problemId,
@@ -77,32 +81,32 @@ public record StagingLabelDetailResponse(
                 ProblemStaging problem,
                 List<OptionStaging> options
         ) {
-            return new StagingProblemResponse(
-                    problem.getId(),
-                    problem.getProblemType(),
-                    problem.getInstruction(),
-                    problem.getContent(),
-                    options.stream().map(StagingOptionResponse::from).toList(),
-                    null
-            );
+            return StagingProblemResponse.builder()
+                    .problemId(problem.getId())
+                    .problemType(problem.getProblemType())
+                    .instruction(problem.getInstruction())
+                    .content(problem.getContent())
+                    .options(options.stream().map(StagingOptionResponse::from).toList())
+                    .answer(null)
+                    .build();
         }
 
         public static StagingProblemResponse subjective(
                 ProblemStaging problem,
                 AnswerStaging answer
         ) {
-            return new StagingProblemResponse(
-                    problem.getId(),
-                    problem.getProblemType(),
-                    problem.getInstruction(),
-                    problem.getContent(),
-                    null,
-                    answer == null ? null : StagingAnswerResponse.from(answer)
-            );
+            return StagingProblemResponse.builder()
+                    .problemId(problem.getId())
+                    .problemType(problem.getProblemType())
+                    .instruction(problem.getInstruction())
+                    .content(problem.getContent())
+                    .options(null)
+                    .answer(answer == null ? null : StagingAnswerResponse.from(answer))
+                    .build();
         }
     }
 
-    @Schema(description = "스테이징 옵션")
+    @Builder(access = AccessLevel.PRIVATE)
     public record StagingOptionResponse(
 
             long optionId,
@@ -115,11 +119,16 @@ public record StagingLabelDetailResponse(
             boolean isAnswer
     ) {
         public static StagingOptionResponse from(OptionStaging option) {
-            return new StagingOptionResponse(option.getId(), option.getContent(), option.getExplanation(), option.isAnswer());
+            return StagingOptionResponse.builder()
+                    .optionId(option.getId())
+                    .content(option.getContent())
+                    .explanation(option.getExplanation())
+                    .isAnswer(option.isAnswer())
+                    .build();
         }
     }
 
-    @Schema(description = "스테이징 정답")
+    @Builder(access = AccessLevel.PRIVATE)
     public record StagingAnswerResponse(
 
             long answerId,
@@ -129,7 +138,11 @@ public record StagingLabelDetailResponse(
             String explanation
     ) {
         public static StagingAnswerResponse from(AnswerStaging answer) {
-            return new StagingAnswerResponse(answer.getId(), answer.getContent(), answer.getExplanation());
+            return StagingAnswerResponse.builder()
+                    .answerId(answer.getId())
+                    .content(answer.getContent())
+                    .explanation(answer.getExplanation())
+                    .build();
         }
     }
 }

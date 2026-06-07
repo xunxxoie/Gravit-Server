@@ -5,11 +5,12 @@ import gravit.code.answer.domain.Answer;
 import gravit.code.option.domain.Option;
 import gravit.code.problem.domain.Problem;
 import gravit.code.problem.domain.ProblemType;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.util.List;
 
-@Schema(description = "문제 상세 (OBJECTIVE=options / SUBJECTIVE=answer)")
+@Builder(access = AccessLevel.PRIVATE)
 public record ProblemDetailResponse(
 
         long problemId,
@@ -22,43 +23,41 @@ public record ProblemDetailResponse(
 
         String content,
 
-        @Schema(description = "객관식 옵션 4개 (주관식이면 null)")
         List<ProblemOptionResponse> options,
 
-        @Schema(description = "주관식 단일 정답 (객관식이면 null)")
         ProblemAnswerResponse answer
 ) {
     public static ProblemDetailResponse objective(
             Problem problem,
             List<Option> options
     ) {
-        return new ProblemDetailResponse(
-                problem.getId(),
-                problem.getLessonId(),
-                problem.getProblemType(),
-                problem.getInstruction(),
-                problem.getContent(),
-                options.stream().map(ProblemOptionResponse::from).toList(),
-                null
-        );
+        return ProblemDetailResponse.builder()
+                .problemId(problem.getId())
+                .lessonId(problem.getLessonId())
+                .problemType(problem.getProblemType())
+                .instruction(problem.getInstruction())
+                .content(problem.getContent())
+                .options(options.stream().map(ProblemOptionResponse::from).toList())
+                .answer(null)
+                .build();
     }
 
     public static ProblemDetailResponse subjective(
             Problem problem,
             Answer answer
     ) {
-        return new ProblemDetailResponse(
-                problem.getId(),
-                problem.getLessonId(),
-                problem.getProblemType(),
-                problem.getInstruction(),
-                problem.getContent(),
-                null,
-                ProblemAnswerResponse.from(answer)
-        );
+        return ProblemDetailResponse.builder()
+                .problemId(problem.getId())
+                .lessonId(problem.getLessonId())
+                .problemType(problem.getProblemType())
+                .instruction(problem.getInstruction())
+                .content(problem.getContent())
+                .options(null)
+                .answer(ProblemAnswerResponse.from(answer))
+                .build();
     }
 
-    @Schema(description = "객관식 옵션")
+    @Builder(access = AccessLevel.PRIVATE)
     public record ProblemOptionResponse(
 
             long optionId,
@@ -71,11 +70,16 @@ public record ProblemDetailResponse(
             boolean isAnswer
     ) {
         public static ProblemOptionResponse from(Option option) {
-            return new ProblemOptionResponse(option.getId(), option.getContent(), option.getExplanation(), option.isAnswer());
+            return ProblemOptionResponse.builder()
+                    .optionId(option.getId())
+                    .content(option.getContent())
+                    .explanation(option.getExplanation())
+                    .isAnswer(option.isAnswer())
+                    .build();
         }
     }
 
-    @Schema(description = "주관식 정답")
+    @Builder(access = AccessLevel.PRIVATE)
     public record ProblemAnswerResponse(
 
             long answerId,
@@ -85,7 +89,11 @@ public record ProblemDetailResponse(
             String explanation
     ) {
         public static ProblemAnswerResponse from(Answer answer) {
-            return new ProblemAnswerResponse(answer.getId(), answer.getContent(), answer.getExplanation());
+            return ProblemAnswerResponse.builder()
+                    .answerId(answer.getId())
+                    .content(answer.getContent())
+                    .explanation(answer.getExplanation())
+                    .build();
         }
     }
 }

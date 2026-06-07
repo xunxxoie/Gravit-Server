@@ -64,6 +64,7 @@ public class AdminNoticeService {
                 author,
                 request.status(),
                 request.pinned());
+
         noticeRepository.save(notice);
 
         if (request.status() == NoticeStatus.PUBLISHED) {
@@ -106,7 +107,7 @@ public class AdminNoticeService {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.NOTICE_NOT_FOUND));
 
-        noticeRepository.delete(notice); // @SQLDelete -> soft delete
+        noticeRepository.delete(notice);
 
         auditLogRecorder.record(adminId, AuditAction.NOTICE_DELETE, String.valueOf(noticeId), null, null);
     }

@@ -31,9 +31,7 @@ public class AdminNoticeController implements AdminNoticeControllerDocs {
     private final AdminNoticeService adminNoticeService;
 
     @GetMapping
-    public ResponseEntity<PageResponse<NoticeListItemResponse>> getNotices(
-            @RequestParam(value = "page", defaultValue = "1") int page
-    ) {
+    public ResponseEntity<PageResponse<NoticeListItemResponse>> getNotices(@RequestParam(value = "page", defaultValue = "1") int page) {
         return ResponseEntity.ok(adminNoticeService.getNotices(page));
     }
 

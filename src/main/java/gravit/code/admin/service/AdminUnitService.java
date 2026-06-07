@@ -27,6 +27,7 @@ public class AdminUnitService {
     public UnitDetailResponse getUnit(long unitId) {
         Unit unit = unitRepository.findById(unitId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.UNIT_NOT_FOUND));
+
         long lessonCount = lessonRepository.countTotalLessonByUnitId(unitId);
 
         return UnitDetailResponse.of(unit, lessonCount);
@@ -42,6 +43,7 @@ public class AdminUnitService {
 
         String title = request.title() != null ? request.title() : unit.getTitle();
         String description = request.description() != null ? request.description() : unit.getDescription();
+
         validateNotBlank(request.title());
 
         unit.update(title, description);

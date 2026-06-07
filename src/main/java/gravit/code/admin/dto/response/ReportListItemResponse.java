@@ -3,11 +3,12 @@ package gravit.code.admin.dto.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import gravit.code.report.domain.Report;
 import gravit.code.report.domain.ReportType;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "신고 목록 항목")
+@Builder(access = AccessLevel.PRIVATE)
 public record ReportListItemResponse(
 
         long reportId,
@@ -22,12 +23,12 @@ public record ReportListItemResponse(
         LocalDateTime submittedAt
 ) {
     public static ReportListItemResponse from(Report report) {
-        return new ReportListItemResponse(
-                report.getId(),
-                report.getReportType(),
-                report.getProblemId(),
-                report.isResolved(),
-                report.getSubmittedAt()
-        );
+        return ReportListItemResponse.builder()
+                .reportId(report.getId())
+                .reportType(report.getReportType())
+                .problemId(report.getProblemId())
+                .isResolved(report.isResolved())
+                .submittedAt(report.getSubmittedAt())
+                .build();
     }
 }

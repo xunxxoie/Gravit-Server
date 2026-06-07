@@ -1,9 +1,10 @@
 package gravit.code.admin.dto.response;
 
 import gravit.code.lesson.domain.Lesson;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
-@Schema(description = "레슨 목록 항목")
+@Builder(access = AccessLevel.PRIVATE)
 public record LessonListItemResponse(
 
         long lessonId,
@@ -11,6 +12,9 @@ public record LessonListItemResponse(
         String title
 ) {
     public static LessonListItemResponse from(Lesson lesson) {
-        return new LessonListItemResponse(lesson.getId(), lesson.getTitle());
+        return LessonListItemResponse.builder()
+                .lessonId(lesson.getId())
+                .title(lesson.getTitle())
+                .build();
     }
 }

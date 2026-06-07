@@ -2,9 +2,10 @@ package gravit.code.admin.dto.response;
 
 import gravit.code.problem.domain.Problem;
 import gravit.code.problem.domain.ProblemType;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
-@Schema(description = "문제 목록 항목")
+@Builder(access = AccessLevel.PRIVATE)
 public record ProblemListItemResponse(
 
         long problemId,
@@ -14,6 +15,10 @@ public record ProblemListItemResponse(
         String instruction
 ) {
     public static ProblemListItemResponse from(Problem problem) {
-        return new ProblemListItemResponse(problem.getId(), problem.getProblemType(), problem.getInstruction());
+        return ProblemListItemResponse.builder()
+                .problemId(problem.getId())
+                .problemType(problem.getProblemType())
+                .instruction(problem.getInstruction())
+                .build();
     }
 }

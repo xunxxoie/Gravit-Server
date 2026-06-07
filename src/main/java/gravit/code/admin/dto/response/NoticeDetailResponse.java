@@ -2,11 +2,12 @@ package gravit.code.admin.dto.response;
 
 import gravit.code.notice.domain.Notice;
 import gravit.code.notice.domain.NoticeStatus;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "공지 상세")
+@Builder(access = AccessLevel.PRIVATE)
 public record NoticeDetailResponse(
 
         long noticeId,
@@ -26,15 +27,15 @@ public record NoticeDetailResponse(
         LocalDateTime createdAt
 ) {
     public static NoticeDetailResponse from(Notice notice) {
-        return new NoticeDetailResponse(
-                notice.getId(),
-                notice.getTitle(),
-                notice.getSummary(),
-                notice.getContent(),
-                notice.getStatus(),
-                notice.isPinned(),
-                notice.getPublishedAt(),
-                notice.getCreatedAt()
-        );
+        return NoticeDetailResponse.builder()
+                .noticeId(notice.getId())
+                .title(notice.getTitle())
+                .summary(notice.getSummary())
+                .content(notice.getContent())
+                .status(notice.getStatus())
+                .pinned(notice.isPinned())
+                .publishedAt(notice.getPublishedAt())
+                .createdAt(notice.getCreatedAt())
+                .build();
     }
 }

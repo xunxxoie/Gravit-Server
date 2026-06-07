@@ -44,6 +44,7 @@ public class AdminChapterService {
     public ChapterDetailResponse getChapter(long chapterId) {
         Chapter chapter = chapterRepository.findById(chapterId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.CHAPTER_NOT_FOUND));
+
         long unitCount = unitRepository.countByChapterId(chapterId);
 
         return ChapterDetailResponse.of(chapter, unitCount);

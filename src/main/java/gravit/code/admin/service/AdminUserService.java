@@ -58,6 +58,7 @@ public class AdminUserService {
     ) {
         AdminUser user = adminUserRepository.findRowById(userId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.USER_NOT_FOUND));
+
         String before = user.getStatus();
 
         adminUserRepository.updateStatusById(userId, status.name());
@@ -73,6 +74,7 @@ public class AdminUserService {
     ) {
         AdminUser user = adminUserRepository.findRowById(userId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.USER_NOT_FOUND));
+
         String before = user.getRole();
 
         adminUserRepository.updateRoleById(userId, role.name());

@@ -65,7 +65,6 @@ public interface AdminUserRepository extends JpaRepository<User, Long> {
             @Param("role") String role
     );
 
-    // status -> DELETED 시 soft delete 정책(handle=NULL, deleted_at=NOW())과 정합. 복구 시 deleted_at=NULL.
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
             UPDATE users

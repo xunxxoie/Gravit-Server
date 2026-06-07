@@ -2,11 +2,12 @@ package gravit.code.admin.dto.response;
 
 import gravit.code.admin.domain.staging.LabelStatus;
 import gravit.code.admin.domain.staging.StagingLabel;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "스테이징 라벨 목록 항목")
+@Builder(access = AccessLevel.PRIVATE)
 public record StagingLabelListItemResponse(
 
         String label,
@@ -20,12 +21,12 @@ public record StagingLabelListItemResponse(
         LocalDateTime createdAt
 ) {
     public static StagingLabelListItemResponse from(StagingLabel label) {
-        return new StagingLabelListItemResponse(
-                label.getLabel(),
-                label.getUnitId(),
-                label.getDescription(),
-                label.getStatus(),
-                label.getCreatedAt()
-        );
+        return StagingLabelListItemResponse.builder()
+                .label(label.getLabel())
+                .unitId(label.getUnitId())
+                .description(label.getDescription())
+                .status(label.getStatus())
+                .createdAt(label.getCreatedAt())
+                .build();
     }
 }

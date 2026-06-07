@@ -1,9 +1,10 @@
 package gravit.code.admin.dto.response;
 
 import gravit.code.chapter.domain.Chapter;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AccessLevel;
+import lombok.Builder;
 
-@Schema(description = "챕터 목록 항목")
+@Builder(access = AccessLevel.PRIVATE)
 public record ChapterListItemResponse(
 
         long chapterId,
@@ -13,6 +14,10 @@ public record ChapterListItemResponse(
         String description
 ) {
     public static ChapterListItemResponse from(Chapter chapter) {
-        return new ChapterListItemResponse(chapter.getId(), chapter.getTitle(), chapter.getDescription());
+        return ChapterListItemResponse.builder()
+                .chapterId(chapter.getId())
+                .title(chapter.getTitle())
+                .description(chapter.getDescription())
+                .build();
     }
 }

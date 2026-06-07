@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import gravit.code.friend.fixture.FriendFixture;
+import gravit.code.social.domain.FeedEventType;
 import gravit.code.global.dto.response.SliceResponse;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
@@ -61,6 +62,71 @@ class SocialFacadeIntegrationTest {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Nested
+    @DisplayName("팔로우할 때")
+    class Follow {
+
+        @Test
+        void 팔로위에게_팔로우_인앱_알림이_생성된다() {
+            // given
+            User follower = userFixture.일반_유저(1);
+            User followee = userFixture.일반_유저(2);
+
+            // when
+            socialFacade.follow(follower.getId(), followee.getId());
+
+            // then
+            List<Notification> notifications = notificationRepository.findAll();
+            assertThat(notifications).hasSize(1);
+            assertSoftly(softly -> {
+                softly.assertThat(notifications.get(0).getUserId()).isEqualTo(followee.getId());
+                softly.assertThat(notifications.get(0).getType()).isEqualTo(NotificationType.FOLLOW);
+                softly.assertThat(notifications.get(0).getMessage()).isEqualTo("유저1님이 나를 팔로우했어요! 👀");
+                softly.assertThat(notifications.get(0).isRead()).isFalse();
+            });
+        }
+    }
+
+    @Nested
+    @DisplayName("피드를 발행할 때")
+    class PublishFeed {
+
+        @Test
+        void 팔로워에게_친구활동_인앱_알림이_생성된다() {
+            // given
+            User actor = userFixture.일반_유저(1);
+            User follower1 = userFixture.일반_유저(2);
+            User follower2 = userFixture.일반_유저(3);
+            friendFixture.팔로우(follower1, actor);
+            friendFixture.팔로우(follower2, actor);
+
+            // when
+            socialFacade.publishFeed(actor.getId(), FeedEventType.LEVEL_UP, "5");
+
+            // then
+            List<Notification> notifications = notificationRepository.findAll();
+            assertThat(notifications).hasSize(2);
+            List<Long> recipientIds = notifications.stream().map(Notification::getUserId).toList();
+            assertThat(recipientIds).containsExactlyInAnyOrder(follower1.getId(), follower2.getId());
+            notifications.forEach(n -> assertSoftly(softly -> {
+                softly.assertThat(n.getType()).isEqualTo(NotificationType.FRIEND_ACTIVITY);
+                softly.assertThat(n.getMessage()).isEqualTo("유저1님이 LV.5이 됐어요! 💪");
+            }));
+        }
+
+        @Test
+        void 팔로워가_없으면_알림을_생성하지_않는다() {
+            // given
+            User actor = userFixture.일반_유저(1);
+
+            // when
+            socialFacade.publishFeed(actor.getId(), FeedEventType.LEVEL_UP, "3");
+
+            // then
+            assertThat(notificationRepository.findAll()).isEmpty();
+        }
+    }
 
     @Nested
     @DisplayName("피드를 조회할 때")
@@ -224,7 +290,7 @@ class SocialFacadeIntegrationTest {
             assertSoftly(softly -> {
                 softly.assertThat(notifications.get(0).getUserId()).isEqualTo(followee.getId());
                 softly.assertThat(notifications.get(0).getType()).isEqualTo(NotificationType.CONGRATULATION);
-                softly.assertThat(notifications.get(0).getMessage()).isEqualTo("유저1님이 축하해줬어요!");
+                softly.assertThat(notifications.get(0).getMessage()).isEqualTo("유저1님이 축하해줬어요! 🎉");
                 softly.assertThat(notifications.get(0).getTargetId()).isNull();
             });
         }

@@ -6,6 +6,10 @@ import gravit.code.auth.domain.Subject;
 import gravit.code.auth.dto.response.LoginResponse;
 import gravit.code.auth.service.AuthTokenProvider;
 import gravit.code.auth.token.JwtProvider;
+import gravit.code.friend.domain.Friend;
+import gravit.code.friend.repository.FriendRepository;
+import gravit.code.global.event.NoticeCreatedEvent;
+import gravit.code.global.event.SeasonRolledOverEvent;
 import gravit.code.user.domain.Role;
 import gravit.code.user.domain.User;
 import gravit.code.user.dto.request.OnboardingRequest;
@@ -13,7 +17,9 @@ import gravit.code.user.repository.UserRepository;
 import gravit.code.user.service.UserService;
 import gravit.code.user.support.RandomHandleGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +39,8 @@ public class UserCheatCreateController {
     private final UserRepository userRepository;
     private final UserService userService;
     private final RandomHandleGenerator handleGenerator;
+    private final FriendRepository friendRepository;
+    private final ApplicationEventPublisher publisher;
 
     private final String PROVIDER = "gravit";
 
@@ -92,5 +100,45 @@ public class UserCheatCreateController {
 
     private Subject toSubject(User user) {
         return new Subject(user.getId().toString());
+    }
+
+    // 1번 유저 기준 팔로우 관계 세팅
+    // - 2~10번: 1번과 맞 팔로우
+    // - 11~19번: 1번을 팔로잉 (1번은 팔로잉 안 함)
+    // - 20번: 관계 없음
+    @Transactional
+    @PostMapping("/follows/setup")
+    public ResponseEntity<Void> setupFollowRelations() {
+        for (long i = 2; i <= 10; i++) {
+            follow(1L, i);
+            follow(i, 1L);
+        }
+        for (long i = 11; i <= 19; i++) {
+            follow(i, 1L);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/events/notice-created")
+    public ResponseEntity<Void> publishNoticeCreatedEvent(
+            @RequestParam long noticeId,
+            @RequestParam String title
+    ) {
+        publisher.publishEvent(new NoticeCreatedEvent(noticeId, title));
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/events/season-rolled-over")
+    public ResponseEntity<Void> publishSeasonRolledOverEvent(
+            @RequestParam String newSeasonKey
+    ) {
+        publisher.publishEvent(new SeasonRolledOverEvent(newSeasonKey));
+        return ResponseEntity.ok().build();
+    }
+
+    private void follow(long followerId, long followeeId) {
+        if (!friendRepository.existsByFollowerIdAndFolloweeId(followerId, followeeId)) {
+            friendRepository.save(Friend.create(followerId, followeeId));
+        }
     }
 }

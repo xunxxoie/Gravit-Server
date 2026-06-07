@@ -6,7 +6,8 @@ import gravit.code.global.dto.response.SliceResponse;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.notification.domain.NotificationType;
-import gravit.code.notification.service.NotificationService;
+import gravit.code.notification.facade.NotificationFacade;
+import gravit.code.notification.support.NotificationMessageProvider;
 import gravit.code.social.domain.FeedEventType;
 import gravit.code.social.domain.SocialFeed;
 import gravit.code.social.dto.internal.RecommendCandidateDto;
@@ -38,7 +39,8 @@ public class SocialFacade {
     private final UserService userService;
     private final UserLeaguePointService userLeaguePointService;
     private final UserLeagueService userLeagueService;
-    private final NotificationService notificationService;
+    private final NotificationFacade notificationFacade;
+    private final NotificationMessageProvider messageProvider;
     private final RecommendUserService recommendUserService;
 
     @Transactional(readOnly = true)
@@ -56,6 +58,8 @@ public class SocialFacade {
             long targetUserId
     ) {
         friendService.following(userId, targetUserId);
+        String followerNickname = userService.getUser(userId).getNickname();
+        notificationFacade.notifyUser(targetUserId, NotificationType.FOLLOW, messageProvider.followReceived(followerNickname));
     }
 
     @Transactional(readOnly = true)
@@ -75,6 +79,11 @@ public class SocialFacade {
         SocialFeed feed = socialFeedService.createFeed(actorId, eventType, eventValue);
         List<Long> followerIds = friendService.getFollowerIds(actorId);
         userFeedService.distributeToFollowers(feed.getId(), followerIds);
+        if (!followerIds.isEmpty()) {
+            String actorNickname = userService.getUser(actorId).getNickname();
+            String message = messageProvider.friendActivity(actorNickname, eventType, eventValue);
+            notificationFacade.notifyUsers(followerIds, NotificationType.FRIEND_ACTIVITY, message);
+        }
     }
 
     @Transactional
@@ -98,6 +107,6 @@ public class SocialFacade {
         userFeedService.congratulateFeed(userId, feedId);
         userLeaguePointService.addLeaguePoints(actorId, CONGRATULATION_LP, FULL_ACCURACY);
         String congratulatorNickname = userService.getUser(userId).getNickname();
-        notificationService.notify(actorId, NotificationType.CONGRATULATION, congratulatorNickname + "님이 축하해줬어요!");
+        notificationFacade.notifyUser(actorId, NotificationType.CONGRATULATION, messageProvider.congratulation(congratulatorNickname));
     }
 }

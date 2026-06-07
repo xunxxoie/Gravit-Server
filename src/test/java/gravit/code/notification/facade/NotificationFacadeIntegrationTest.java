@@ -4,8 +4,10 @@ import gravit.code.fcm.domain.FcmToken;
 import gravit.code.fcm.dto.internal.PushMessage;
 import gravit.code.fcm.repository.FcmTokenRepository;
 import gravit.code.fcm.service.FcmService;
+import gravit.code.notification.domain.Notification;
 import gravit.code.notification.domain.NotificationActionType;
 import gravit.code.notification.domain.NotificationType;
+import gravit.code.notification.repository.NotificationRepository;
 import gravit.code.notification.support.NotificationMessageProvider;
 import gravit.code.season.batch.SeasonBatchService;
 import gravit.code.season.fixture.SeasonFixture;
@@ -23,6 +25,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.never;
@@ -52,6 +55,9 @@ class NotificationFacadeIntegrationTest {
 
     @Autowired
     private FcmTokenRepository fcmTokenRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     // FCM 외부 발송 경계만 격리하고, 토큰 조회·메시지 구성 등 우리 로직은 실제로 동작시킨다
     @MockitoBean
@@ -97,7 +103,7 @@ class NotificationFacadeIntegrationTest {
             // when
             notificationFacade.sendSeasonEndingReminders();
 
-            // then
+            // then - FCM 발송
             List<PushMessage> sent = 발송된_메시지_캡처(1000);
             assertSoftly(softly -> {
                 softly.assertThat(sent).hasSize(1);
@@ -106,6 +112,13 @@ class NotificationFacadeIntegrationTest {
                 softly.assertThat(sent.get(0).data())
                         .containsEntry("type", NotificationType.SEASON_ENDING.name())
                         .containsEntry("actionType", NotificationActionType.GO_TO_LEARNING.name());
+            });
+            // DB 저장 - 토큰을 가진 2명 모두 알림함에 적재
+            List<Notification> saved = notificationRepository.findAll();
+            assertSoftly(softly -> {
+                softly.assertThat(saved).hasSize(2);
+                softly.assertThat(saved).allMatch(n -> n.getType() == NotificationType.SEASON_ENDING);
+                softly.assertThat(saved).allMatch(n -> n.getMessage().equals(종료_임박_문구(7)));
             });
         }
 
@@ -121,13 +134,15 @@ class NotificationFacadeIntegrationTest {
             // when
             notificationFacade.sendSeasonEndingReminders();
 
-            // then
+            // then - FCM 발송
             List<PushMessage> sent = 발송된_메시지_캡처(1000);
             assertSoftly(softly -> {
                 softly.assertThat(sent.get(0).title()).isEqualTo(종료_임박_문구(3));
                 softly.assertThat(sent.get(0).data())
                         .containsEntry("type", NotificationType.SEASON_ENDING.name());
             });
+            // DB 저장
+            assertThat(notificationRepository.findAll()).hasSize(2);
         }
 
         @Test
@@ -144,6 +159,7 @@ class NotificationFacadeIntegrationTest {
 
             // then
             verify(fcmService, never()).sendNotifications(anyList());
+            assertThat(notificationRepository.findAll()).isEmpty();
         }
 
         @Test
@@ -156,6 +172,7 @@ class NotificationFacadeIntegrationTest {
 
             // then
             verify(fcmService, never()).sendNotifications(anyList());
+            assertThat(notificationRepository.findAll()).isEmpty();
         }
     }
 
@@ -172,7 +189,7 @@ class NotificationFacadeIntegrationTest {
             // when - 현재 시각 기준으로 롤오버 실행 (커밋 후 AFTER_COMMIT 리스너가 발송)
             seasonBatchService.finalizeAndRollover();
 
-            // then
+            // then - FCM 발송
             List<PushMessage> sent = 발송된_메시지_캡처(3000);
             assertSoftly(softly -> {
                 softly.assertThat(sent).hasSize(1);
@@ -180,6 +197,13 @@ class NotificationFacadeIntegrationTest {
                 softly.assertThat(sent.get(0).data())
                         .containsEntry("type", NotificationType.SEASON_RESET.name())
                         .containsEntry("actionType", NotificationActionType.NONE.name());
+            });
+            // DB 저장 - 2명 모두 알림함에 적재
+            List<Notification> saved = notificationRepository.findAll();
+            assertSoftly(softly -> {
+                softly.assertThat(saved).hasSize(2);
+                softly.assertThat(saved).allMatch(n -> n.getType() == NotificationType.SEASON_RESET);
+                softly.assertThat(saved).allMatch(n -> n.getMessage().equals(messageProvider.seasonReset()));
             });
         }
 
@@ -193,6 +217,80 @@ class NotificationFacadeIntegrationTest {
 
             // then
             verify(fcmService, never()).sendNotifications(anyList());
+        }
+    }
+
+    @Nested
+    @DisplayName("단일 유저에게 알림을 발송할 때")
+    class NotifyUser {
+
+        @Test
+        void 인앱_알림이_저장되고_FCM이_발송된다() {
+            // given
+            User user = userFixture.일반_유저(1);
+            fcmTokenRepository.save(FcmToken.create(user.getId(), "device-1", "token-1"));
+
+            // when
+            notificationFacade.notifyUser(user.getId(), NotificationType.FOLLOW, "유저2님이 나를 팔로우했어요! 👀");
+
+            // then - DB 저장
+            List<Notification> saved = notificationRepository.findAll();
+            assertSoftly(softly -> {
+                softly.assertThat(saved).hasSize(1);
+                softly.assertThat(saved.get(0).getUserId()).isEqualTo(user.getId());
+                softly.assertThat(saved.get(0).getType()).isEqualTo(NotificationType.FOLLOW);
+                softly.assertThat(saved.get(0).getMessage()).isEqualTo("유저2님이 나를 팔로우했어요! 👀");
+                softly.assertThat(saved.get(0).isRead()).isFalse();
+            });
+            // FCM 발송
+            verify(fcmService, timeout(1000)).sendNotifications(anyList());
+        }
+
+        @Test
+        void FCM_토큰이_없어도_인앱_알림은_저장된다() {
+            // given - 토큰 미등록
+            User user = userFixture.일반_유저(1);
+
+            // when
+            notificationFacade.notifyUser(user.getId(), NotificationType.CONGRATULATION, "유저2님이 축하해줬어요! 🎉");
+
+            // then - DB 저장
+            assertThat(notificationRepository.findAll()).hasSize(1);
+            // FCM 미발송
+            verify(fcmService, never()).sendNotifications(anyList());
+        }
+    }
+
+    @Nested
+    @DisplayName("여러 유저에게 알림을 발송할 때")
+    class NotifyUsers {
+
+        @Test
+        void 인앱_알림이_저장되고_FCM이_발송된다() {
+            // given
+            User user1 = userFixture.일반_유저(1);
+            User user2 = userFixture.일반_유저(2);
+            fcmTokenRepository.save(FcmToken.create(user1.getId(), "device-1", "token-1"));
+            fcmTokenRepository.save(FcmToken.create(user2.getId(), "device-2", "token-2"));
+
+            // when
+            notificationFacade.notifyUsers(
+                    List.of(user1.getId(), user2.getId()),
+                    NotificationType.FRIEND_ACTIVITY,
+                    "유저3님이 LV.5이 됐어요! 💪"
+            );
+
+            // then - DB 저장
+            List<Notification> saved = notificationRepository.findAll();
+            assertSoftly(softly -> {
+                softly.assertThat(saved).hasSize(2);
+                softly.assertThat(saved).extracting(Notification::getUserId)
+                        .containsExactlyInAnyOrder(user1.getId(), user2.getId());
+                softly.assertThat(saved).allMatch(n -> n.getType() == NotificationType.FRIEND_ACTIVITY);
+                softly.assertThat(saved).allMatch(n -> n.getMessage().equals("유저3님이 LV.5이 됐어요! 💪"));
+            });
+            // FCM 발송
+            verify(fcmService, timeout(1000)).sendNotifications(anyList());
         }
     }
 }

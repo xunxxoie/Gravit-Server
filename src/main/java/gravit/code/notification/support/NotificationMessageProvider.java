@@ -2,6 +2,7 @@ package gravit.code.notification.support;
 
 import gravit.code.notification.dto.internal.InactivityMilestone;
 import gravit.code.notification.dto.internal.SeasonEndingMilestone;
+import gravit.code.social.domain.FeedEventType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -70,5 +71,26 @@ public class NotificationMessageProvider {
 
     public String seasonReset() {
         return SEASON_RESET_MESSAGE;
+    }
+
+    public String followReceived(String followerNickname) {
+        return followerNickname + "님이 나를 팔로우했어요! 👀";
+    }
+
+    public String congratulation(String congratulatorNickname) {
+        return congratulatorNickname + "님이 축하해줬어요! 🎉";
+    }
+
+    public String friendActivity(
+            String actorNickname,
+            FeedEventType eventType,
+            String eventValue
+    ) {
+        return switch (eventType) {
+            case PLANET_COMPLETE -> actorNickname + "님이 " + eventValue + "행성을 정복했어요! 🌍";
+            case STREAK_DAYS -> actorNickname + "님이 " + eventValue + "일 연속학습을 달성했어요! 🔥";
+            case TIER_PROMOTION -> actorNickname + "님이 " + eventValue + "티어로 승급했어요! 🎉";
+            case LEVEL_UP -> actorNickname + "님이 LV." + eventValue + "이 됐어요! 💪";
+        };
     }
 }

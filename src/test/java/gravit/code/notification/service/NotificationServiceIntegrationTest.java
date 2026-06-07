@@ -65,4 +65,44 @@ class NotificationServiceIntegrationTest {
             assertThat(notificationRepository.findAll()).isEmpty();
         }
     }
+
+    @Nested
+    @DisplayName("특정 유저 목록에게 알림을 적재할 때")
+    class NotifyUsers {
+
+        @Test
+        void 목록의_유저_모두에게_알림이_적재된다() {
+            // given
+            User user1 = userRepository.save(User.create("a@test.com", "p1", "유저1", "h1", 1, Role.USER));
+            User user2 = userRepository.save(User.create("b@test.com", "p2", "유저2", "h2", 1, Role.USER));
+            userRepository.save(User.create("c@test.com", "p3", "유저3", "h3", 1, Role.USER)); // 대상 외 유저
+
+            // when
+            notificationService.notifyUsers(
+                    List.of(user1.getId(), user2.getId()),
+                    NotificationType.FRIEND_ACTIVITY,
+                    "유저3님이 LV.5이 됐어요! 💪"
+            );
+
+            // then
+            List<Notification> notifications = notificationRepository.findAll();
+            assertThat(notifications)
+                    .extracting(Notification::getUserId)
+                    .containsExactlyInAnyOrder(user1.getId(), user2.getId());
+            assertThat(notifications).allSatisfy(n -> {
+                assertThat(n.getType()).isEqualTo(NotificationType.FRIEND_ACTIVITY);
+                assertThat(n.getMessage()).isEqualTo("유저3님이 LV.5이 됐어요! 💪");
+                assertThat(n.isRead()).isFalse();
+            });
+        }
+
+        @Test
+        void 빈_목록이면_아무것도_적재하지_않는다() {
+            // when
+            notificationService.notifyUsers(List.of(), NotificationType.FRIEND_ACTIVITY, "테스트");
+
+            // then
+            assertThat(notificationRepository.findAll()).isEmpty();
+        }
+    }
 }

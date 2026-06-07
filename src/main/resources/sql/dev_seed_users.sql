@@ -22,13 +22,10 @@
 
 BEGIN;
 
--- 0) ACTIVE 시즌 존재 확인 (없으면 즉시 중단하여 FK 오류 방지)
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM season WHERE status = 'ACTIVE') THEN
-        RAISE EXCEPTION 'ACTIVE 상태의 season 이 없습니다. 활성 시즌을 먼저 만든 뒤 다시 실행하세요.';
-    END IF;
-END $$;
+-- 0) ACTIVE 시즌 생성 (없으면 삽입, 있으면 스킵)
+INSERT INTO season (season_key, status, starts_at, ends_at, tz)
+VALUES ('2026-S1', 'ACTIVE', now(), now() + INTERVAL '4 months', 'Asia/Seoul')
+ON CONFLICT (season_key) DO NOTHING;
 
 -- 1) 유저 20명 생성 (온보딩 완료 상태)
 INSERT INTO users (

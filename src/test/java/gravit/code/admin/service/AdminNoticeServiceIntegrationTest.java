@@ -16,6 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -164,5 +166,56 @@ class AdminNoticeServiceIntegrationTest {
                 .isInstanceOf(RestApiException.class)
                 .extracting(e -> ((RestApiException) e).getErrorCode())
                 .isEqualTo(CustomErrorCode.NOTICE_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("공지 목록 정렬: 핀 최상단(게시일 내림차순) → 비핀 최신순 → 미게시(DRAFT) 최후순, 페이지 경계 적용")
+    void getNotices_ordering() {
+        // 비핀 PUBLISHED 18건: 생성 순서대로 publishedAt 증가 (일반-00 이 가장 오래됨)
+        for (int i = 0; i < 18; i++) {
+            adminNoticeService.createNotice(adminId,
+                    new NoticeCreateRequest("일반-%02d".formatted(i), "요약", "본문", NoticeStatus.PUBLISHED, false));
+        }
+        // 비핀 DRAFT 1건: publishedAt 이 null 이라 NULLS LAST 로 맨 뒤
+        adminNoticeService.createNotice(adminId,
+                new NoticeCreateRequest("드래프트", "요약", "본문", NoticeStatus.DRAFT, false));
+        // 핀 PUBLISHED 3건: 가장 늦게 생성한 핀-2 가 게시일이 가장 최신
+        for (int i = 0; i < 3; i++) {
+            adminNoticeService.createNotice(adminId,
+                    new NoticeCreateRequest("핀-%d".formatted(i), "요약", "본문", NoticeStatus.PUBLISHED, true));
+        }
+
+        // 총 22건 → 1페이지 20건, 2페이지 2건
+        List<NoticeListItemResponse> page1 = adminNoticeService.getNotices(1).contents();
+        List<NoticeListItemResponse> page2 = adminNoticeService.getNotices(2).contents();
+
+        assertSoftly(softly -> {
+            softly.assertThat(page1).hasSize(20);
+            softly.assertThat(page2).hasSize(2);
+
+            // 핀 공지(3건)는 모두 1페이지 최상단
+            softly.assertThat(page1.stream().filter(NoticeListItemResponse::pinned).count()).isEqualTo(3L);
+            softly.assertThat(page1.get(0).pinned()).isTrue();
+            softly.assertThat(page1.get(1).pinned()).isTrue();
+            softly.assertThat(page1.get(2).pinned()).isTrue();
+            softly.assertThat(page1.get(3).pinned()).isFalse();
+
+            // 핀 그룹 내부는 게시일 내림차순 (핀-2 > 핀-1 > 핀-0)
+            softly.assertThat(page1.get(0).title()).isEqualTo("핀-2");
+            softly.assertThat(page1.get(1).title()).isEqualTo("핀-1");
+            softly.assertThat(page1.get(2).title()).isEqualTo("핀-0");
+            softly.assertThat(page1.get(0).publishedAt()).isAfterOrEqualTo(page1.get(1).publishedAt());
+            softly.assertThat(page1.get(1).publishedAt()).isAfterOrEqualTo(page1.get(2).publishedAt());
+
+            // 핀 바로 아래는 비핀 중 가장 최근 게시분(일반-17)
+            softly.assertThat(page1.get(3).title()).isEqualTo("일반-17");
+
+            // 2페이지는 비핀만, 미게시 DRAFT 는 publishedAt null 로 가장 마지막
+            softly.assertThat(page2.stream().anyMatch(NoticeListItemResponse::pinned)).isFalse();
+            softly.assertThat(page2.get(0).title()).isEqualTo("일반-00");
+            softly.assertThat(page2.get(0).publishedAt()).isNotNull();
+            softly.assertThat(page2.get(1).title()).isEqualTo("드래프트");
+            softly.assertThat(page2.get(1).publishedAt()).isNull();
+        });
     }
 }

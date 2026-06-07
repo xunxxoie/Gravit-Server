@@ -32,6 +32,13 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
             Pageable pageable
     );
 
+    @Query("""
+        select n
+        from Notice n
+        order by n.pinned desc, n.publishedAt desc nulls last, n.createdAt desc
+        """)
+    Page<Notice> findAllForAdmin(Pageable pageable);
+
     Optional<Notice> findByIdAndStatus(
             long id,
             NoticeStatus status

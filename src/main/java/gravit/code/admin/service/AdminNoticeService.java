@@ -19,15 +19,12 @@ import gravit.code.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class AdminNoticeService {
-
-    private static final Sort NOTICE_SORT = Sort.by(Sort.Direction.DESC, "id");
 
     private final NoticeRepository noticeRepository;
     private final UserRepository userRepository;
@@ -36,9 +33,9 @@ public class AdminNoticeService {
 
     @Transactional(readOnly = true)
     public PageResponse<NoticeListItemResponse> getNotices(int page) {
-        Pageable pageable = AdminPages.of(page, NOTICE_SORT);
+        Pageable pageable = AdminPages.of(page);
 
-        return PageResponse.from(noticeRepository.findAll(pageable).map(NoticeListItemResponse::from));
+        return PageResponse.from(noticeRepository.findAllForAdmin(pageable).map(NoticeListItemResponse::from));
     }
 
     @Transactional(readOnly = true)

@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
 
-@Schema(description = "신고 상세 (신고자 미노출)")
-public record ReportDetailResponse(
+@Schema(description = "신고 목록 항목")
+public record ReportListItemResponse(
 
         long reportId,
 
@@ -16,19 +16,16 @@ public record ReportDetailResponse(
 
         long problemId,
 
-        String content,
-
         @JsonProperty("isResolved")
         boolean isResolved,
 
         LocalDateTime submittedAt
 ) {
-    public static ReportDetailResponse from(Report report) {
-        return new ReportDetailResponse(
+    public static ReportListItemResponse from(Report report) {
+        return new ReportListItemResponse(
                 report.getId(),
                 report.getReportType(),
                 report.getProblemId(),
-                report.getContent(),
                 report.isResolved(),
                 report.getSubmittedAt()
         );

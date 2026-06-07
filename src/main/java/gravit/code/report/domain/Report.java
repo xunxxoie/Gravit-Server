@@ -71,7 +71,7 @@ public class Report {
                 .build();
     }
 
-    public void updateResolvedStatus(){
-        this.isResolved = !this.isResolved;
+    public void changeResolved(boolean isResolved){
+        this.isResolved = isResolved;
     }
 }

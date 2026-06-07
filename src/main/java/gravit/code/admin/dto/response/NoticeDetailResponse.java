@@ -2,11 +2,13 @@ package gravit.code.admin.dto.response;
 
 import gravit.code.notice.domain.Notice;
 import gravit.code.notice.domain.NoticeStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 
+@Schema(name = "AdminNoticeDetailResponse")
 @Builder(access = AccessLevel.PRIVATE)
 public record NoticeDetailResponse(
 

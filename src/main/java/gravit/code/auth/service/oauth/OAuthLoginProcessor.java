@@ -34,7 +34,7 @@ public class OAuthLoginProcessor {
         AccessToken accessToken = authTokenProvider.generateAccessToken(user);
         RefreshToken refreshToken = authTokenProvider.generateRefreshToken(user);
 
-        return LoginResponse.of(accessToken, refreshToken, isOnboarded);
+        return LoginResponse.of(accessToken, refreshToken, isOnboarded, user.getRole());
     }
 
     private User findOrCreateUser(OAuthUserInfo oAuthUserInfo) {

@@ -43,4 +43,8 @@ public class Lesson {
                 .unitId(unitId)
                 .build();
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }

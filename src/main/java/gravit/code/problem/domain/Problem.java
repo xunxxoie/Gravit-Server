@@ -1,6 +1,5 @@
 package gravit.code.problem.domain;
 
-import gravit.code.admin.dto.request.ProblemUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -62,9 +61,11 @@ public class Problem {
                 .build();
     }
 
-    public void updateProblem(ProblemUpdateRequest problemUpdateRequest){
-        this.problemType = ProblemType.from(problemUpdateRequest.problemType());
-        this.instruction = problemUpdateRequest.instruction();
-        this.content = problemUpdateRequest.content();
+    public void updateContent(
+            String instruction,
+            String content
+    ){
+        this.instruction = instruction;
+        this.content = content;
     }
 }

@@ -13,6 +13,8 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
 
     Optional<Option> findById(long optionId);
 
+    List<Option> findByProblemIdOrderById(long problemId);
+
     @Query("""
         SELECT new gravit.code.option.dto.response.OptionResponse(o.id, o.content, o.explanation, o.isAnswer, o.problemId)
         FROM Option o

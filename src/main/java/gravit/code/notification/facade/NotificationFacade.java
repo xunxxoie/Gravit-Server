@@ -8,6 +8,7 @@ import gravit.code.learning.dto.internal.ConsecutiveAtRiskUser;
 import gravit.code.learning.service.LearningQueryService;
 import gravit.code.notification.domain.NotificationType;
 import gravit.code.notification.dto.internal.InactivityMilestone;
+import gravit.code.notification.service.NotificationService;
 import gravit.code.notification.support.NotificationMessageProvider;
 import gravit.code.season.service.SeasonService;
 import gravit.code.user.service.UserAccessService;
@@ -30,6 +31,7 @@ public class NotificationFacade {
     private final FcmTokenQueryService fcmTokenQueryService;
     private final FcmService fcmService;
     private final NotificationMessageProvider messageProvider;
+    private final NotificationService notificationService;
     private final SeasonService seasonService;
     private final Clock clock;
 
@@ -120,15 +122,37 @@ public class NotificationFacade {
         messageProvider.seasonEndingMilestones().stream()
                 .filter(milestone -> milestone.daysBefore() == daysRemaining)
                 .findFirst()
-                .ifPresent(milestone -> broadcastToAll(
-                        NotificationType.SEASON_ENDING.toPushData(),
-                        milestone.message()
-                ));
+                .ifPresent(milestone -> {
+                    notificationService.notifyAllUsers(NotificationType.SEASON_ENDING, milestone.message(), null);
+                    broadcastToAll(NotificationType.SEASON_ENDING.toPushData(), milestone.message());
+                });
     }
 
     // 시즌 종료 + 새 시즌 시작: 롤오버 직후 전체 발송 (소프트 리셋 결과는 알림에 포함하지 않음)
     public void sendSeasonResetAlerts() {
-        broadcastToAll(NotificationType.SEASON_RESET.toPushData(), messageProvider.seasonReset());
+        String message = messageProvider.seasonReset();
+        notificationService.notifyAllUsers(NotificationType.SEASON_RESET, message, null);
+        broadcastToAll(NotificationType.SEASON_RESET.toPushData(), message);
+    }
+
+    // 특정 유저에게 인앱 알림 저장 + FCM 푸시 발송
+    public void notifyUser(
+            long userId,
+            NotificationType type,
+            String message
+    ) {
+        notificationService.notify(userId, type, message);
+        pushToUser(userId, type.toPushData(), message);
+    }
+
+    // 여러 유저에게 인앱 알림 저장 + FCM 푸시 발송
+    public void notifyUsers(
+            List<Long> userIds,
+            NotificationType type,
+            String message
+    ) {
+        notificationService.notifyUsers(userIds, type, message);
+        pushToUsers(userIds, type.toPushData(), () -> message);
     }
 
     public void sendConsecutiveLearningWarningToUser(

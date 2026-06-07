@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +45,21 @@ public class NotificationService {
             Long targetId
     ) {
         notificationRepository.insertForAllActiveUsers(type.name(), message, targetId, LocalDateTime.now(clock));
+    }
+
+    // 특정 유저 목록에게 동일 알림 적재 (친구 활동 등)
+    @Transactional
+    public void notifyUsers(
+            List<Long> userIds,
+            NotificationType type,
+            String message
+    ) {
+        if (userIds.isEmpty()) {
+            return;
+        }
+        List<Notification> notifications = userIds.stream()
+                .map(userId -> Notification.create(userId, type, message))
+                .toList();
+        notificationRepository.saveAll(notifications);
     }
 }

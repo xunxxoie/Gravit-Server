@@ -53,7 +53,7 @@ public class UserCheatCreateController {
         AccessToken accessToken = authTokenProvider.generateAccessToken(user);
         RefreshToken refreshToken = authTokenProvider.generateRefreshToken(user);
 
-        return ResponseEntity.ok().body(LoginResponse.of(accessToken,refreshToken,true));
+        return ResponseEntity.ok().body(LoginResponse.of(accessToken,refreshToken,true, user.getRole()));
     }
 
     @PostMapping("/users/login")
@@ -65,7 +65,7 @@ public class UserCheatCreateController {
         AccessToken accessToken = authTokenProvider.generateAccessToken(user);
         RefreshToken refreshToken = authTokenProvider.generateRefreshToken(user);
 
-        return ResponseEntity.ok().body(LoginResponse.of(accessToken,refreshToken,true));
+        return ResponseEntity.ok().body(LoginResponse.of(accessToken,refreshToken,true, user.getRole()));
     }
 
     @PostMapping("/tokens/custom")
@@ -75,7 +75,7 @@ public class UserCheatCreateController {
     ){
         User user = authTokenProvider.parseUser(accessToken);
         AccessToken newAccessToken = createNewCustomAccessToken(user, newExpirationMinutes);
-        return ResponseEntity.ok().body(LoginResponse.of(newAccessToken,new RefreshToken("refresh"),true));
+        return ResponseEntity.ok().body(LoginResponse.of(newAccessToken,new RefreshToken("refresh"),true, user.getRole()));
     }
 
     private AccessToken createNewCustomAccessToken(User user, Long newExpirationMinutes) {

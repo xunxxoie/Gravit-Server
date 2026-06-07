@@ -49,3 +49,4 @@ grafana_data
 
 ### Firebase ###
 /src/main/resources/firebase/firebase_service_key.json
+/BACKEND_ADMIN_API_SPEC.md

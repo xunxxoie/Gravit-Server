@@ -66,6 +66,7 @@ public enum CustomErrorCode implements ErrorCode {
     PROBLEM_SUBMISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "PROBLEM_4041", "문제 풀이 제출 이력 조회에 실패하였습니다."),
     // Option
     OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "OPTION_4041", "옵션 조회에 실패하였습니다."),
+    OBJECTIVE_OPTIONS_INVALID(HttpStatus.BAD_REQUEST, "OPTION_4001", "객관식 문제는 옵션 4개와 정답 1개여야 합니다."),
 
     // Answer
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "ANSWER_4041", "정답 조회에 실패하였습니다."),
@@ -115,7 +116,18 @@ public enum CustomErrorCode implements ErrorCode {
     NOTICE_CONTENT_INVALID(HttpStatus.BAD_REQUEST, "NOTICE_4003", "공지 사항의 내용이 유효하지 않습니다."),
     NOTICE_PINNED_MUST_BE_PUBLISHED(HttpStatus.BAD_REQUEST, "NOTICE_4004", "핀을 고정하려면 PUBLISHED 상태여야 합니다."),
     NOTICE_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTICE_4041", "존재하지 않는 공지사항입니다."),
-    NOTICE_STATUS_INVALID(HttpStatus.BAD_REQUEST, "NOTICE_4005", "공지 사항의 상태가 PUBLISHED, ARCHIVED 에서 DRAFT 로 변경될 수 없습니다."),
+    NOTICE_STATUS_INVALID(HttpStatus.BAD_REQUEST, "NOTICE_4005", "유효하지 않은 공지 상태입니다. (작성 시 ARCHIVED 불가)"),
+    NOTICE_INVALID_STATUS_TRANSITION(HttpStatus.CONFLICT, "NOTICE_4091", "허용되지 않는 공지 상태 전이입니다."),
+
+    // Staging (admin 콘텐츠 검수/승급)
+    STAGING_LABEL_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGING_4041", "존재하지 않는 스테이징 라벨입니다."),
+    STAGING_LESSON_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGING_4042", "존재하지 않는 스테이징 레슨입니다."),
+    STAGING_PROBLEM_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGING_4043", "존재하지 않는 스테이징 문제입니다."),
+    STAGING_OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGING_4044", "존재하지 않는 스테이징 옵션입니다."),
+    STAGING_ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "STAGING_4045", "존재하지 않는 스테이징 정답입니다."),
+    STAGING_STATUS_INVALID(HttpStatus.BAD_REQUEST, "STAGING_4001", "스테이징 라벨 상태 변경 값이 유효하지 않습니다. (COMPLETED 만 허용)"),
+    STAGING_INVALID_STRUCTURE(HttpStatus.BAD_REQUEST, "STAGING_4002", "승급 불변식(레슨1·문제6·옵션4·정답1)을 만족하지 않습니다."),
+    STAGING_LABEL_ALREADY_COMPLETED(HttpStatus.CONFLICT, "STAGING_4091", "이미 승급 완료된 스테이징 라벨입니다."),
 
     // Dest
     DEST_NOT_VALID(HttpStatus.BAD_REQUEST, "DEST_4001", "유효하지 않은 Dest 입니다. (local/prod 만 유효합니다.)"),

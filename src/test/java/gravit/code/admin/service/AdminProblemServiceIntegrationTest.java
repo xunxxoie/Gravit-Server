@@ -1,0 +1,149 @@
+package gravit.code.admin.service;
+
+import gravit.code.admin.dto.request.ObjectiveProblemUpdateRequest;
+import gravit.code.admin.dto.request.ObjectiveProblemUpdateRequest.ObjectiveOptionUpdateRequest;
+import gravit.code.admin.dto.request.SubjectiveProblemUpdateRequest;
+import gravit.code.admin.dto.request.SubjectiveProblemUpdateRequest.SubjectiveAnswerUpdateRequest;
+import gravit.code.admin.dto.response.ProblemDetailResponse;
+import gravit.code.answer.domain.Answer;
+import gravit.code.answer.repository.AnswerRepository;
+import gravit.code.global.exception.domain.CustomErrorCode;
+import gravit.code.global.exception.domain.RestApiException;
+import gravit.code.option.domain.Option;
+import gravit.code.option.repository.OptionRepository;
+import gravit.code.problem.domain.Problem;
+import gravit.code.problem.domain.ProblemType;
+import gravit.code.problem.repository.ProblemRepository;
+import gravit.code.support.TCSpringBootTest;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+@TCSpringBootTest
+class AdminProblemServiceIntegrationTest {
+
+    private static final long LESSON_ID = 10L;
+
+    @Autowired
+    private AdminProblemService adminProblemService;
+
+    @Autowired
+    private ProblemRepository problemRepository;
+
+    @Autowired
+    private OptionRepository optionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
+
+    private Problem saveObjectiveWithOptions() {
+        Problem problem = problemRepository.save(Problem.create(ProblemType.OBJECTIVE, "지시문", "내용", LESSON_ID));
+        optionRepository.save(Option.create("정답옵션", "해설", true, problem.getId()));
+        optionRepository.save(Option.create("오답1", "해설", false, problem.getId()));
+        optionRepository.save(Option.create("오답2", "해설", false, problem.getId()));
+        optionRepository.save(Option.create("오답3", "해설", false, problem.getId()));
+        return problem;
+    }
+
+    @Test
+    @DisplayName("객관식 상세: options 4개(id ASC), answer null")
+    void getProblem_objective() {
+        Problem problem = saveObjectiveWithOptions();
+
+        ProblemDetailResponse detail = adminProblemService.getProblem(problem.getId());
+
+        assertSoftly(softly -> {
+            softly.assertThat(detail.problemType()).isEqualTo(ProblemType.OBJECTIVE);
+            softly.assertThat(detail.options()).hasSize(4);
+            softly.assertThat(detail.answer()).isNull();
+            softly.assertThat(detail.options().get(0).isAnswer()).isTrue();
+        });
+    }
+
+    @Test
+    @DisplayName("주관식 상세: answer 단일, options null")
+    void getProblem_subjective() {
+        Problem problem = problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지시문", "내용", LESSON_ID));
+        answerRepository.save(Answer.create("정답", "해설", problem.getId()));
+
+        ProblemDetailResponse detail = adminProblemService.getProblem(problem.getId());
+
+        assertSoftly(softly -> {
+            softly.assertThat(detail.problemType()).isEqualTo(ProblemType.SUBJECTIVE);
+            softly.assertThat(detail.answer()).isNotNull();
+            softly.assertThat(detail.options()).isNull();
+        });
+    }
+
+    @Test
+    @DisplayName("객관식 상세: 옵션 없으면 OPTION_NOT_FOUND")
+    void getProblem_objective_noOptions() {
+        Problem problem = problemRepository.save(Problem.create(ProblemType.OBJECTIVE, "지시문", "내용", LESSON_ID));
+
+        assertThatThrownBy(() -> adminProblemService.getProblem(problem.getId()))
+                .isInstanceOf(RestApiException.class)
+                .extracting(e -> ((RestApiException) e).getErrorCode())
+                .isEqualTo(CustomErrorCode.OPTION_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("객관식 수정: instruction/content 부분 수정 + 옵션 4개 교체")
+    void updateObjective() {
+        Problem problem = saveObjectiveWithOptions();
+        List<Option> options = optionRepository.findByProblemIdOrderById(problem.getId());
+        List<ObjectiveOptionUpdateRequest> optionRequests = options.stream()
+                .map(o -> new ObjectiveOptionUpdateRequest(o.getId(), "수정옵션" + o.getId(), "수정해설", o.isAnswer()))
+                .toList();
+
+        adminProblemService.updateObjective(problem.getId(),
+                new ObjectiveProblemUpdateRequest("새지시문", "새본문", optionRequests));
+
+        ProblemDetailResponse detail = adminProblemService.getProblem(problem.getId());
+        assertSoftly(softly -> {
+            softly.assertThat(detail.instruction()).isEqualTo("새지시문");
+            softly.assertThat(detail.content()).isEqualTo("새본문");
+            softly.assertThat(detail.options().get(0).content()).startsWith("수정옵션");
+            softly.assertThat(detail.options().stream().filter(ProblemDetailResponse.ProblemOptionResponse::isAnswer).count()).isEqualTo(1);
+        });
+    }
+
+    @Test
+    @DisplayName("객관식 수정: 정답이 1개가 아니면 OBJECTIVE_OPTIONS_INVALID")
+    void updateObjective_invalidAnswerCount() {
+        Problem problem = saveObjectiveWithOptions();
+        List<Option> options = optionRepository.findByProblemIdOrderById(problem.getId());
+        List<ObjectiveOptionUpdateRequest> allFalse = options.stream()
+                .map(o -> new ObjectiveOptionUpdateRequest(o.getId(), "옵션", "해설", false))
+                .toList();
+
+        assertThatThrownBy(() -> adminProblemService.updateObjective(problem.getId(),
+                new ObjectiveProblemUpdateRequest(null, null, allFalse)))
+                .isInstanceOf(RestApiException.class)
+                .extracting(e -> ((RestApiException) e).getErrorCode())
+                .isEqualTo(CustomErrorCode.OBJECTIVE_OPTIONS_INVALID);
+    }
+
+    @Test
+    @DisplayName("주관식 수정: answer content/explanation 수정")
+    void updateSubjective() {
+        Problem problem = problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지시문", "내용", LESSON_ID));
+        Answer answer = answerRepository.save(Answer.create("정답", "해설", problem.getId()));
+
+        adminProblemService.updateSubjective(problem.getId(),
+                new SubjectiveProblemUpdateRequest("새지시문", "새본문",
+                        new SubjectiveAnswerUpdateRequest(answer.getId(), "0,영,zero", "새해설")));
+
+        ProblemDetailResponse detail = adminProblemService.getProblem(problem.getId());
+        assertSoftly(softly -> {
+            softly.assertThat(detail.instruction()).isEqualTo("새지시문");
+            softly.assertThat(detail.answer().content()).isEqualTo("0,영,zero");
+            softly.assertThat(detail.answer().explanation()).isEqualTo("새해설");
+        });
+    }
+}

@@ -1,6 +1,7 @@
 package gravit.code.notification.facade;
 
 import gravit.code.fcm.dto.internal.PushMessage;
+import gravit.code.fcm.service.FcmService;
 import gravit.code.fcm.service.FcmTokenQueryService;
 import gravit.code.global.annotation.Facade;
 import gravit.code.learning.dto.internal.ConsecutiveAtRiskUser;
@@ -28,7 +29,7 @@ public class NotificationFacade {
     private final LearningQueryService learningQueryService;
     private final UserAccessService userAccessService;
     private final FcmTokenQueryService fcmTokenQueryService;
-    //private final FcmService fcmService;
+    private final FcmService fcmService;
     private final NotificationMessageProvider messageProvider;
     private final NotificationService notificationService;
     private final SeasonService seasonService;
@@ -60,7 +61,7 @@ public class NotificationFacade {
                 ))
                 .toList();
 
-        //fcmService.sendNotifications(messages);
+        fcmService.sendNotifications(messages);
     }
 
     public void sendDailyIncompleteReminders() {
@@ -104,7 +105,7 @@ public class NotificationFacade {
                 NotificationType.NEW_CONTENT.toPushData(unitId)
         );
 
-        //fcmService.sendNotifications(List.of(message));
+        fcmService.sendNotifications(List.of(message));
     }
 
     // 시즌 종료 임박: ACTIVE 시즌의 종료일까지 남은 일수가 마일스톤(7일/3일)과 일치하면 전체 발송
@@ -207,7 +208,7 @@ public class NotificationFacade {
 
         PushMessage pushMessage = PushMessage.of(tokens, message, null, data);
 
-        //fcmService.sendNotifications(List.of(pushMessage));
+        fcmService.sendNotifications(List.of(pushMessage));
     }
 
     private void pushToUser(
@@ -224,7 +225,7 @@ public class NotificationFacade {
 
         PushMessage pushMessage = PushMessage.of(tokens, message, null, data);
 
-        //fcmService.sendNotifications(List.of(pushMessage));
+        fcmService.sendNotifications(List.of(pushMessage));
     }
 
     private void pushToUsers(
@@ -244,6 +245,6 @@ public class NotificationFacade {
                 ))
                 .toList();
 
-        //fcmService.sendNotifications(messages);
+        fcmService.sendNotifications(messages);
     }
 }

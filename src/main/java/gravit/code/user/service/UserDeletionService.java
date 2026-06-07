@@ -26,7 +26,6 @@ public class UserDeletionService {
     private final UserRepository userRepository;
     private final MailAuthCodeStore mailAuthCodeStore;
     private final RedisUserCleanManager cleanManager;
-    private final RedirectHostConst redirectHostConst;
 
     public void requestDeleteMailWithMailAuthCode(
             long userId,
@@ -56,7 +55,7 @@ public class UserDeletionService {
     }
 
     private String makeDeleteLink(String dest) {
-        String base = redirectHostConst.DEST_BASE.get(dest);
+        String base = RedirectHostConst.DEST_BASE.get(dest);
 
         if (base == null || base.isBlank()) {
             throw new RestApiException(CustomErrorCode.DEST_NOT_VALID);

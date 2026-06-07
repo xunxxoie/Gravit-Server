@@ -64,9 +64,11 @@ public enum CustomErrorCode implements ErrorCode {
     // Problem
     PROBLEM_NOT_FOUND(HttpStatus.NOT_FOUND, "PROBLEM_4041", "문제 조회에 실패하였습니다."),
     PROBLEM_SUBMISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "PROBLEM_4041", "문제 풀이 제출 이력 조회에 실패하였습니다."),
+    PROBLEM_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, "PROBLEM_4001", "문제 유형이 요청과 일치하지 않습니다."),
     // Option
     OPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "OPTION_4041", "옵션 조회에 실패하였습니다."),
     OBJECTIVE_OPTIONS_INVALID(HttpStatus.BAD_REQUEST, "OPTION_4001", "객관식 문제는 옵션 4개와 정답 1개여야 합니다."),
+    OPTION_NOT_IN_PROBLEM(HttpStatus.BAD_REQUEST, "OPTION_4002", "해당 문제에 속하지 않는 옵션입니다."),
 
     // Answer
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "ANSWER_4041", "정답 조회에 실패하였습니다."),

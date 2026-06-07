@@ -77,4 +77,19 @@ public interface AdminUserRepository extends JpaRepository<User, Long> {
             @Param("id") long id,
             @Param("status") String status
     );
+
+    // DELETED -> ACTIVE/SUSPENDED 복구: deleted_at 해제 + handle 재발급(soft delete 시 NULL 처리된 handle 복원)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE users
+            SET status = :status,
+                deleted_at = NULL,
+                handle = :handle
+            WHERE id = :id
+            """, nativeQuery = true)
+    int restoreStatusById(
+            @Param("id") long id,
+            @Param("status") String status,
+            @Param("handle") String handle
+    );
 }

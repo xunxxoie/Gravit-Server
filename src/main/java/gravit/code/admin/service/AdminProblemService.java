@@ -59,13 +59,17 @@ public class AdminProblemService {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.PROBLEM_NOT_FOUND));
 
+        if (problem.getProblemType() != ProblemType.OBJECTIVE) {
+            throw new RestApiException(CustomErrorCode.PROBLEM_TYPE_MISMATCH);
+        }
+
         String instruction = request.instruction() != null ? request.instruction() : problem.getInstruction();
         String content = request.content() != null ? request.content() : problem.getContent();
 
         problem.updateContent(instruction, content);
 
         if (request.options() != null) {
-            replaceOptions(request.options());
+            replaceOptions(problemId, request.options());
         }
     }
 
@@ -76,6 +80,10 @@ public class AdminProblemService {
     ) {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new RestApiException(CustomErrorCode.PROBLEM_NOT_FOUND));
+
+        if (problem.getProblemType() != ProblemType.SUBJECTIVE) {
+            throw new RestApiException(CustomErrorCode.PROBLEM_TYPE_MISMATCH);
+        }
 
         String instruction = request.instruction() != null ? request.instruction() : problem.getInstruction();
         String content = request.content() != null ? request.content() : problem.getContent();
@@ -91,12 +99,19 @@ public class AdminProblemService {
         }
     }
 
-    private void replaceOptions(List<ObjectiveOptionUpdateRequest> options) {
+    private void replaceOptions(
+            long problemId,
+            List<ObjectiveOptionUpdateRequest> options
+    ) {
         validateObjectiveOptions(options);
 
         for (ObjectiveOptionUpdateRequest optionRequest : options) {
             Option option = optionRepository.findById(optionRequest.optionId())
                     .orElseThrow(() -> new RestApiException(CustomErrorCode.OPTION_NOT_FOUND));
+
+            if (option.getProblemId() != problemId) {
+                throw new RestApiException(CustomErrorCode.OPTION_NOT_IN_PROBLEM);
+            }
 
             option.update(optionRequest.content(), optionRequest.explanation(), optionRequest.isAnswer());
         }

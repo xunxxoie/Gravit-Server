@@ -177,4 +177,19 @@ class AdminStagingPromoteServiceIntegrationTest {
         assertThat(problemRepository.count()).isZero();
         assertThat(stagingLabelRepository.findByLabel(LABEL).orElseThrow().getStatus()).isEqualTo(LabelStatus.PENDING);
     }
+
+    @Test
+    @DisplayName("promote: option 이 라벨 문제 목록 밖 problemId 참조 시 STAGING_INVALID_STRUCTURE (NPE 방지)")
+    void promote_optionReferencesUnknownProblem() {
+        persistValidLabel(LABEL);
+        // 라벨의 어떤 문제에도 속하지 않는 problemId(88888) 를 참조하는 옵션 추가
+        optionStagingRepository.save(StagingFixture.옵션(999L, 88888L, false, LABEL));
+
+        assertThatThrownBy(() -> adminStagingPromoteService.promote(ADMIN_ID, LABEL, LabelStatus.COMPLETED))
+                .isInstanceOf(RestApiException.class)
+                .extracting(e -> ((RestApiException) e).getErrorCode())
+                .isEqualTo(CustomErrorCode.STAGING_INVALID_STRUCTURE);
+
+        assertThat(lessonRepository.count()).isZero(); // 롤백
+    }
 }

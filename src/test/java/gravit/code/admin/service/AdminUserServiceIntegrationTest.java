@@ -118,4 +118,19 @@ class AdminUserServiceIntegrationTest {
         });
         assertThat(active.getId()).isNotNull();
     }
+
+    @Test
+    @DisplayName("DELETED -> ACTIVE 복구 시 handle 이 재발급된다")
+    void updateStatus_restoreFromDeleted_regeneratesHandle() {
+        User user = userFixture.일반_유저(1);
+
+        adminUserService.updateStatus(ADMIN_ID, user.getId(), UserStatus.DELETED);
+        assertThat(adminUserService.getUser(user.getId()).handle()).isNull(); // soft delete 로 handle 제거됨
+
+        adminUserService.updateStatus(ADMIN_ID, user.getId(), UserStatus.ACTIVE);
+
+        UserDetailResponse restored = adminUserService.getUser(user.getId());
+        assertThat(restored.status()).isEqualTo(UserStatus.ACTIVE);
+        assertThat(restored.handle()).isNotBlank(); // 재발급됨
+    }
 }

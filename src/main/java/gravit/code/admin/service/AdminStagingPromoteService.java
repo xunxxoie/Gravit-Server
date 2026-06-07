@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -134,6 +135,20 @@ public class AdminStagingPromoteService {
         long subjectiveCount = problems.stream().filter(p -> p.getProblemType() == ProblemType.SUBJECTIVE).count();
 
         if (objectiveCount != EXPECTED_OBJECTIVE_COUNT || subjectiveCount != EXPECTED_SUBJECTIVE_COUNT) {
+            throw new RestApiException(CustomErrorCode.STAGING_INVALID_STRUCTURE);
+        }
+
+        // option/answer 의 problemId 가 라벨 문제 목록을 벗어나면 promote 단계에서 NPE 가 발생하므로 사전 차단
+        Set<Long> problemIds = problems.stream()
+                .map(ProblemStaging::getId)
+                .collect(Collectors.toSet());
+
+        boolean optionsReferenceValid = options.stream()
+                .allMatch(option -> problemIds.contains(option.getProblemId()));
+        boolean answersReferenceValid = answers.stream()
+                .allMatch(answer -> answer.getProblemId() != null && problemIds.contains(answer.getProblemId()));
+
+        if (!optionsReferenceValid || !answersReferenceValid) {
             throw new RestApiException(CustomErrorCode.STAGING_INVALID_STRUCTURE);
         }
 

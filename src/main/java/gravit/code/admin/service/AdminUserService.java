@@ -12,6 +12,7 @@ import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.user.domain.Role;
 import gravit.code.user.domain.UserStatus;
+import gravit.code.user.support.RandomHandleGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class AdminUserService {
 
     private final AdminUserRepository adminUserRepository;
     private final AuditLogRecorder auditLogRecorder;
+    private final RandomHandleGenerator handleGenerator;
 
     @Transactional(readOnly = true)
     public PageResponse<UserListItemResponse> getUsers(
@@ -61,7 +63,13 @@ public class AdminUserService {
 
         String before = user.getStatus();
 
-        adminUserRepository.updateStatusById(userId, status.name());
+        if (isRestore(before, status)) {
+            // soft delete 시 NULL 로 비운 handle 을 새로 발급해 무결성 복원
+            String newHandle = handleGenerator.generateUniqueHandle();
+            adminUserRepository.restoreStatusById(userId, status.name(), newHandle);
+        } else {
+            adminUserRepository.updateStatusById(userId, status.name());
+        }
 
         auditLogRecorder.record(adminId, AuditAction.USER_STATUS_CHANGE, String.valueOf(userId), before, status.name());
     }
@@ -80,5 +88,12 @@ public class AdminUserService {
         adminUserRepository.updateRoleById(userId, role.name());
 
         auditLogRecorder.record(adminId, AuditAction.USER_ROLE_CHANGE, String.valueOf(userId), before, role.name());
+    }
+
+    private boolean isRestore(
+            String beforeStatus,
+            UserStatus target
+    ) {
+        return UserStatus.DELETED.name().equals(beforeStatus) && target != UserStatus.DELETED;
     }
 }

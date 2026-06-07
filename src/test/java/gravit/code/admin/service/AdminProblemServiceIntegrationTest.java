@@ -146,4 +146,51 @@ class AdminProblemServiceIntegrationTest {
             softly.assertThat(detail.answer().explanation()).isEqualTo("새해설");
         });
     }
+
+    @Test
+    @DisplayName("객관식 수정 엔드포인트에 주관식 문제 요청 시 PROBLEM_TYPE_MISMATCH")
+    void updateObjective_onSubjectiveProblem_typeMismatch() {
+        Problem subjective = problemRepository.save(Problem.create(ProblemType.SUBJECTIVE, "지시문", "내용", LESSON_ID));
+
+        assertThatThrownBy(() -> adminProblemService.updateObjective(subjective.getId(),
+                new ObjectiveProblemUpdateRequest("새지시문", null, null)))
+                .isInstanceOf(RestApiException.class)
+                .extracting(e -> ((RestApiException) e).getErrorCode())
+                .isEqualTo(CustomErrorCode.PROBLEM_TYPE_MISMATCH);
+    }
+
+    @Test
+    @DisplayName("주관식 수정 엔드포인트에 객관식 문제 요청 시 PROBLEM_TYPE_MISMATCH")
+    void updateSubjective_onObjectiveProblem_typeMismatch() {
+        Problem objective = problemRepository.save(Problem.create(ProblemType.OBJECTIVE, "지시문", "내용", LESSON_ID));
+
+        assertThatThrownBy(() -> adminProblemService.updateSubjective(objective.getId(),
+                new SubjectiveProblemUpdateRequest("새지시문", null, null)))
+                .isInstanceOf(RestApiException.class)
+                .extracting(e -> ((RestApiException) e).getErrorCode())
+                .isEqualTo(CustomErrorCode.PROBLEM_TYPE_MISMATCH);
+    }
+
+    @Test
+    @DisplayName("객관식 수정 시 다른 문제 소속 옵션이 섞이면 OPTION_NOT_IN_PROBLEM")
+    void updateObjective_optionFromAnotherProblem() {
+        Problem problem = saveObjectiveWithOptions();
+        Problem other = problemRepository.save(Problem.create(ProblemType.OBJECTIVE, "지시문", "내용", LESSON_ID));
+        Option foreign = optionRepository.save(Option.create("외부옵션", "해설", false, other.getId()));
+
+        List<Option> options = optionRepository.findByProblemIdOrderById(problem.getId());
+        // 정답 1개 유지하되 비정답 1개를 다른 문제의 옵션으로 교체 (개수/정답 검증은 통과, 소속 검증에서 실패)
+        List<ObjectiveOptionUpdateRequest> requests = List.of(
+                new ObjectiveOptionUpdateRequest(options.get(0).getId(), "수정", "해설", true),
+                new ObjectiveOptionUpdateRequest(options.get(1).getId(), "수정", "해설", false),
+                new ObjectiveOptionUpdateRequest(options.get(2).getId(), "수정", "해설", false),
+                new ObjectiveOptionUpdateRequest(foreign.getId(), "수정", "해설", false)
+        );
+
+        assertThatThrownBy(() -> adminProblemService.updateObjective(problem.getId(),
+                new ObjectiveProblemUpdateRequest(null, null, requests)))
+                .isInstanceOf(RestApiException.class)
+                .extracting(e -> ((RestApiException) e).getErrorCode())
+                .isEqualTo(CustomErrorCode.OPTION_NOT_IN_PROBLEM);
+    }
 }

@@ -2,6 +2,8 @@ package gravit.code.problem.repository;
 
 import gravit.code.problem.domain.Problem;
 import gravit.code.problem.dto.response.ProblemDetailResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +18,13 @@ public interface ProblemRepository extends JpaRepository<Problem, Long> {
     void deleteById(long problemId);
 
     boolean existsProblemById(long id);
+
+    Page<Problem> findByLessonId(
+            long lessonId,
+            Pageable pageable
+    );
+
+    long countByLessonId(long lessonId);
 
     @Query("""
         SELECT new gravit.code.problem.dto.response.ProblemDetailResponse(

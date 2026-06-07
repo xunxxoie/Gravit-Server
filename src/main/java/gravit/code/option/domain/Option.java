@@ -1,6 +1,5 @@
 package gravit.code.option.domain;
 
-import gravit.code.admin.dto.request.OptionUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -59,9 +58,13 @@ public class Option {
                 .build();
     }
 
-    public void updateOption(OptionUpdateRequest optionUpdateRequest){
-        this.content = optionUpdateRequest.content();
-        this.explanation = optionUpdateRequest.explanation();
-        this.isAnswer = optionUpdateRequest.isAnswer();
+    public void update(
+            String content,
+            String explanation,
+            boolean isAnswer
+    ){
+        this.content = content;
+        this.explanation = explanation;
+        this.isAnswer = isAnswer;
     }
 }

@@ -1,19 +1,16 @@
 package gravit.code.admin.controller;
 
 import gravit.code.admin.controller.docs.AdminProblemControllerDocs;
-import gravit.code.admin.dto.request.ProblemCreateRequest;
-import gravit.code.admin.dto.request.ProblemUpdateRequest;
+import gravit.code.admin.dto.request.ObjectiveProblemUpdateRequest;
+import gravit.code.admin.dto.request.SubjectiveProblemUpdateRequest;
+import gravit.code.admin.dto.response.ProblemDetailResponse;
 import gravit.code.admin.service.AdminProblemService;
-import gravit.code.problem.dto.response.ProblemResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,25 +23,25 @@ public class AdminProblemController implements AdminProblemControllerDocs {
     private final AdminProblemService adminProblemService;
 
     @GetMapping("/{problemId}")
-    public ResponseEntity<ProblemResponse> getProblem(@PathVariable("problemId") Long problemId){
-        return ResponseEntity.status(HttpStatus.OK).body(adminProblemService.getProblem(problemId));
+    public ResponseEntity<ProblemDetailResponse> getProblem(@PathVariable("problemId") Long problemId) {
+        return ResponseEntity.ok(adminProblemService.getProblem(problemId));
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createProblem(@Valid@RequestBody ProblemCreateRequest request){
-        adminProblemService.createProblem(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @PatchMapping("/{problemId}/objective")
+    public ResponseEntity<Void> updateObjective(
+            @PathVariable("problemId") Long problemId,
+            @Valid @RequestBody ObjectiveProblemUpdateRequest request
+    ) {
+        adminProblemService.updateObjective(problemId, request);
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> updateProblem(@Valid@RequestBody ProblemUpdateRequest request){
-        adminProblemService.updateProblem(request);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/{problemId}")
-    public ResponseEntity<Void> deleteProblem(@PathVariable("problemId") Long problemId){
-        adminProblemService.deleteProblem(problemId);
-        return ResponseEntity.noContent().build();
+    @PatchMapping("/{problemId}/subjective")
+    public ResponseEntity<Void> updateSubjective(
+            @PathVariable("problemId") Long problemId,
+            @Valid @RequestBody SubjectiveProblemUpdateRequest request
+    ) {
+        adminProblemService.updateSubjective(problemId, request);
+        return ResponseEntity.ok().build();
     }
 }

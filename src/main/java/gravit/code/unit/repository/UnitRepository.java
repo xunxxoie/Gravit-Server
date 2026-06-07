@@ -4,6 +4,8 @@ import gravit.code.unit.domain.Unit;
 import gravit.code.unit.dto.internal.UnitProgressRowDto;
 import gravit.code.unit.dto.response.RecommendedUnitResponse;
 import gravit.code.unit.dto.response.UnitSummaryResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +16,13 @@ import java.util.Optional;
 public interface UnitRepository extends JpaRepository<Unit, Long> {
 
     Optional<Unit> findById(long unitId);
+
+    Page<Unit> findByChapterId(
+            long chapterId,
+            Pageable pageable
+    );
+
+    long countByChapterId(long chapterId);
 
     @Query("""
         SELECT new gravit.code.unit.dto.response.UnitSummaryResponse(u.id, u.title, u.description)

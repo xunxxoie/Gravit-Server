@@ -50,4 +50,12 @@ public class Answer {
                 .problemId(problemId)
                 .build();
     }
+
+    public void update(
+            String content,
+            String explanation
+    ){
+        this.content = content;
+        this.explanation = explanation;
+    }
 }

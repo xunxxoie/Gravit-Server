@@ -17,12 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.ALREADY_ONBOARDING;
-import static gravit.code.global.exception.domain.CustomErrorCode.NICKNAME_LENGTH_INVALID;
-import static gravit.code.global.exception.domain.CustomErrorCode.PROFILE_IMG_NUM_INVALID;
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_NOT_FOUND;
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_PAGE_NOT_FOUND;
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_RESTORE_ONLY_POSSIBLE_DELETED_STATUS_USER;
+import static gravit.code.global.exception.domain.CustomErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;

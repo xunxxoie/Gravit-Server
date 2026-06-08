@@ -22,9 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 
 import static gravit.code.global.exception.domain.CustomErrorCode.UNIT_NOT_FOUND;
-import static gravit.code.unit.domain.UnitProgressStatus.COMPLETED;
-import static gravit.code.unit.domain.UnitProgressStatus.IN_PROGRESS;
-import static gravit.code.unit.domain.UnitProgressStatus.NOT_STARTED;
+import static gravit.code.unit.domain.UnitProgressStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;

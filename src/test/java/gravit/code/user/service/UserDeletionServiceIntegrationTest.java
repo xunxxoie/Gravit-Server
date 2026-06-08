@@ -13,12 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.DEST_NOT_VALID;
-import static gravit.code.global.exception.domain.CustomErrorCode.INVALID_MAIL_AUTH_CODE;
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_NOT_FOUND;
+import static gravit.code.global.exception.domain.CustomErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

@@ -1,13 +1,6 @@
 package gravit.code.social.facade;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.CANNOT_CONGRATULATE_OWN_FEED;
-import static gravit.code.global.exception.domain.CustomErrorCode.CONGRATULATE_LIMIT_EXCEEDED;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import gravit.code.friend.fixture.FriendFixture;
-import gravit.code.social.domain.FeedEventType;
 import gravit.code.global.dto.response.SliceResponse;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.league.domain.League;
@@ -17,6 +10,7 @@ import gravit.code.notification.domain.NotificationType;
 import gravit.code.notification.repository.NotificationRepository;
 import gravit.code.season.domain.Season;
 import gravit.code.season.fixture.SeasonFixture;
+import gravit.code.social.domain.FeedEventType;
 import gravit.code.social.domain.SocialFeed;
 import gravit.code.social.dto.response.RecommendUserResponse;
 import gravit.code.social.dto.response.SocialFeedResponse;
@@ -27,11 +21,18 @@ import gravit.code.user.fixture.UserFixture;
 import gravit.code.userLeague.domain.UserLeague;
 import gravit.code.userLeague.fixture.UserLeagueFixture;
 import gravit.code.userLeague.repository.UserLeagueRepository;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static gravit.code.global.exception.domain.CustomErrorCode.CANNOT_CONGRATULATE_OWN_FEED;
+import static gravit.code.global.exception.domain.CustomErrorCode.CONGRATULATE_LIMIT_EXCEEDED;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @TCSpringBootTest
 class SocialFacadeIntegrationTest {

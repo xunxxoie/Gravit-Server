@@ -1,19 +1,20 @@
 package gravit.code.social.service;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.ALREADY_CONGRATULATED;
-import static gravit.code.global.exception.domain.CustomErrorCode.CONGRATULATE_LIMIT_EXCEEDED;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.social.domain.Congratulation;
 import gravit.code.social.repository.CongratulationRepository;
 import gravit.code.support.TCSpringBootTest;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static gravit.code.global.exception.domain.CustomErrorCode.ALREADY_CONGRATULATED;
+import static gravit.code.global.exception.domain.CustomErrorCode.CONGRATULATE_LIMIT_EXCEEDED;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @TCSpringBootTest
 class CongratulationServiceIntegrationTest {

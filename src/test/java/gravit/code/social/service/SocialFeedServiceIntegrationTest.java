@@ -1,8 +1,5 @@
 package gravit.code.social.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import gravit.code.friend.fixture.FriendFixture;
 import gravit.code.global.dto.response.SliceResponse;
 import gravit.code.social.domain.FeedEventType;
@@ -13,11 +10,15 @@ import gravit.code.social.repository.SocialFeedRepository;
 import gravit.code.support.TCSpringBootTest;
 import gravit.code.user.domain.User;
 import gravit.code.user.fixture.UserFixture;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @TCSpringBootTest
 class SocialFeedServiceIntegrationTest {

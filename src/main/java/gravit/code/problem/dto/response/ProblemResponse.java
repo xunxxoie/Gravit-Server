@@ -2,10 +2,8 @@ package gravit.code.problem.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gravit.code.answer.domain.Answer;
 import gravit.code.answer.dto.response.AnswerResponse;
 import gravit.code.option.dto.response.OptionResponse;
-import gravit.code.problem.domain.Problem;
 import gravit.code.problem.domain.ProblemType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AccessLevel;
@@ -93,36 +91,6 @@ public record ProblemResponse(
                         .answerResponse(null)
                         .options(options)
                         .isBookmarked(problemDetailResponse.isBookmarked())
-                        .build();
-        }
-
-        public static ProblemResponse createSubjectiveProblemForAdmin(
-                Problem problem,
-                Answer answer
-        ){
-                return ProblemResponse.builder()
-                        .problemId(problem.getId())
-                        .problemType(problem.getProblemType())
-                        .instruction(problem.getInstruction())
-                        .content(problem.getContent())
-                        .answerResponse(AnswerResponse.from(answer))
-                        .options(null)
-                        .isBookmarked(false)
-                        .build();
-        }
-
-        public static ProblemResponse createObjectiveProblemForAdmin(
-                Problem problem,
-                List<OptionResponse> options
-        ){
-                return ProblemResponse.builder()
-                        .problemId(problem.getId())
-                        .problemType(problem.getProblemType())
-                        .instruction(problem.getInstruction())
-                        .content(problem.getContent())
-                        .answerResponse(null)
-                        .options(options)
-                        .isBookmarked(false)
                         .build();
         }
 }

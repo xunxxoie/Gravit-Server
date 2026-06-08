@@ -1,20 +1,21 @@
 package gravit.code.social.service;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_FEED_NOT_FOUND;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.social.domain.UserFeed;
 import gravit.code.social.fixture.UserFeedFixture;
 import gravit.code.social.repository.UserFeedRepository;
 import gravit.code.support.TCSpringBootTest;
-import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static gravit.code.global.exception.domain.CustomErrorCode.USER_FEED_NOT_FOUND;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @TCSpringBootTest
 class UserFeedServiceIntegrationTest {

@@ -1,6 +1,7 @@
 package gravit.code.lesson.facade;
 
 import gravit.code.bookmark.service.BookmarkService;
+import gravit.code.global.event.LessonCompletedEvent;
 import gravit.code.learning.dto.internal.ConsecutiveSolvedDto;
 import gravit.code.learning.dto.internal.LearningIdsDto;
 import gravit.code.learning.dto.request.LearningSubmissionSaveRequest;
@@ -33,9 +34,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import gravit.code.global.event.LessonCompletedEvent;
-
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

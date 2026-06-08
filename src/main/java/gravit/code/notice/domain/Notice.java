@@ -25,9 +25,7 @@ import org.hibernate.annotations.SQLRestriction;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static gravit.code.notice.domain.NoticeStatus.ARCHIVED;
-import static gravit.code.notice.domain.NoticeStatus.DRAFT;
-import static gravit.code.notice.domain.NoticeStatus.PUBLISHED;
+import static gravit.code.notice.domain.NoticeStatus.*;
 import static java.time.temporal.ChronoUnit.MICROS;
 
 @Entity

@@ -1,8 +1,5 @@
 package gravit.code.friend.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import gravit.code.friend.dto.response.FollowerResponse;
 import gravit.code.friend.fixture.FriendFixture;
 import gravit.code.global.dto.response.SliceResponse;
@@ -10,9 +7,13 @@ import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.support.TCSpringBootTest;
 import gravit.code.user.domain.User;
 import gravit.code.user.fixture.UserFixture;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @TCSpringBootTest
 class FriendServiceTest {

@@ -1,5 +1,6 @@
 package gravit.code.season.batch;
 
+import gravit.code.global.event.SeasonRolledOverEvent;
 import gravit.code.global.exception.domain.CustomErrorCode;
 import gravit.code.global.exception.domain.RestApiException;
 import gravit.code.season.calendar.SeasonCalendar;
@@ -8,7 +9,6 @@ import gravit.code.season.repository.SeasonRepository;
 import gravit.code.season.service.port.SeasonClosedCache;
 import gravit.code.userLeague.repository.UserLeagueRepository;
 import gravit.code.userLeagueHistory.repository.UserLeagueHistoryRepository;
-import gravit.code.global.event.SeasonRolledOverEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;

@@ -39,9 +39,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import static gravit.code.global.exception.domain.CustomErrorCode.LEARNING_NOT_FOUND;
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_LEAGUE_NOT_FOUND;
-import static gravit.code.global.exception.domain.CustomErrorCode.USER_NOT_FOUND;
+import static gravit.code.global.exception.domain.CustomErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 

@@ -2,9 +2,10 @@ package gravit.code.season.fixture;
 
 import gravit.code.season.domain.Season;
 import gravit.code.season.repository.SeasonRepository;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestComponent;
+
+import java.time.LocalDateTime;
 
 @TestComponent
 @RequiredArgsConstructor

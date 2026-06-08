@@ -1,15 +1,16 @@
 package gravit.code.season.calendar;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import gravit.code.season.calendar.dto.SeasonDto;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class SeasonCalendarTest {
 

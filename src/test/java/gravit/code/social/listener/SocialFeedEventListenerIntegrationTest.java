@@ -1,14 +1,5 @@
 package gravit.code.social.listener;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.after;
-import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.verify;
-
 import gravit.code.dailyLearningRecord.service.DailyLearningRecordService;
 import gravit.code.global.event.LessonCompletedEvent;
 import gravit.code.global.event.LevelUpFeedEvent;
@@ -28,6 +19,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.transaction.TestTransaction;
 import org.springframework.transaction.annotation.Transactional;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.*;
 
 @TCSpringBootTest
 class SocialFeedEventListenerIntegrationTest {
